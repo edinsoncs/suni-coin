@@ -7,7 +7,7 @@ import Miner from '../miner';
 
 
 const app = express();
-const { PORT = 3000 } = process.env;
+const { PORT = 5600 } = process.env;
 global.newBlockchain = new Blockchain();
 global.newWallet = new Wallet(newBlockchain);
 global.newWalletMiner = new Wallet(newBlockchain, 0);

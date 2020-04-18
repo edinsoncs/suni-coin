@@ -12,7 +12,9 @@
     "nodemon": "nodemon --exec npm start",
     "eslint": "eslint index.js src",
     "test": "jest",
-    "test:watch": "jest --watchAll"
+    "test:watch": "jest --watchAll",
+    "build": "babel -d ./build ./server -s",
+    "start-prod": "node ./build/index.js"
   },
   "repository": {
     "type": "git",
