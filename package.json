@@ -1,0 +1,50 @@
+{
+  "name": "sunicoin",
+  "version": "0.0.1",
+  "description": "sunicoin.org",
+  "main": "index.js",
+  "scripts": {
+    "start": "babel-node ./src/service/index.js",
+    "start:2": "PORT=3001 P2P_PORT=6001 PORTS=ws:localhost:6000 babel-node ./src/service/index.js",
+    "start:3": "PORT=3002 P2P_PORT=6002 PORTS=ws:localhost:6000 babel-node ./src/service/index.js",
+    "start:4": "PORT=3003 P2P_PORT=6003 PORTS=ws:localhost:6000 babel-node ./src/service/index.js",
+    "start:ex": "babel-node ./ejemplo_mine.js",
+    "nodemon": "nodemon --exec npm start",
+    "eslint": "eslint index.js src",
+    "test": "jest",
+    "test:watch": "jest --watchAll"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ockang/sunicoin.git"
+  },
+  "author": "Edinsoncs",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ockang/sunicoin/issues"
+  },
+  "homepage": "https://github.com/ockang/sunicoin#readme",
+  "devDependencies": {
+    "@babel/core": "^7.8.4",
+    "@babel/node": "^7.8.4",
+    "@babel/preset-env": "^7.8.4",
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb-base": "^14.0.0",
+    "eslint-plugin-import": "^2.20.1",
+    "jest": "^25.1.0",
+    "nodemon": "^2.0.2"
+  },
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "crypto-js": "^4.0.0",
+    "elliptic": "^6.5.2",
+    "express": "^4.17.1",
+    "uuid": "^7.0.2",
+    "ws": "^7.2.1"
+  },
+  "jest": {
+    "silent": false,
+    "verbose": true,
+    "testEnvironment": "node"
+  }
+}
