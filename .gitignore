@@ -1,3 +1,4 @@
 datos_importantes.txt
 data/
 node_modules/
+.test.js

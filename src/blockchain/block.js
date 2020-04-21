@@ -5,7 +5,7 @@ const DIFFICULTY = 3;
 
 class Block{
 	constructor(timestamp, previousHash, data, hash, nonce, difficulty){
-		this.timestamp = timestamp;
+		this.timest$amp = timestamp;
 		this.previousHash = previousHash;
 		this.data = data;
 		this.hash = hash;
@@ -14,8 +14,8 @@ class Block{
 	}
 
 	static get genesis(){
-		const timestamp = (new Date(1990, 0, 1)).getTime();
-		return new this(timestamp, undefined, 'Block first created', 'hash-compiled', 0, DIFFICULTY);		
+		const timestamp = (new Date(2020, 1, 1)).getTime();
+		return new this(timestamp, undefined, 'S-U-N-I', 'hash-compiled', 0, DIFFICULTY);		
 	}
 
 	static mine(previousBlock, data){

@@ -19,6 +19,7 @@ app.use(bodyParser.json());
 require('../middleware')(app)
 
 app.listen(PORT, () => {
-	console.log(`Servidor ready: ${PORT}`);
+	console.log(`Servidor ready: ${PORT}, 
+		Wallet: ${newWallet}`);
 	p2pAction.listen();
 });

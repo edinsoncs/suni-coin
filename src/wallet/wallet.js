@@ -19,7 +19,6 @@ class Wallet{
 		return `
 			pulicKey: ${publicKey.toString()}
 			balance: ${balance}
-
 		 `;
 	}
 

@@ -10,7 +10,7 @@ console.log(genesis.toString());
 
 const bl = Block.mine(genesis, 'Soy un string');
 console.log(bl.toString());
-
+w
 /*const bl_2 = Block.mine(genesis, 'xa010200');
 console.log(bl_2.toString());*/
 
