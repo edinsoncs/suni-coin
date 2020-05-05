@@ -17,9 +17,17 @@ class Wallet{
 		const { balance, publicKey } = this;
 
 		return `
-			pulicKey: ${publicKey.toString()}
+			publicKey: ${publicKey.toString()}
 			balance: ${balance}
 		 `;
+	}
+
+	blockchainWallet(){
+		const { balance, publicKey, keyPair } = this;
+		return {
+			'publicKey': publicKey.toString(),
+			'balance': balance,
+		}	
 	}
 
 	sign(data){
@@ -82,6 +90,7 @@ class Wallet{
 		return balance;
 
 	}
+
 
 }
 
