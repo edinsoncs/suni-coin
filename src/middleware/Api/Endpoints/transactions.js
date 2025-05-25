@@ -1,6 +1,6 @@
 module.exports = (req, res, next) => {
 
-	const { memoryPool: { transactions } }  = Blockchain;
+        const { memoryPool: { transactions } }  = newBlockchain;
 	res.json(transactions);
 
 }

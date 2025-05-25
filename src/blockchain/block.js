@@ -4,13 +4,13 @@ import mdDificulty from './modules/mdDifficulty';
 const DIFFICULTY = 3; 
 
 class Block{
-	constructor(timestamp, previousHash, data, hash, nonce, difficulty){
-		this.timest$amp = timestamp;
-		this.previousHash = previousHash;
-		this.data = data;
-		this.hash = hash;
-		this.nonce = nonce;
-		this.difficulty = difficulty;
+        constructor(timestamp, previousHash, data, hash, nonce, difficulty){
+                this.timestamp = timestamp;
+                this.previousHash = previousHash;
+                this.data = data;
+                this.hash = hash;
+                this.nonce = nonce;
+                this.difficulty = difficulty;
 	}
 
 	static get genesis(){
