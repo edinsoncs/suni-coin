@@ -1,5 +1,5 @@
+import { gnHash } from '../modules/index.js';
 
-import gnHash from '../modules/hash';
 
 
 class Block{
