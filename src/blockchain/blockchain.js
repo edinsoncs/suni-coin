@@ -1,6 +1,6 @@
-import Block from './block';
-import validator from './modules/validator';
-import MemoryPool from './memPool';
+import Block from './block.js';
+import validator from './modules/validator.js';
+import MemoryPool from './memPool.js';
 
 class Blockchain {
 

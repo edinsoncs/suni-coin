@@ -1,4 +1,4 @@
-module.exports = (req, res, next) => {
+export default (req, res, next) => {
 
 	var blockchain = newBlockchain;
 
@@ -11,4 +11,4 @@ module.exports = (req, res, next) => {
  		block
  	});
 
-}
+};

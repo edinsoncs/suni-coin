@@ -1,7 +1,7 @@
-import Wallet from '../../../wallet';
+import Wallet from '../../../wallet/index.js';
 
 
-module.exports = (req, res, next) => {
+export default (req, res, next) => {
 
 	global.wallet_new = new Wallet(newBlockchain, 20);
 
@@ -10,4 +10,4 @@ module.exports = (req, res, next) => {
 		data: wallet_new.blockchainWallet()
 	});
 
-}
+};

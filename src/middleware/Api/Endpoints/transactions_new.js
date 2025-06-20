@@ -1,6 +1,6 @@
-import { MESSAGE } from '../../../service/p2p';
+import { MESSAGE } from '../../../service/p2p.js';
 
-module.exports = (req, res, next) => {
+export default (req, res, next) => {
 	const { body: { recipient, amount }} = req;
 	try{
 		const tr = wallet_new.createTransaction(recipient, amount);
@@ -14,4 +14,4 @@ module.exports = (req, res, next) => {
 	}
 
 
-}
+};
