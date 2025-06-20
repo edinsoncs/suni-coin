@@ -2,7 +2,7 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import Blockchain from '../blockchain/index.js';
 import P2PAction from './p2p.js';
-import Wallet, { blockchainWallet } from '../wallet/index.js';
+import Wallet from '../wallet/index.js';
 import Miner from '../miner/index.js';
 import middleware from '../middleware/index.js';
 
@@ -10,8 +10,6 @@ import middleware from '../middleware/index.js';
 const app = express();
 const { PORT = 8000 } = process.env;
 global.newBlockchain = new Blockchain();
-// ensure the genesis wallet can validate blocks
-newBlockchain.registerStake(blockchainWallet.publicKey, blockchainWallet.balance);
 //global.newWallet = new Wallet(newBlockchain, 0);
 global.newWalletMiner = new Wallet(newBlockchain, 0);
 global.p2pAction = new P2PAction(newBlockchain);
