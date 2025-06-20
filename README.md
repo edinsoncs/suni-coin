@@ -24,6 +24,7 @@ datasets or model checkpoints while tokens can be used to incentivise agents.
 
 2. Open `http://localhost:3000` in your browser to access the new Next.js front end.
    The blockchain API continues to run on `http://localhost:8000`.
+   Cross-origin requests are allowed so the UI can communicate with the API while both servers run on different ports.
 
 Chain data is automatically saved to disk so blocks remain after you restart the server.
 
