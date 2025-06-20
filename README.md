@@ -19,9 +19,8 @@ datasets or model checkpoints while tokens can be used to incentivise agents.
 
    ```bash
    npm install
-   npm start
-   npm run front
-   ```
+   npm run dev
+  ```
 
 2. Open `http://localhost:3000` in your browser to access the new Next.js front end.
    The blockchain API continues to run on `http://localhost:8000`.

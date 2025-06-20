@@ -12,6 +12,7 @@
     "start:ex": "node ./ejemplo_mine.js",
     "nodemon": "nodemon ./src/service/index.js",
     "front": "next dev -p 3000",
+    "dev": "node ./dev.js",
     "eslint": "eslint index.js src",
     "test": "jest",
     "test:watch": "jest --watchAll"
