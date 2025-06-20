@@ -8,6 +8,7 @@ import walletStake from './wallet_stake.js';
 import mine from './mine.js';
 import transactionsNew from './transactions_new.js';
 import aiStore from './ai_store.js';
+import mempool from './mempool.js';
 import validators from './validators.js';
 import verify from './verify.js';
 import blockGet from './block_get.js';
@@ -27,6 +28,9 @@ r.route('/transactions')
 
 r.route('/mine/transactions')
 .get(mineTransactions);
+
+r.route('/mempool')
+.get(mempool);
 
 r.route('/validators')
 .get(validators);

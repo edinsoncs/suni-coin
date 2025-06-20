@@ -1,0 +1,9 @@
+[
+  {
+    "timestamp": 1580515200000,
+    "previousHash": null,
+    "data": "S-U-N-I",
+    "hash": "hash-genesis",
+    "validator": "genesis"
+  }
+]

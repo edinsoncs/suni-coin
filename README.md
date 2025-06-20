@@ -33,7 +33,8 @@ Multiple nodes can be launched using the extra `start:*` scripts in
 
 SUNI keeps a chain of blocks linked with hashes. Transactions are collected in a
 pool and can be mined via the "Mine Transactions" button on the web interface.
-The Proof‑of‑Stake mechanism is simplified for educational purposes.
+Blocks are minted using a basic Proof‑of‑Stake algorithm that randomly selects a
+validator proportionally to their stake.
 
 ### AI Data Blocks
 
@@ -61,6 +62,11 @@ Several helper methods are exposed through the `Blockchain` class:
   for a wallet.
 - `getStakeOf(key)` returns how many tokens a validator has staked.
 - `getValidators()` gives the full validator table.
+
+Validators are persisted to `src/storage/validators.json` and a random
+validator is now selected based on stake when new blocks are mined.
+
+You can inspect pending transactions via `GET /api/mempool`.
 
 The chain is loaded from `src/storage/chain.json` on start and saved back to
 this file whenever new blocks are added, ensuring persistence between restarts.

@@ -3,3 +3,8 @@ data/
 node_modules/
 .test.js
 storage/
+!src/storage/
+!storage/chain.json
+!storage/validators.json
+!src/storage/chain.json
+!src/storage/validators.json
