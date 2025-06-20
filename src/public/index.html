@@ -29,7 +29,6 @@
             const [validators, setValidators] = React.useState(null);
             const [hashInput, setHashInput] = React.useState('');
             const [blockInfo, setBlockInfo] = React.useState(null);
-            const [mempool, setMempool] = React.useState([]);
 
             React.useEffect(() => {
                 refreshBlocks();
@@ -106,12 +105,6 @@
                 setBlockInfo(json);
             }
 
-            async function loadMempool() {
-                const res = await fetch('/api/mempool');
-                const json = await res.json();
-                setMempool(json);
-            }
-
             return (
                 <div>
                     <section className="mb-8 max-w-xl mx-auto bg-white p-6 rounded shadow">
@@ -168,12 +161,6 @@
                         <h2 className="text-xl font-semibold mb-4">Validators</h2>
                         <button onClick={loadValidators} className="px-4 py-2 bg-blue-500 text-white rounded">Load Validators</button>
                         <pre className="mt-4 bg-gray-100 p-4 rounded overflow-auto">{validators && JSON.stringify(validators, null, 2)}</pre>
-                    </section>
-
-                    <section className="max-w-xl mx-auto bg-white p-6 mt-8 rounded shadow">
-                        <h2 className="text-xl font-semibold mb-4">Mempool</h2>
-                        <button onClick={loadMempool} className="px-4 py-2 bg-blue-500 text-white rounded">Load Mempool</button>
-                        <pre className="mt-4 bg-gray-100 p-4 rounded overflow-auto">{JSON.stringify(mempool, null, 2)}</pre>
                     </section>
 
                     <section className="max-w-xl mx-auto bg-white p-6 mt-8 rounded shadow">
