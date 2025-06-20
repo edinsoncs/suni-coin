@@ -50,6 +50,22 @@ The REST API exposes several helpers for querying the chain:
 - `GET /api/block/:hash` – fetch a block by its hash
 - `GET /api/balance/:address` – show the balance of a wallet address
 
+### Blockchain Utilities
+
+Several helper methods are exposed through the `Blockchain` class:
+
+- `verifyChain()` returns `true` if every block links correctly and the
+  stored hashes match.
+- `findBlockByHash(hash)` looks up a specific block based on its hash.
+- `getBalance(address)` aggregates all transactions to compute the balance
+  for a wallet.
+- `getStakeOf(key)` returns how many tokens a validator has staked.
+- `getValidators()` gives the full validator table.
+
+The chain is loaded from `src/storage/chain.json` on start and saved back to
+this file whenever new blocks are added, ensuring persistence between restarts.
+
+
 ### For Developers
 
 - Node.js 18 or later is recommended.
