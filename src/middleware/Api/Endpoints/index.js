@@ -8,6 +8,7 @@ import walletStake from './wallet_stake.js';
 import mine from './mine.js';
 import transactionsNew from './transactions_new.js';
 import aiStore from './ai_store.js';
+import aiList from './ai_list.js';
 import mempool from './mempool.js';
 import validators from './validators.js';
 import verify from './verify.js';
@@ -43,6 +44,9 @@ r.route('/block/:hash')
 
 r.route('/balance/:address')
 .get(balance);
+
+r.route('/ai/list')
+.get(aiList);
 
 
 /**
