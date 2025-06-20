@@ -1,5 +1,5 @@
 # SUNI
-We present you a new project, we are the **SUNI** community that works creating personalized wallets for your projects
+We present you a new project, we are the **SUNI** community that works creating personalized wallets for your projects. The blockchain now operates with a simple Proof-of-Stake (PoS) consensus.
 
 
 ## Our mission 

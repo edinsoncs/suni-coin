@@ -5,12 +5,13 @@ const INIT_BL = 100;
 
 class Wallet{
 
-	constructor(blockchain, initBalance = INIT_BL){
-		this.balance = initBalance;
-		this.keyPair  = elliptic.createKeyPair();
-		this.publicKey = this.keyPair.getPublic().encode('hex');
-		this.blockchain = blockchain;
-	}
+        constructor(blockchain, initBalance = INIT_BL){
+                this.balance = initBalance;
+                this.keyPair  = elliptic.createKeyPair();
+                this.publicKey = this.keyPair.getPublic().encode('hex');
+                this.blockchain = blockchain;
+                this.stakeBalance = 0;
+        }
 
 	toString(){
 
@@ -30,9 +31,18 @@ class Wallet{
 		}	
 	}
 
-	sign(data){
-		return this.keyPair.sign(gnHash(data));
-	}
+        sign(data){
+                return this.keyPair.sign(gnHash(data));
+        }
+
+        stake(amount){
+                if(amount > this.balance){
+                        throw Error(`El monto es: ${amount} superior al balance: ${this.balance}`);
+                }
+                this.balance -= amount;
+                this.stakeBalance += amount;
+                this.blockchain.registerStake(this.publicKey, amount);
+        }
 
 
 	createTransaction(receptAddress, amount){

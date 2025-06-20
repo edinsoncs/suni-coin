@@ -1,68 +1,51 @@
 import gnHash from '../modules/hash';
-import mdDificulty from './modules/mdDifficulty';
-
-const DIFFICULTY = 3; 
 
 class Block{
-	constructor(timestamp, previousHash, data, hash, nonce, difficulty){
-		this.timest$amp = timestamp;
-		this.previousHash = previousHash;
-		this.data = data;
-		this.hash = hash;
-		this.nonce = nonce;
-		this.difficulty = difficulty;
-	}
+        constructor(timestamp, previousHash, data, hash, validator){
+                this.timestamp = timestamp;
+                this.previousHash = previousHash;
+                this.data = data;
+                this.hash = hash;
+                this.validator = validator;
+        }
 
-	static get genesis(){
-		const timestamp = (new Date(2020, 1, 1)).getTime();
-		return new this(timestamp, undefined, 'S-U-N-I', 'hash-compiled', 0, DIFFICULTY);		
-	}
+        static get genesis(){
+                const timestamp = (new Date(2020, 1, 1)).getTime();
+                return new this(timestamp, undefined, 'S-U-N-I', 'hash-genesis', 'genesis');
+        }
 
-	static mine(previousBlock, data){
-		const { "hash": previousHash } = previousBlock;
-		let hash;
-		let nonce = 0;
-		let timestamp;
-		let { difficulty } = previousBlock
-		do{
-			timestamp = Date.now();
-			nonce += 1;
-			difficulty = mdDificulty(previousBlock, timestamp);
-			hash = Block.hash(timestamp, previousHash, data, nonce, difficulty);
+        static mine(previousBlock, data, validator){
+                const { hash: previousHash } = previousBlock;
+                const timestamp = Date.now();
+                const hash = Block.hash(timestamp, previousHash, data, validator);
+                return new this(timestamp, previousHash, data, hash, validator);
+        }
 
-		}while(hash.substring(0, difficulty) !== '0'.repeat(difficulty));
-
-		return new this(timestamp, previousHash, data, hash, nonce, difficulty);
-	}
-
-	static hash(timestamp, previousHash, data, nonce, difficulty){
-		return gnHash(`${timestamp}${previousHash}${data}${nonce}${difficulty}`).toString();
-	}
+        static hash(timestamp, previousHash, data, validator){
+                return gnHash(`${timestamp}${previousHash}${JSON.stringify(data)}${validator}`).toString();
+        }
 
 	toString(){
 
-		const {
-			timestamp,
-			previousHash,
-			data,
-			hash,
-			nonce,
-			difficulty
-		} = this;
+                const {
+                        timestamp,
+                        previousHash,
+                        data,
+                        hash,
+                        validator
+                } = this;
 
 		return ` BLOCK
 		Timestamp: ${timestamp}
 		Previoushash: ${previousHash}
 		Data: ${data}
-		Hash: ${hash}
-		Nonce: ${nonce}
-		Difficulty: ${difficulty}
-		`;
-	}
+                Hash: ${hash}
+                Validator: ${validator}
+                `;
+        }
 
 }
 
-export { DIFFICULTY };
 export default Block;
 
 
