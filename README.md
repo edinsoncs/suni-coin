@@ -1,6 +1,6 @@
-# SUNI
+# BYDChain
 
-SUNI is an experimental Proof‑of‑Stake blockchain written in Node.js. It includes
+BYDChain is an experimental Proof‑of‑Stake blockchain written in Node.js. It includes
 a lightweight wallet, mining utilities and a web interface styled with
 Tailwind CSS. The Next.js frontend now offers a basic explorer in the spirit of
 Etherscan or Solscan. The project is focused on exploring how blockchain technology can
@@ -10,7 +10,7 @@ model information so researchers can track and share their assets.
 
 ## Why AI?
 
-AI projects often need a trusted ledger to exchange data or rewards. SUNI aims
+AI projects often need a trusted ledger to exchange data or rewards. BYDChain aims
 to be a minimal starting point for that purpose. Blocks can store hashes of
 datasets or model checkpoints while tokens can be used to incentivise agents.
 
@@ -34,7 +34,7 @@ Multiple nodes can be launched using the extra `start:*` scripts in
 
 ## How It Works
 
-SUNI keeps a chain of blocks linked with hashes. Transactions are collected in a
+BYDChain keeps a chain of blocks linked with hashes. Transactions are collected in a
 pool and can be mined via the "Mine Transactions" button on the web interface.
 Blocks are minted using a basic Proof‑of‑Stake algorithm that randomly selects a
 validator proportionally to their stake.
