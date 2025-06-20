@@ -54,6 +54,7 @@ The REST API exposes several helpers for querying the chain:
 - `GET /api/verify` – check whether the chain is valid
 - `GET /api/block/:hash` – fetch a block by its hash
 - `GET /api/balance/:address` – show the balance of a wallet address
+- `GET /api/address/:address/transactions` – list all transactions involving an address
 - `GET /api/ai/list` – list all blocks that contain AI data
 
 ### Blockchain Utilities
@@ -101,6 +102,7 @@ blocks are created in real time.
 - Verify that the chain is valid and view the total block count
 - Search for a block by its hash
 - Browse blocks in a table via the new **Blocks** section
+- Search for an address to view its balance and transactions
 
 ## Troubleshooting
 
