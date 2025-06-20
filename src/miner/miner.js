@@ -20,7 +20,7 @@ class Miner {
 		//1
 		memoryPool.transactions.push(Transaction.reward(wallet, blockchainWallet));
 		//2
-		const block = this.blockchain.addBlock(memoryPool.transactions);
+                const block = this.blockchain.addBlock(memoryPool.transactions, wallet.publicKey);
 		//3
 		p2p.sync();
 		//4
