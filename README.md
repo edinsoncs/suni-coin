@@ -24,6 +24,8 @@ datasets or model checkpoints while tokens can be used to incentivise agents.
 
 2. Open `http://localhost:8000` in your browser to access the web interface.
 
+Chain data is automatically saved to disk so blocks remain after you restart the server.
+
 Multiple nodes can be launched using the extra `start:*` scripts in
 `package.json`.
 
@@ -45,6 +47,8 @@ track AI assets over time.
 - REST API endpoints are defined in `src/middleware/Api/Endpoints`.
 - Frontend files live in `src/public` and use Tailwind CSS via CDN.
 - The blockchain core can be found under `src/blockchain`.
+- Chain data is saved to `src/storage/chain.json` so your history persists across restarts.
+- Helper methods now let you verify the chain, query balances and inspect validator stakes.
 
 ### For Non‑Programmers and Investors
 
