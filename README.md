@@ -98,6 +98,13 @@ blocks are created in real time.
 - Verify that the chain is valid and view the total block count
 - Search for a block by its hash
 
+## Troubleshooting
+
+If `npm run dev` fails with a message like `Cannot find module '@babel/preset-env'`,
+make sure dependencies are installed by running `npm install` first. The
+project now uses the built-in `next/babel` preset so no extra Babel packages are
+required once dependencies have been installed.
+
 ### Community
 
 Developer: [Edinsoncs](https://edinsoncs.com) - Edinson Carranza Saldaña
