@@ -21,6 +21,7 @@ export default function Home() {
   const [hashInput, setHashInput] = useState('');
   const [blockInfo, setBlockInfo] = useState(null);
   const [searchAddress, setSearchAddress] = useState('');
+  const [mempool, setMempool] = useState([]);
 
   useEffect(() => {
     refreshBlocks();
@@ -102,6 +103,12 @@ export default function Home() {
     setBlockInfo(json);
   }
 
+  async function loadMempool() {
+    const res = await fetch(`${API_BASE}/api/mempool`);
+    const json = await res.json();
+    setMempool(json);
+  }
+
   return (
     <div className="py-6">
       <h1 className="text-2xl font-bold mb-2 text-center">SuniCoin Dashboard</h1>
@@ -167,6 +174,12 @@ export default function Home() {
         <h2 className="text-xl font-semibold mb-4">Validators</h2>
         <button onClick={loadValidators} className="px-4 py-2 bg-blue-500 text-white rounded">Load Validators</button>
         <pre className="mt-4 bg-gray-100 p-4 rounded overflow-auto">{validators && JSON.stringify(validators, null, 2)}</pre>
+      </section>
+
+      <section className="max-w-xl mx-auto bg-white p-6 mt-8 rounded shadow">
+        <h2 className="text-xl font-semibold mb-4">Mempool</h2>
+        <button onClick={loadMempool} className="px-4 py-2 bg-blue-500 text-white rounded">Load Mempool</button>
+        <pre className="mt-4 bg-gray-100 p-4 rounded overflow-auto">{JSON.stringify(mempool, null, 2)}</pre>
       </section>
 
       <section className="max-w-xl mx-auto bg-white p-6 mt-8 rounded shadow">
