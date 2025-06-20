@@ -1,8 +1,9 @@
 # SUNI
 
 SUNI is an experimental Proof‑of‑Stake blockchain written in Node.js. It includes
-a lightweight wallet, mining utilities and a simple web interface styled with
-Tailwind CSS.  The project is focused on exploring how blockchain technology can
+a lightweight wallet, mining utilities and a web interface styled with
+Tailwind CSS. The Next.js frontend now offers a basic explorer in the spirit of
+Etherscan or Solscan. The project is focused on exploring how blockchain technology can
 be used alongside Artificial Intelligence. The chain can store AI dataset or
 model information so researchers can track and share their assets.
 
@@ -80,7 +81,8 @@ this file whenever new blocks are added, ensuring persistence between restarts.
 
 - Node.js 18 or later is recommended.
 - REST API endpoints are defined in `src/middleware/Api/Endpoints`.
-- Frontend files live in `src/public` and use Tailwind CSS via CDN.
+- Frontend pages are built with Next.js under `pages/` and styled with
+  Tailwind CSS via CDN.
 - The blockchain core can be found under `src/blockchain`.
 - Chain data is saved to `src/storage/chain.json` so your history persists across restarts.
 - Helper methods now let you verify the chain, query balances and inspect validator stakes.
@@ -98,6 +100,7 @@ blocks are created in real time.
 - Load the current validator list and their stakes
 - Verify that the chain is valid and view the total block count
 - Search for a block by its hash
+- Browse blocks in a table via the new **Blocks** section
 
 ## Troubleshooting
 
