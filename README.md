@@ -66,6 +66,13 @@ knowledge.  It demonstrates how a token ecosystem might operate and is intended
 for educational and research use.  Feel free to experiment locally and see how
 blocks are created in real time.
 
+### Web Interface Features
+
+- View your wallet balance and lookup any address
+- Load the current validator list and their stakes
+- Verify that the chain is valid and view the total block count
+- Search for a block by its hash
+
 ### Community
 
 Developer: [Edinsoncs](https://edinsoncs.com) - Edinson Carranza Saldaña
