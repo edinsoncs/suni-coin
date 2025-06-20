@@ -1,7 +1,7 @@
 import Block from './block.js';
 import validator from './modules/validator.js';
 import MemoryPool from './memPool.js';
-import { loadBlocks, saveBlocks } from './modules/storage.js';
+import { loadBlocks, saveBlocks, loadValidators, saveValidators } from './modules/storage.js';
 
 class Blockchain {
 
@@ -13,12 +13,14 @@ class Blockchain {
                         this.blocks = [Block.genesis];
                 }
                 this.memoryPool = new MemoryPool();
-                this.validators = {};
+                const storedValidators = loadValidators();
+                this.validators = storedValidators && typeof storedValidators === 'object' ? storedValidators : {};
         }
 
         registerStake(publicKey, amount){
                 if(!this.validators[publicKey]) this.validators[publicKey] = 0;
                 this.validators[publicKey] += amount;
+                saveValidators(this.validators);
         }
 
         addBlock(data, validatorKey){
@@ -90,6 +92,18 @@ class Blockchain {
 
         getValidators(){
                 return { ...this.validators };
+        }
+
+        selectValidator(){
+                const entries = Object.entries(this.validators);
+                const total = entries.reduce((t, [, stake]) => t + Number(stake), 0);
+                if(total === 0) return null;
+                let rnd = Math.random() * total;
+                for(const [key, stake] of entries){
+                        rnd -= Number(stake);
+                        if(rnd <= 0) return key;
+                }
+                return entries[0][0];
         }
 
 }

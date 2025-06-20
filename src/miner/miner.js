@@ -9,27 +9,23 @@ class Miner {
 		this.wallet = wallet;
 	}
 
-	mine() {
-		const { blockchain: { memoryPool },
-		 p2p, wallet } = this;
+        mine() {
+                const { blockchain, p2p, wallet } = this;
+                const { memoryPool } = blockchain;
 
-		if(memoryPool.transactions.length === 0) {
-			throw Error('La transacción no esta confirmada');
-		} 
+                if(memoryPool.transactions.length === 0) {
+                        throw Error('La transacción no esta confirmada');
+                }
 
-		//1
-		memoryPool.transactions.push(Transaction.reward(wallet, blockchainWallet));
-		//2
-                const block = this.blockchain.addBlock(memoryPool.transactions, wallet.publicKey);
-		//3
-		p2p.sync();
-		//4
-		memoryPool.wipe();
-		//5
-		p2p.broadcast(MESSAGE.WIPE);
-		return block;
+                memoryPool.transactions.push(Transaction.reward(wallet, blockchainWallet));
+                const validatorKey = blockchain.selectValidator() || wallet.publicKey;
+                const block = blockchain.addBlock(memoryPool.transactions, validatorKey);
+                p2p.sync();
+                memoryPool.wipe();
+                p2p.broadcast(MESSAGE.WIPE);
+                return block;
 
-	}
+        }
 }
 
 export default Miner;
