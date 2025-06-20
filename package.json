@@ -1,7 +1,7 @@
 {
-  "name": "sunicoin",
+  "name": "bydchain",
   "version": "0.0.1",
-  "description": "sunicoin.org",
+  "description": "bydchain.org",
   "main": "index.js",
   "type": "module",
   "scripts": {
@@ -19,14 +19,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ockang/sunicoin.git"
+    "url": "git+https://github.com/ockang/bydchain.git"
   },
   "author": "Edinsoncs",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/ockang/sunicoin/issues"
+    "url": "https://github.com/ockang/bydchain/issues"
   },
-  "homepage": "https://github.com/ockang/sunicoin#readme",
+  "homepage": "https://github.com/ockang/bydchain#readme",
   "devDependencies": {
     "eslint": "^6.8.0",
     "eslint-config-airbnb-base": "^14.0.0",

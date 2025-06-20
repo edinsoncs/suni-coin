@@ -104,7 +104,7 @@ export default function Home() {
 
   return (
     <div className="py-6">
-      <h1 className="text-2xl font-bold mb-2 text-center">SuniCoin Dashboard</h1>
+      <h1 className="text-2xl font-bold mb-2 text-center">BYDChain Dashboard</h1>
       <p className="text-center mb-6">
         <a href="/blocks" className="text-blue-600 hover:underline">Browse Blocks</a>
       </p>

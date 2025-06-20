@@ -5,7 +5,7 @@ export default function Layout({ children }) {
     <div className="min-h-screen bg-gray-50">
       <header className="bg-gray-800 text-white">
         <nav className="max-w-5xl mx-auto flex justify-between items-center p-4">
-          <Link href="/" className="font-semibold hover:underline">SUNI Explorer</Link>
+          <Link href="/" className="font-semibold hover:underline">BYDChain Explorer</Link>
           <div className="space-x-4">
             <Link href="/blocks" className="hover:underline">Blocks</Link>
           </div>
