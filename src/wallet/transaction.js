@@ -1,5 +1,5 @@
 import { v1 as uuidv1 } from 'uuid';
-import { elliptic } from '../modules';
+import { elliptic } from '../modules/index.js';
 
 const REWARD = 1;
 

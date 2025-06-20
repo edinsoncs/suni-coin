@@ -1,2 +1,2 @@
-import Miner from './miner';
+import Miner from './miner.js';
 export default Miner;

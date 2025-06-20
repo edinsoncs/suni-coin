@@ -1,8 +1,9 @@
 import express from 'express';
+import endpoints from './Endpoints/index.js';
 const r = express.Router();
 
 //localhost:{$port}/
-r.use('/', require('./Endpoints'));
+r.use('/', endpoints);
 
 
-module.exports = r;
+export default r;

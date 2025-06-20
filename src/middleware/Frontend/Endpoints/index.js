@@ -1,4 +1,5 @@
 import express from 'express';
+import home from './home.js';
 const r = express.Router();
 
 
@@ -6,8 +7,8 @@ const r = express.Router();
  * Methods Get
 */
 r.route('/')
-.get(require('./home'));
+.get(home);
 
 
 
-module.exports = r;
+export default r;
