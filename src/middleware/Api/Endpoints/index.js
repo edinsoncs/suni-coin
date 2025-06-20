@@ -7,6 +7,7 @@ import walletAccess from './wallet_access.js';
 import walletStake from './wallet_stake.js';
 import mine from './mine.js';
 import transactionsNew from './transactions_new.js';
+import aiStore from './ai_store.js';
 
 const r = express.Router();
 
@@ -43,6 +44,9 @@ r.route('/mine')
 
 r.route('/transactions')
 .post(transactionsNew);
+
+r.route('/ai/store')
+.post(aiStore);
 
 
 

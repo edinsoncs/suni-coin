@@ -3,7 +3,8 @@
 SUNI is an experimental Proof‑of‑Stake blockchain written in Node.js. It includes
 a lightweight wallet, mining utilities and a simple web interface styled with
 Tailwind CSS.  The project is focused on exploring how blockchain technology can
-be used alongside Artificial Intelligence.
+be used alongside Artificial Intelligence. The chain can store AI dataset or
+model information so researchers can track and share their assets.
 
 ## Why AI?
 
@@ -30,6 +31,12 @@ Multiple nodes can be launched using the extra `start:*` scripts in
 SUNI keeps a chain of blocks linked with hashes. Transactions are collected in a
 pool and can be mined via the "Mine Transactions" button on the web interface.
 The Proof‑of‑Stake mechanism is simplified for educational purposes.
+
+### AI Data Blocks
+
+Use `POST /api/ai/store` to record metadata about models or datasets on chain.
+Each block will contain fields `model`, `description` and `hash` so you can
+track AI assets over time.
 
 ### For Developers
 

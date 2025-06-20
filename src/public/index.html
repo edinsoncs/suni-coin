@@ -24,6 +24,16 @@
         <pre id="transactionResult" class="mt-4 bg-gray-100 p-4 rounded overflow-auto"></pre>
     </section>
 
+    <section class="mb-8 max-w-xl mx-auto bg-white p-6 rounded shadow">
+        <h2 class="text-xl font-semibold mb-4">Store AI Data</h2>
+        <div class="flex flex-col gap-2">
+            <input id="model" placeholder="model name" class="border p-2 rounded" />
+            <input id="description" placeholder="description" class="border p-2 rounded" />
+            <input id="dataHash" placeholder="data hash" class="border p-2 rounded" />
+            <button id="storeAI" class="px-4 py-2 bg-indigo-500 text-white rounded">Save AI Data</button>
+        </div>
+    </section>
+
     <section class="mb-8 text-center">
         <button id="mine" class="px-4 py-2 bg-purple-500 text-white rounded">Mine Transactions</button>
     </section>
@@ -68,10 +78,23 @@
             blocksEl.textContent = JSON.stringify(json, null, 2);
         }
 
+        async function storeAIData() {
+            const model = document.getElementById('model').value;
+            const description = document.getElementById('description').value;
+            const dataHash = document.getElementById('dataHash').value;
+            await fetch('/api/ai/store', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ model, description, dataHash })
+            });
+            await refreshBlocks();
+        }
+
         document.getElementById('createWallet').onclick = createWallet;
         document.getElementById('sendTransaction').onclick = sendTransaction;
         document.getElementById('mine').onclick = mineTransactions;
         document.getElementById('refreshBlocks').onclick = refreshBlocks;
+        document.getElementById('storeAI').onclick = storeAIData;
 
         refreshBlocks();
     </script>
