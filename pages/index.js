@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { FaCubes } from 'react-icons/fa';
 import { useRouter } from 'next/router';
 
 const API_BASE = 'http://localhost:8000';
@@ -104,7 +105,12 @@ export default function Home() {
 
   return (
     <div className="py-6">
-      <h1 className="text-2xl font-bold mb-2 text-center">BYDChain Dashboard</h1>
+      <div className="text-center mb-6">
+        <h1 className="text-3xl font-bold flex justify-center items-center gap-2 mb-2">
+          <FaCubes className="text-purple-600" /> BYDChain Dashboard
+        </h1>
+        <p className="text-gray-700">Explore a simple Proof-of-Stake blockchain.</p>
+      </div>
       <p className="text-center mb-6">
         <a href="/blocks" className="text-blue-600 hover:underline">Browse Blocks</a>
       </p>
