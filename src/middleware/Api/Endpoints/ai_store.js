@@ -4,7 +4,7 @@ export default (req, res) => {
     try {
         const block = newBlockchain.addBlock(
             { type: 'AI_DATA', model, description, hash: dataHash },
-            newWalletMiner.publicKey
+            newWalletMiner
         );
         p2pAction.sync();
         res.json({ status: 'ok', block });

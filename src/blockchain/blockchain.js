@@ -8,7 +8,16 @@ class Blockchain {
         constructor(){
                 const stored = loadBlocks();
                 if(stored && Array.isArray(stored) && stored.length > 0){
-                        this.blocks = stored.map((b) => new Block(b.timestamp, b.previousHash, b.data, b.hash, b.validator));
+                        this.blocks = stored.map((b) =>
+                                new Block(
+                                        b.timestamp,
+                                        b.previousHash,
+                                        b.data,
+                                        b.hash,
+                                        b.validator,
+                                        b.signature
+                                )
+                        );
                 } else {
                         this.blocks = [Block.genesis];
                 }
@@ -23,12 +32,16 @@ class Blockchain {
                 saveValidators(this.validators);
         }
 
-        addBlock(data, validatorKey){
-                if(!this.validators[validatorKey]){
+        addBlock(data, validatorWallet) {
+                const vKey =
+                        typeof validatorWallet === 'string'
+                                ? validatorWallet
+                                : validatorWallet.publicKey;
+                if(!this.validators[vKey]){
                         throw Error('Validator has no stake');
                 }
                 const previousBlock = this.blocks[this.blocks.length - 1];
-                const block = Block.mine(previousBlock, data, validatorKey);
+                const block = Block.mine(previousBlock, data, validatorWallet);
                 this.blocks.push(block);
                 saveBlocks(this.blocks);
 

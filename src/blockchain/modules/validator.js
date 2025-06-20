@@ -1,4 +1,5 @@
 import Block from '../block.js';
+import { elliptic } from '../../modules/index.js';
 
 export default(blockchain) => {
 	const [genesisBlock, ...blocks] = blockchain;
@@ -11,7 +12,7 @@ export default(blockchain) => {
 	}
 
         for(let i = 0; i < blocks.length; i++){
-                const { previousHash, timestamp, data, hash, validator } = blocks[i];
+                const { previousHash, timestamp, data, hash, validator, signature } = blocks[i];
                 const previousBlock = blockchain[i];
 
                 if(previousHash !== previousBlock.hash){
@@ -19,6 +20,9 @@ export default(blockchain) => {
                 }
                 if(hash !== Block.hash(timestamp, previousHash, data, validator)){
                         throw Error('El hash es invalido');
+                }
+                if(!elliptic.verifySignature(validator, signature, hash)){
+                        throw Error('La firma del bloque es invalida');
                 }
         }
 
