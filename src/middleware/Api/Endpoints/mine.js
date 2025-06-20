@@ -3,7 +3,7 @@ export default (req, res, next) => {
 	var blockchain = newBlockchain;
 
         const { 'body': {data} } = req;
-        const block = blockchain.addBlock(data, newWalletMiner.publicKey);
+        const block = blockchain.addBlock(data, newWalletMiner);
 	p2pAction.sync();
  	
  	res.json({

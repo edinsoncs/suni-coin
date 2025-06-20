@@ -18,8 +18,7 @@ class Miner {
                 }
 
                 memoryPool.transactions.push(Transaction.reward(wallet, blockchainWallet));
-                const validatorKey = blockchain.selectValidator() || wallet.publicKey;
-                const block = blockchain.addBlock(memoryPool.transactions, validatorKey);
+                const block = blockchain.addBlock(memoryPool.transactions, wallet);
                 p2p.sync();
                 memoryPool.wipe();
                 p2p.broadcast(MESSAGE.WIPE);
