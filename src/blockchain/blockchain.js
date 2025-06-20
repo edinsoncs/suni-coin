@@ -1,21 +1,30 @@
-import Block from './block';
-import validator from './modules/validator';
-import MemoryPool from './memPool';
+import Block from './block.js';
+import validator from './modules/validator.js';
+import MemoryPool from './memPool.js';
 
 class Blockchain {
 
-	constructor(){
-		this.blocks = [Block.genesis];
-		this.memoryPool = new MemoryPool();
-	}
+        constructor(){
+                this.blocks = [Block.genesis];
+                this.memoryPool = new MemoryPool();
+                this.validators = {};
+        }
 
-	addBlock(data){
-		const previousBlock = this.blocks[this.blocks.length - 1];
-    	const block = Block.mine(previousBlock, data);
-		this.blocks.push(block);
-		
-		return block;
-	}
+        registerStake(publicKey, amount){
+                if(!this.validators[publicKey]) this.validators[publicKey] = 0;
+                this.validators[publicKey] += amount;
+        }
+
+        addBlock(data, validatorKey){
+                if(!this.validators[validatorKey]){
+                        throw Error('Validator has no stake');
+                }
+                const previousBlock = this.blocks[this.blocks.length - 1];
+                const block = Block.mine(previousBlock, data, validatorKey);
+                this.blocks.push(block);
+
+                return block;
+        }
 
 	replace(newBlocks = []){
 		

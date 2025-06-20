@@ -1,4 +1,4 @@
-module.exports = (req, res, next) => {
+export default (req, res, next) => {
 
 	try{
 		newMiner.mine();
@@ -7,4 +7,4 @@ module.exports = (req, res, next) => {
 		res.json({error: error.message});
 	}
 
-}
+};

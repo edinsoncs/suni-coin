@@ -1,5 +1,5 @@
 import Elliptic from 'elliptic';
-import gnHash from './hash';
+import gnHash from './hash.js';
 
 const ec = new Elliptic.ec('secp256k1');
 
