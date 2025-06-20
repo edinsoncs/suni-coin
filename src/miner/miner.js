@@ -1,5 +1,5 @@
-import { Transaction, blockchainWallet } from '../wallet';
-import { MESSAGE } from '../service/p2p';
+import { Transaction, blockchainWallet } from '../wallet/index.js';
+import { MESSAGE } from '../service/p2p.js';
 
 class Miner {
 
@@ -20,7 +20,7 @@ class Miner {
 		//1
 		memoryPool.transactions.push(Transaction.reward(wallet, blockchainWallet));
 		//2
-		const block = this.blockchain.addBlock(memoryPool.transactions);
+                const block = this.blockchain.addBlock(memoryPool.transactions, wallet.publicKey);
 		//3
 		p2p.sync();
 		//4
