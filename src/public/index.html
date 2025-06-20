@@ -3,37 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <title>SuniCoin Blockchain</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 2em; }
-        pre { background: #f7f7f7; padding: 1em; }
-        input { margin: 0.25em; }
-    </style>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-    <h1>SuniCoin Blockchain Explorer</h1>
+<body class="min-h-screen bg-gray-50 py-10 px-4">
+    <h1 class="text-2xl font-bold mb-6 text-center">SuniCoin Blockchain Explorer</h1>
 
-    <section>
-        <h2>Wallet</h2>
-        <button id="createWallet">Create Wallet</button>
-        <pre id="wallet"></pre>
+    <section class="mb-8 max-w-xl mx-auto bg-white p-6 rounded shadow">
+        <h2 class="text-xl font-semibold mb-4">Wallet</h2>
+        <button id="createWallet" class="px-4 py-2 bg-blue-500 text-white rounded">Create Wallet</button>
+        <pre id="wallet" class="mt-4 bg-gray-100 p-4 rounded overflow-auto"></pre>
     </section>
 
-    <section>
-        <h2>Create Transaction</h2>
-        <input id="recipient" placeholder="recipient address" />
-        <input id="amount" type="number" placeholder="amount" />
-        <button id="sendTransaction">Send</button>
-        <pre id="transactionResult"></pre>
+    <section class="mb-8 max-w-xl mx-auto bg-white p-6 rounded shadow">
+        <h2 class="text-xl font-semibold mb-4">Create Transaction</h2>
+        <div class="flex flex-col gap-2">
+            <input id="recipient" placeholder="recipient address" class="border p-2 rounded" />
+            <input id="amount" type="number" placeholder="amount" class="border p-2 rounded" />
+            <button id="sendTransaction" class="px-4 py-2 bg-green-500 text-white rounded">Send</button>
+        </div>
+        <pre id="transactionResult" class="mt-4 bg-gray-100 p-4 rounded overflow-auto"></pre>
     </section>
 
-    <section>
-        <button id="mine">Mine Transactions</button>
+    <section class="mb-8 text-center">
+        <button id="mine" class="px-4 py-2 bg-purple-500 text-white rounded">Mine Transactions</button>
     </section>
 
-    <section>
-        <h2>Blocks</h2>
-        <button id="refreshBlocks">Refresh Blocks</button>
-        <pre id="blocks"></pre>
+    <section class="max-w-xl mx-auto bg-white p-6 rounded shadow">
+        <h2 class="text-xl font-semibold mb-4">Blocks</h2>
+        <button id="refreshBlocks" class="px-4 py-2 bg-blue-500 text-white rounded">Refresh Blocks</button>
+        <pre id="blocks" class="mt-4 bg-gray-100 p-4 rounded overflow-auto"></pre>
     </section>
 
     <script>
