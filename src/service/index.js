@@ -1,9 +1,10 @@
 import express from 'express';
 import bodyParser from 'body-parser';
-import Blockchain from '../blockchain';
-import P2PAction from './p2p';
-import Wallet from '../wallet';
-import Miner from '../miner';
+import Blockchain from '../blockchain/index.js';
+import P2PAction from './p2p.js';
+import Wallet from '../wallet/index.js';
+import Miner from '../miner/index.js';
+import middleware from '../middleware/index.js';
 
 
 const app = express();
@@ -16,7 +17,7 @@ global.newMiner = new Miner(newBlockchain, p2pAction, newWalletMiner);
 
 
 app.use(bodyParser.json());
-require('../middleware')(app)
+middleware(app);
 
 app.listen(PORT, () => {
 	p2pAction.listen();

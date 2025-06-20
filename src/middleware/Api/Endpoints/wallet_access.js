@@ -1,7 +1,7 @@
-import Wallet from '../../../wallet';
+import Wallet from '../../../wallet/index.js';
 
 
-module.exports = (req, res, next) => {
+export default (req, res, next) => {
 
 	const my_wallet = wallet_new.sign(req.body.private);
 
@@ -16,4 +16,4 @@ module.exports = (req, res, next) => {
 	});
 
 
-}
+};

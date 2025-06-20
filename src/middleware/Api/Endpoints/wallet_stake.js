@@ -1,4 +1,6 @@
-module.exports = (req, res, next) => {
+
+export default (req, res, next) => {
+
     const { body: { amount } } = req;
     try {
         wallet_new.stake(Number(amount));

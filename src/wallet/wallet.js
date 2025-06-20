@@ -1,5 +1,5 @@
-import Transaction from './transaction';
-import { gnHash, elliptic} from '../modules';
+import Transaction from './transaction.js';
+import { gnHash, elliptic } from '../modules/index.js';
 
 const INIT_BL = 100;
 

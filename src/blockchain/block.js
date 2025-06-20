@@ -1,4 +1,6 @@
+
 import gnHash from '../modules/hash';
+
 
 class Block{
         constructor(timestamp, previousHash, data, hash, validator){

@@ -1,5 +1,5 @@
-import { Transaction, blockchainWallet } from '../wallet';
-import { MESSAGE } from '../service/p2p';
+import { Transaction, blockchainWallet } from '../wallet/index.js';
+import { MESSAGE } from '../service/p2p.js';
 
 class Miner {
 

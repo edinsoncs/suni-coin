@@ -1,4 +1,4 @@
-import Block from '../block';
+import Block from '../block.js';
 
 export default(blockchain) => {
 	const [genesisBlock, ...blocks] = blockchain;
