@@ -8,6 +8,10 @@ import walletStake from './wallet_stake.js';
 import mine from './mine.js';
 import transactionsNew from './transactions_new.js';
 import aiStore from './ai_store.js';
+import validators from './validators.js';
+import verify from './verify.js';
+import blockGet from './block_get.js';
+import balance from './balance.js';
 
 const r = express.Router();
 
@@ -23,6 +27,18 @@ r.route('/transactions')
 
 r.route('/mine/transactions')
 .get(mineTransactions);
+
+r.route('/validators')
+.get(validators);
+
+r.route('/verify')
+.get(verify);
+
+r.route('/block/:hash')
+.get(blockGet);
+
+r.route('/balance/:address')
+.get(balance);
 
 
 /**
