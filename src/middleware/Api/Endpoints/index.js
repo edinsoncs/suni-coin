@@ -37,6 +37,7 @@ r.route('/wallet/access')
 r.route('/wallet/stake')
 .post(walletStake);
 
+
 r.route('/mine')
 .post(mine);
 
