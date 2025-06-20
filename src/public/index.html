@@ -1,177 +1,181 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" />
     <title>SuniCoin Blockchain</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
 </head>
 <body class="min-h-screen bg-gray-50 py-10 px-4">
     <h1 class="text-2xl font-bold mb-6 text-center">SuniCoin Blockchain Explorer</h1>
+    <div id="root"></div>
 
-    <section class="mb-8 max-w-xl mx-auto bg-white p-6 rounded shadow">
-        <h2 class="text-xl font-semibold mb-4">Wallet</h2>
-        <button id="createWallet" class="px-4 py-2 bg-blue-500 text-white rounded">Create Wallet</button>
-        <pre id="wallet" class="mt-4 bg-gray-100 p-4 rounded overflow-auto"></pre>
-        <div class="mt-4 flex items-end gap-2">
-            <input id="balanceAddress" placeholder="address" class="flex-1 border p-2 rounded" />
-            <button id="getBalance" class="px-4 py-2 bg-blue-500 text-white rounded">Balance</button>
-        </div>
-        <pre id="balance" class="mt-2 bg-gray-100 p-4 rounded overflow-auto"></pre>
-    </section>
+    <script type="text/babel">
+        function App() {
+            const [wallet, setWallet] = React.useState(null);
+            const [balanceAddress, setBalanceAddress] = React.useState('');
+            const [balance, setBalance] = React.useState(null);
+            const [recipient, setRecipient] = React.useState('');
+            const [amount, setAmount] = React.useState('');
+            const [transactionResult, setTransactionResult] = React.useState(null);
+            const [model, setModel] = React.useState('');
+            const [description, setDescription] = React.useState('');
+            const [dataHash, setDataHash] = React.useState('');
+            const [blocks, setBlocks] = React.useState([]);
+            const [chainStatus, setChainStatus] = React.useState(null);
+            const [chainLength, setChainLength] = React.useState(0);
+            const [validators, setValidators] = React.useState(null);
+            const [hashInput, setHashInput] = React.useState('');
+            const [blockInfo, setBlockInfo] = React.useState(null);
 
-    <section class="mb-8 max-w-xl mx-auto bg-white p-6 rounded shadow">
-        <h2 class="text-xl font-semibold mb-4">Create Transaction</h2>
-        <div class="flex flex-col gap-2">
-            <input id="recipient" placeholder="recipient address" class="border p-2 rounded" />
-            <input id="amount" type="number" placeholder="amount" class="border p-2 rounded" />
-            <button id="sendTransaction" class="px-4 py-2 bg-green-500 text-white rounded">Send</button>
-        </div>
-        <pre id="transactionResult" class="mt-4 bg-gray-100 p-4 rounded overflow-auto"></pre>
-    </section>
+            React.useEffect(() => {
+                refreshBlocks();
+                verifyChain();
+                loadValidators();
+            }, []);
 
-    <section class="mb-8 max-w-xl mx-auto bg-white p-6 rounded shadow">
-        <h2 class="text-xl font-semibold mb-4">Store AI Data</h2>
-        <div class="flex flex-col gap-2">
-            <input id="model" placeholder="model name" class="border p-2 rounded" />
-            <input id="description" placeholder="description" class="border p-2 rounded" />
-            <input id="dataHash" placeholder="data hash" class="border p-2 rounded" />
-            <button id="storeAI" class="px-4 py-2 bg-indigo-500 text-white rounded">Save AI Data</button>
-        </div>
-    </section>
+            async function createWallet() {
+                const res = await fetch('/api/wallet/new', { method: 'POST' });
+                const json = await res.json();
+                setWallet(json.data);
+                setBalanceAddress(json.data.publicKey);
+                await getBalance(json.data.publicKey);
+            }
 
-    <section class="mb-8 text-center">
-        <button id="mine" class="px-4 py-2 bg-purple-500 text-white rounded">Mine Transactions</button>
-    </section>
+            async function getBalance(addr) {
+                const address = addr || balanceAddress;
+                if (!address) return;
+                const res = await fetch(`/api/balance/${address}`);
+                const json = await res.json();
+                setBalance(json);
+            }
 
+            async function sendTransaction() {
+                const amt = parseFloat(amount);
+                const res = await fetch('/api/transactions', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ recipient, amount: amt })
+                });
+                const json = await res.json();
+                setTransactionResult(json);
+            }
 
-    <section class="max-w-xl mx-auto bg-white p-6 rounded shadow">
-        <h2 class="text-xl font-semibold mb-4">Blocks</h2>
-        <button id="refreshBlocks" class="px-4 py-2 bg-blue-500 text-white rounded">Refresh Blocks</button>
-        <pre id="blocks" class="mt-4 bg-gray-100 p-4 rounded overflow-auto"></pre>
-    </section>
+            async function storeAIData() {
+                await fetch('/api/ai/store', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ model, description, dataHash })
+                });
+                refreshBlocks();
+            }
 
-    <section class="max-w-xl mx-auto bg-white p-6 mt-8 rounded shadow">
-        <h2 class="text-xl font-semibold mb-4">Chain</h2>
-        <div class="flex items-end gap-2 mb-2">
-            <button id="verifyChain" class="px-4 py-2 bg-green-600 text-white rounded">Verify</button>
-            <span id="chainLength" class="ml-auto text-sm text-gray-600"></span>
-        </div>
-        <pre id="chainStatus" class="bg-gray-100 p-4 rounded overflow-auto"></pre>
-    </section>
+            async function mineTransactions() {
+                await fetch('/api/mine/transactions');
+                refreshBlocks();
+            }
 
-    <section class="max-w-xl mx-auto bg-white p-6 mt-8 rounded shadow">
-        <h2 class="text-xl font-semibold mb-4">Validators</h2>
-        <button id="loadValidators" class="px-4 py-2 bg-blue-500 text-white rounded">Load Validators</button>
-        <pre id="validators" class="mt-4 bg-gray-100 p-4 rounded overflow-auto"></pre>
-    </section>
+            async function refreshBlocks() {
+                const res = await fetch('/api/blocks');
+                const json = await res.json();
+                setBlocks(json);
+            }
 
-    <section class="max-w-xl mx-auto bg-white p-6 mt-8 rounded shadow">
-        <h2 class="text-xl font-semibold mb-4">Block Lookup</h2>
-        <div class="flex items-end gap-2">
-            <input id="hashInput" placeholder="block hash" class="flex-1 border p-2 rounded" />
-            <button id="getBlock" class="px-4 py-2 bg-blue-500 text-white rounded">Find</button>
-        </div>
-        <pre id="blockInfo" class="mt-4 bg-gray-100 p-4 rounded overflow-auto"></pre>
-    </section>
+            async function verifyChain() {
+                const res = await fetch('/api/verify');
+                const json = await res.json();
+                setChainStatus(json);
+                const blocksRes = await fetch('/api/blocks');
+                const blockJson = await blocksRes.json();
+                setChainLength(blockJson.length);
+            }
 
-    <script>
-        const walletEl = document.getElementById('wallet');
-        const transactionResultEl = document.getElementById('transactionResult');
-        const blocksEl = document.getElementById('blocks');
-        const balanceEl = document.getElementById('balance');
-        const validatorsEl = document.getElementById('validators');
-        const chainStatusEl = document.getElementById('chainStatus');
-        const blockInfoEl = document.getElementById('blockInfo');
-        const chainLengthEl = document.getElementById('chainLength');
-        let walletAddress = '';
+            async function loadValidators() {
+                const res = await fetch('/api/validators');
+                const json = await res.json();
+                setValidators(json);
+            }
 
-        async function createWallet() {
-            const res = await fetch('/api/wallet/new', { method: 'POST' });
-            const json = await res.json();
-            walletAddress = json.data.publicKey;
-            walletEl.textContent = JSON.stringify(json.data, null, 2);
-            document.getElementById('balanceAddress').value = walletAddress;
-            await getBalance();
+            async function getBlock() {
+                if (!hashInput) return;
+                const res = await fetch(`/api/block/${hashInput}`);
+                const json = await res.json();
+                setBlockInfo(json);
+            }
+
+            return (
+                <div>
+                    <section className="mb-8 max-w-xl mx-auto bg-white p-6 rounded shadow">
+                        <h2 className="text-xl font-semibold mb-4">Wallet</h2>
+                        <button onClick={createWallet} className="px-4 py-2 bg-blue-500 text-white rounded">Create Wallet</button>
+                        <pre className="mt-4 bg-gray-100 p-4 rounded overflow-auto">{wallet && JSON.stringify(wallet, null, 2)}</pre>
+                        <div className="mt-4 flex items-end gap-2">
+                            <input value={balanceAddress} onChange={e => setBalanceAddress(e.target.value)} placeholder="address" className="flex-1 border p-2 rounded" />
+                            <button onClick={() => getBalance()} className="px-4 py-2 bg-blue-500 text-white rounded">Balance</button>
+                        </div>
+                        <pre className="mt-2 bg-gray-100 p-4 rounded overflow-auto">{balance && JSON.stringify(balance, null, 2)}</pre>
+                    </section>
+
+                    <section className="mb-8 max-w-xl mx-auto bg-white p-6 rounded shadow">
+                        <h2 className="text-xl font-semibold mb-4">Create Transaction</h2>
+                        <div className="flex flex-col gap-2">
+                            <input value={recipient} onChange={e => setRecipient(e.target.value)} placeholder="recipient address" className="border p-2 rounded" />
+                            <input value={amount} onChange={e => setAmount(e.target.value)} type="number" placeholder="amount" className="border p-2 rounded" />
+                            <button onClick={sendTransaction} className="px-4 py-2 bg-green-500 text-white rounded">Send</button>
+                        </div>
+                        <pre className="mt-4 bg-gray-100 p-4 rounded overflow-auto">{transactionResult && JSON.stringify(transactionResult, null, 2)}</pre>
+                    </section>
+
+                    <section className="mb-8 max-w-xl mx-auto bg-white p-6 rounded shadow">
+                        <h2 className="text-xl font-semibold mb-4">Store AI Data</h2>
+                        <div className="flex flex-col gap-2">
+                            <input value={model} onChange={e => setModel(e.target.value)} placeholder="model name" className="border p-2 rounded" />
+                            <input value={description} onChange={e => setDescription(e.target.value)} placeholder="description" className="border p-2 rounded" />
+                            <input value={dataHash} onChange={e => setDataHash(e.target.value)} placeholder="data hash" className="border p-2 rounded" />
+                            <button onClick={storeAIData} className="px-4 py-2 bg-indigo-500 text-white rounded">Save AI Data</button>
+                        </div>
+                    </section>
+
+                    <section className="mb-8 text-center">
+                        <button onClick={mineTransactions} className="px-4 py-2 bg-purple-500 text-white rounded">Mine Transactions</button>
+                    </section>
+
+                    <section className="max-w-xl mx-auto bg-white p-6 rounded shadow">
+                        <h2 className="text-xl font-semibold mb-4">Blocks</h2>
+                        <button onClick={refreshBlocks} className="px-4 py-2 bg-blue-500 text-white rounded">Refresh Blocks</button>
+                        <pre className="mt-4 bg-gray-100 p-4 rounded overflow-auto">{JSON.stringify(blocks, null, 2)}</pre>
+                    </section>
+
+                    <section className="max-w-xl mx-auto bg-white p-6 mt-8 rounded shadow">
+                        <h2 className="text-xl font-semibold mb-4">Chain</h2>
+                        <div className="flex items-end gap-2 mb-2">
+                            <button onClick={verifyChain} className="px-4 py-2 bg-green-600 text-white rounded">Verify</button>
+                            <span className="ml-auto text-sm text-gray-600">{chainLength ? `${chainLength} blocks` : ''}</span>
+                        </div>
+                        <pre className="bg-gray-100 p-4 rounded overflow-auto">{chainStatus && JSON.stringify(chainStatus, null, 2)}</pre>
+                    </section>
+
+                    <section className="max-w-xl mx-auto bg-white p-6 mt-8 rounded shadow">
+                        <h2 className="text-xl font-semibold mb-4">Validators</h2>
+                        <button onClick={loadValidators} className="px-4 py-2 bg-blue-500 text-white rounded">Load Validators</button>
+                        <pre className="mt-4 bg-gray-100 p-4 rounded overflow-auto">{validators && JSON.stringify(validators, null, 2)}</pre>
+                    </section>
+
+                    <section className="max-w-xl mx-auto bg-white p-6 mt-8 rounded shadow">
+                        <h2 className="text-xl font-semibold mb-4">Block Lookup</h2>
+                        <div className="flex items-end gap-2">
+                            <input value={hashInput} onChange={e => setHashInput(e.target.value)} placeholder="block hash" className="flex-1 border p-2 rounded" />
+                            <button onClick={getBlock} className="px-4 py-2 bg-blue-500 text-white rounded">Find</button>
+                        </div>
+                        <pre className="mt-4 bg-gray-100 p-4 rounded overflow-auto">{blockInfo && JSON.stringify(blockInfo, null, 2)}</pre>
+                    </section>
+                </div>
+            );
         }
 
-        async function sendTransaction() {
-            const recipient = document.getElementById('recipient').value;
-            const amount = parseFloat(document.getElementById('amount').value);
-            const res = await fetch('/api/transactions', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ recipient, amount })
-            });
-            const json = await res.json();
-            transactionResultEl.textContent = JSON.stringify(json, null, 2);
-        }
-
-        async function mineTransactions() {
-            await fetch('/api/mine/transactions');
-            await refreshBlocks();
-        }
-
-        async function refreshBlocks() {
-            const res = await fetch('/api/blocks');
-            const json = await res.json();
-            blocksEl.textContent = JSON.stringify(json, null, 2);
-        }
-
-        async function storeAIData() {
-            const model = document.getElementById('model').value;
-            const description = document.getElementById('description').value;
-            const dataHash = document.getElementById('dataHash').value;
-            await fetch('/api/ai/store', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ model, description, dataHash })
-            });
-            await refreshBlocks();
-        }
-
-        async function getBalance() {
-            const addr = document.getElementById('balanceAddress').value || walletAddress;
-            if (!addr) return;
-            const res = await fetch(`/api/balance/${addr}`);
-            const json = await res.json();
-            balanceEl.textContent = JSON.stringify(json, null, 2);
-        }
-
-        async function loadValidators() {
-            const res = await fetch('/api/validators');
-            const json = await res.json();
-            validatorsEl.textContent = JSON.stringify(json, null, 2);
-        }
-
-        async function verifyChain() {
-            const res = await fetch('/api/verify');
-            const json = await res.json();
-            chainStatusEl.textContent = JSON.stringify(json, null, 2);
-            const blocks = await fetch('/api/blocks').then(r => r.json());
-            chainLengthEl.textContent = `${blocks.length} blocks`;
-        }
-
-        async function getBlock() {
-            const hash = document.getElementById('hashInput').value;
-            if (!hash) return;
-            const res = await fetch(`/api/block/${hash}`);
-            const json = await res.json();
-            blockInfoEl.textContent = JSON.stringify(json, null, 2);
-        }
-
-        document.getElementById('createWallet').onclick = createWallet;
-        document.getElementById('sendTransaction').onclick = sendTransaction;
-        document.getElementById('mine').onclick = mineTransactions;
-        document.getElementById('refreshBlocks').onclick = refreshBlocks;
-        document.getElementById('storeAI').onclick = storeAIData;
-        document.getElementById('getBalance').onclick = getBalance;
-        document.getElementById('loadValidators').onclick = loadValidators;
-        document.getElementById('verifyChain').onclick = verifyChain;
-        document.getElementById('getBlock').onclick = getBlock;
-
-        refreshBlocks();
-        verifyChain();
-        loadValidators();
+        ReactDOM.createRoot(document.getElementById('root')).render(<App />);
     </script>
 </body>
 </html>
