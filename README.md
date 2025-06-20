@@ -6,6 +6,7 @@ Tailwind CSS.  The project is focused on exploring how blockchain technology can
 be used alongside Artificial Intelligence. The chain can store AI dataset or
 model information so researchers can track and share their assets.
 
+
 ## Why AI?
 
 AI projects often need a trusted ledger to exchange data or rewards. SUNI aims
