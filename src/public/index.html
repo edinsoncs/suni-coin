@@ -12,6 +12,11 @@
         <h2 class="text-xl font-semibold mb-4">Wallet</h2>
         <button id="createWallet" class="px-4 py-2 bg-blue-500 text-white rounded">Create Wallet</button>
         <pre id="wallet" class="mt-4 bg-gray-100 p-4 rounded overflow-auto"></pre>
+        <div class="mt-4 flex items-end gap-2">
+            <input id="balanceAddress" placeholder="address" class="flex-1 border p-2 rounded" />
+            <button id="getBalance" class="px-4 py-2 bg-blue-500 text-white rounded">Balance</button>
+        </div>
+        <pre id="balance" class="mt-2 bg-gray-100 p-4 rounded overflow-auto"></pre>
     </section>
 
     <section class="mb-8 max-w-xl mx-auto bg-white p-6 rounded shadow">
@@ -45,15 +50,48 @@
         <pre id="blocks" class="mt-4 bg-gray-100 p-4 rounded overflow-auto"></pre>
     </section>
 
+    <section class="max-w-xl mx-auto bg-white p-6 mt-8 rounded shadow">
+        <h2 class="text-xl font-semibold mb-4">Chain</h2>
+        <div class="flex items-end gap-2 mb-2">
+            <button id="verifyChain" class="px-4 py-2 bg-green-600 text-white rounded">Verify</button>
+            <span id="chainLength" class="ml-auto text-sm text-gray-600"></span>
+        </div>
+        <pre id="chainStatus" class="bg-gray-100 p-4 rounded overflow-auto"></pre>
+    </section>
+
+    <section class="max-w-xl mx-auto bg-white p-6 mt-8 rounded shadow">
+        <h2 class="text-xl font-semibold mb-4">Validators</h2>
+        <button id="loadValidators" class="px-4 py-2 bg-blue-500 text-white rounded">Load Validators</button>
+        <pre id="validators" class="mt-4 bg-gray-100 p-4 rounded overflow-auto"></pre>
+    </section>
+
+    <section class="max-w-xl mx-auto bg-white p-6 mt-8 rounded shadow">
+        <h2 class="text-xl font-semibold mb-4">Block Lookup</h2>
+        <div class="flex items-end gap-2">
+            <input id="hashInput" placeholder="block hash" class="flex-1 border p-2 rounded" />
+            <button id="getBlock" class="px-4 py-2 bg-blue-500 text-white rounded">Find</button>
+        </div>
+        <pre id="blockInfo" class="mt-4 bg-gray-100 p-4 rounded overflow-auto"></pre>
+    </section>
+
     <script>
         const walletEl = document.getElementById('wallet');
         const transactionResultEl = document.getElementById('transactionResult');
         const blocksEl = document.getElementById('blocks');
+        const balanceEl = document.getElementById('balance');
+        const validatorsEl = document.getElementById('validators');
+        const chainStatusEl = document.getElementById('chainStatus');
+        const blockInfoEl = document.getElementById('blockInfo');
+        const chainLengthEl = document.getElementById('chainLength');
+        let walletAddress = '';
 
         async function createWallet() {
             const res = await fetch('/api/wallet/new', { method: 'POST' });
             const json = await res.json();
+            walletAddress = json.data.publicKey;
             walletEl.textContent = JSON.stringify(json.data, null, 2);
+            document.getElementById('balanceAddress').value = walletAddress;
+            await getBalance();
         }
 
         async function sendTransaction() {
@@ -91,13 +129,49 @@
             await refreshBlocks();
         }
 
+        async function getBalance() {
+            const addr = document.getElementById('balanceAddress').value || walletAddress;
+            if (!addr) return;
+            const res = await fetch(`/api/balance/${addr}`);
+            const json = await res.json();
+            balanceEl.textContent = JSON.stringify(json, null, 2);
+        }
+
+        async function loadValidators() {
+            const res = await fetch('/api/validators');
+            const json = await res.json();
+            validatorsEl.textContent = JSON.stringify(json, null, 2);
+        }
+
+        async function verifyChain() {
+            const res = await fetch('/api/verify');
+            const json = await res.json();
+            chainStatusEl.textContent = JSON.stringify(json, null, 2);
+            const blocks = await fetch('/api/blocks').then(r => r.json());
+            chainLengthEl.textContent = `${blocks.length} blocks`;
+        }
+
+        async function getBlock() {
+            const hash = document.getElementById('hashInput').value;
+            if (!hash) return;
+            const res = await fetch(`/api/block/${hash}`);
+            const json = await res.json();
+            blockInfoEl.textContent = JSON.stringify(json, null, 2);
+        }
+
         document.getElementById('createWallet').onclick = createWallet;
         document.getElementById('sendTransaction').onclick = sendTransaction;
         document.getElementById('mine').onclick = mineTransactions;
         document.getElementById('refreshBlocks').onclick = refreshBlocks;
         document.getElementById('storeAI').onclick = storeAIData;
+        document.getElementById('getBalance').onclick = getBalance;
+        document.getElementById('loadValidators').onclick = loadValidators;
+        document.getElementById('verifyChain').onclick = verifyChain;
+        document.getElementById('getBlock').onclick = getBlock;
 
         refreshBlocks();
+        verifyChain();
+        loadValidators();
     </script>
 </body>
 </html>
