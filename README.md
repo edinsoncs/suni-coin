@@ -65,6 +65,7 @@ Several helper methods are exposed through the `Blockchain` class:
 The chain is loaded from `src/storage/chain.json` on start and saved back to
 this file whenever new blocks are added, ensuring persistence between restarts.
 
+
 ### For Developers
 
 - Node.js 18 or later is recommended.
