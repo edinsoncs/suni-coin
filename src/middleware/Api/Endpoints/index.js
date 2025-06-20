@@ -25,6 +25,9 @@ r.route('/wallet/new')
 r.route('/wallet/access')
 .post(require('./wallet_access'));
 
+r.route('/wallet/stake')
+.post(require('./wallet_stake'));
+
 r.route('/mine')
 .post(require('./mine'));
 
