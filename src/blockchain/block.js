@@ -1,7 +1,5 @@
 import { gnHash } from '../modules/index.js';
 
-
-
 class Block{
         constructor(timestamp, previousHash, data, hash, validator){
                 this.timestamp = timestamp;

@@ -13,6 +13,7 @@ export default (app) => {
         // Static frontend files
         app.use(express.static(path.join(__dirname, '../public')));
 
+
         //localhost:{$port}/
         app.use('/', frontend);
 
