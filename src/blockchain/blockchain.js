@@ -119,6 +119,23 @@ class Blockchain {
                 return entries[0][0];
         }
 
+        getTransactionsForAddress(address){
+                const txs = [];
+                this.blocks.forEach((block, index) => {
+                        const { data = [] } = block;
+                        if(Array.isArray(data)){
+                                data.forEach((tx) => {
+                                        const involved = tx.input?.address === address ||
+                                                (Array.isArray(tx.outputs) && tx.outputs.some(o => o.address === address));
+                                        if(involved){
+                                                txs.push({ blockIndex: index, transaction: tx });
+                                        }
+                                });
+                        }
+                });
+                return txs;
+        }
+
 }
 
 export default Blockchain;

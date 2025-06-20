@@ -14,6 +14,7 @@ import validators from './validators.js';
 import verify from './verify.js';
 import blockGet from './block_get.js';
 import balance from './balance.js';
+import addressTransactions from './address_transactions.js';
 
 const r = express.Router();
 
@@ -44,6 +45,9 @@ r.route('/block/:hash')
 
 r.route('/balance/:address')
 .get(balance);
+
+r.route('/address/:address/transactions')
+.get(addressTransactions);
 
 r.route('/ai/list')
 .get(aiList);

@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
 
 const API_BASE = 'http://localhost:8000';
 
 export default function Home() {
+  const router = useRouter();
   const [wallet, setWallet] = useState(null);
   const [balanceAddress, setBalanceAddress] = useState('');
   const [balance, setBalance] = useState(null);
@@ -18,6 +20,7 @@ export default function Home() {
   const [validators, setValidators] = useState(null);
   const [hashInput, setHashInput] = useState('');
   const [blockInfo, setBlockInfo] = useState(null);
+  const [searchAddress, setSearchAddress] = useState('');
 
   useEffect(() => {
     refreshBlocks();
@@ -66,6 +69,11 @@ export default function Home() {
     refreshBlocks();
   }
 
+  function searchAddressPage() {
+    if (!searchAddress) return;
+    router.push(`/address/${searchAddress}`);
+  }
+
   async function refreshBlocks() {
     const res = await fetch(`${API_BASE}/api/blocks`);
     const json = await res.json();
@@ -100,6 +108,10 @@ export default function Home() {
       <p className="text-center mb-6">
         <a href="/blocks" className="text-blue-600 hover:underline">Browse Blocks</a>
       </p>
+      <div className="mb-6 max-w-xl mx-auto flex items-end gap-2">
+        <input value={searchAddress} onChange={e => setSearchAddress(e.target.value)} placeholder="search address" className="flex-1 border p-2 rounded" />
+        <button onClick={searchAddressPage} className="px-4 py-2 bg-blue-500 text-white rounded">Search</button>
+      </div>
 
       <section className="mb-8 max-w-xl mx-auto bg-white p-6 rounded shadow">
         <h2 className="text-xl font-semibold mb-4">Wallet</h2>
