@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SuniCoin Blockchain</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 2em; }
+        pre { background: #f7f7f7; padding: 1em; }
+        input { margin: 0.25em; }
+    </style>
+</head>
+<body>
+    <h1>SuniCoin Blockchain Explorer</h1>
+
+    <section>
+        <h2>Wallet</h2>
+        <button id="createWallet">Create Wallet</button>
+        <pre id="wallet"></pre>
+    </section>
+
+    <section>
+        <h2>Create Transaction</h2>
+        <input id="recipient" placeholder="recipient address" />
+        <input id="amount" type="number" placeholder="amount" />
+        <button id="sendTransaction">Send</button>
+        <pre id="transactionResult"></pre>
+    </section>
+
+    <section>
+        <button id="mine">Mine Transactions</button>
+    </section>
+
+    <section>
+        <h2>Blocks</h2>
+        <button id="refreshBlocks">Refresh Blocks</button>
+        <pre id="blocks"></pre>
+    </section>
+
+    <script>
+        const walletEl = document.getElementById('wallet');
+        const transactionResultEl = document.getElementById('transactionResult');
+        const blocksEl = document.getElementById('blocks');
+
+        async function createWallet() {
+            const res = await fetch('/api/wallet/new', { method: 'POST' });
+            const json = await res.json();
+            walletEl.textContent = JSON.stringify(json.data, null, 2);
+        }
+
+        async function sendTransaction() {
+            const recipient = document.getElementById('recipient').value;
+            const amount = parseFloat(document.getElementById('amount').value);
+            const res = await fetch('/api/transactions', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ recipient, amount })
+            });
+            const json = await res.json();
+            transactionResultEl.textContent = JSON.stringify(json, null, 2);
+        }
+
+        async function mineTransactions() {
+            await fetch('/api/mine/transactions');
+            await refreshBlocks();
+        }
+
+        async function refreshBlocks() {
+            const res = await fetch('/api/blocks');
+            const json = await res.json();
+            blocksEl.textContent = JSON.stringify(json, null, 2);
+        }
+
+        document.getElementById('createWallet').onclick = createWallet;
+        document.getElementById('sendTransaction').onclick = sendTransaction;
+        document.getElementById('mine').onclick = mineTransactions;
+        document.getElementById('refreshBlocks').onclick = refreshBlocks;
+
+        refreshBlocks();
+    </script>
+</body>
+</html>
