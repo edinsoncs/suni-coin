@@ -10,6 +10,10 @@ export default (req, res) => {
         const initTx = Transaction.create(blockchainWallet, wallet_new.publicKey, 20);
         const block = newBlockchain.addBlock([initTx], blockchainWallet);
 
+        // update wallet balances according to the blockchain
+        wallet_new.balance = wallet_new.calculateBalance();
+        blockchainWallet.balance = blockchainWallet.calculateBalance();
+
         res.json({
                 status: 'ok',
                 data: wallet_new.blockchainWallet(),
