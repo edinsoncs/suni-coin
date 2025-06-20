@@ -40,7 +40,8 @@ validator proportionally to their stake.
 
 Use `POST /api/ai/store` to record metadata about models or datasets on chain.
 Each block will contain fields `model`, `description` and `hash` so you can
-track AI assets over time.
+track AI assets over time. List all recorded AI blocks via
+`GET /api/ai/list`.
 
 ### API Endpoints
 
@@ -50,6 +51,7 @@ The REST API exposes several helpers for querying the chain:
 - `GET /api/verify` – check whether the chain is valid
 - `GET /api/block/:hash` – fetch a block by its hash
 - `GET /api/balance/:address` – show the balance of a wallet address
+- `GET /api/ai/list` – list all blocks that contain AI data
 
 ### Blockchain Utilities
 
