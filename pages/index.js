@@ -95,8 +95,11 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-10 px-4">
-      <h1 className="text-2xl font-bold mb-6 text-center">SuniCoin Blockchain Explorer</h1>
+    <div className="py-6">
+      <h1 className="text-2xl font-bold mb-2 text-center">SuniCoin Dashboard</h1>
+      <p className="text-center mb-6">
+        <a href="/blocks" className="text-blue-600 hover:underline">Browse Blocks</a>
+      </p>
 
       <section className="mb-8 max-w-xl mx-auto bg-white p-6 rounded shadow">
         <h2 className="text-xl font-semibold mb-4">Wallet</h2>
