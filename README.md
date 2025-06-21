@@ -83,6 +83,16 @@ validator is now selected based on stake when new blocks are mined.
 
 You can inspect pending transactions via `GET /api/mempool`.
 
+### Mining Transactions
+
+Pending transfers remain in the mempool until a block is produced. You can
+manually confirm them from the UI by pressing **Mine Transactions** or by
+calling `GET /api/mine/transactions`.
+
+For unattended nodes run `npm run auto-mine` in a separate terminal. The script
+checks the mempool every few seconds and mines a new block whenever pending
+transactions are detected.
+
 The chain is loaded from `src/storage/chain.json` on start and saved back to
 this file whenever new blocks are added, ensuring persistence between restarts.
 
