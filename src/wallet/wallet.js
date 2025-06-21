@@ -1,16 +1,29 @@
 import Transaction from './transaction.js';
 import { gnHash, elliptic } from '../modules/index.js';
+import * as bip39 from 'bip39';
+import * as bip32 from 'bip32';
+import crypto from 'crypto';
 
 const INIT_BL = 100;
 
 class Wallet{
 
-        constructor(blockchain, initBalance = INIT_BL){
+        constructor(blockchain, initBalance = INIT_BL, mnemonic = null, path = "m/44'/0'/0'/0/0"){
                 this.balance = initBalance;
-                this.keyPair  = elliptic.createKeyPair();
-                this.publicKey = this.keyPair.getPublic().encode('hex');
                 this.blockchain = blockchain;
                 this.stakeBalance = 0;
+
+                if(mnemonic){
+                        this.mnemonic = mnemonic;
+                } else {
+                        this.mnemonic = bip39.generateMnemonic();
+                }
+
+                const seed = bip39.mnemonicToSeedSync(this.mnemonic);
+                const node = bip32.fromSeed(seed);
+                const child = node.derivePath(path);
+                this.keyPair  = elliptic.fromPrivate(child.privateKey);
+                this.publicKey = this.keyPair.getPublic().encode('hex');
         }
 
 	toString(){
@@ -23,13 +36,21 @@ class Wallet{
 		 `;
 	}
 
-	blockchainWallet(){
-		const { balance, publicKey, keyPair } = this;
-		return {
-			'publicKey': publicKey.toString(),
-			'balance': balance,
-		}	
-	}
+        blockchainWallet(){
+                const { balance, publicKey, keyPair } = this;
+                return {
+                        'publicKey': publicKey.toString(),
+                        'balance': balance,
+                }
+        }
+
+        exportMnemonic(){
+                return this.mnemonic;
+        }
+
+        static fromMnemonic(blockchain, mnemonic, initBalance = INIT_BL, path = "m/44'/0'/0'/0/0"){
+                return new Wallet(blockchain, initBalance, mnemonic, path);
+        }
 
         sign(data){
                 return this.keyPair.sign(gnHash(data));
