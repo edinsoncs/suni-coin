@@ -102,7 +102,20 @@ blocks are created in real time.
 - Verify that the chain is valid and view the total block count
 - Search for a block by its hash
 - Browse blocks in a table via the new **Blocks** section
+- Manage your wallet from the **Profile** page and submit metadata to the chain
 - Search for an address to view its balance and transactions
+
+## Professional Overview
+
+BYDChain is designed to showcase core blockchain concepts in a clear and
+research‑friendly way. The validator selection process follows a simple
+Proof‑of‑Stake mechanism and the API provides endpoints for inspecting
+every aspect of the chain. Tokens are awarded when a wallet is created so
+new users can immediately experiment with transactions and staking.
+
+The Next.js frontend now includes additional pages for wallet management,
+browsing blocks and submitting metadata. Modern icons and webfonts give the
+UI a polished feel while keeping the codebase lightweight.
 
 ## Troubleshooting
 
