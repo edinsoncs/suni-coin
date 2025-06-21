@@ -21,7 +21,7 @@ export default function BlockDetail() {
   return (
     <div>
       <h1 className="text-xl font-bold mb-4 break-all">Block {hash}</h1>
-      <pre className="bg-gray-100 p-4 overflow-auto rounded">
+      <pre className="bg-gray-700 p-4 overflow-auto rounded">
         {JSON.stringify(block, null, 2)}
       </pre>
     </div>

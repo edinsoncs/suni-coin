@@ -21,14 +21,14 @@ export default function AddressPage() {
     <div>
       <h1 className="text-xl font-bold break-all mb-4">Address {address}</h1>
       {balance && (
-        <div className="bg-gray-100 p-4 rounded mb-4">
+        <div className="bg-gray-700 p-4 rounded mb-4">
           <p>Balance: {balance.balance}</p>
         </div>
       )}
       <h2 className="text-lg font-semibold mb-2">Transactions</h2>
       <div className="overflow-x-auto">
         <table className="min-w-full text-sm text-left">
-          <thead className="bg-gray-100">
+          <thead className="bg-gray-800">
             <tr>
               <th className="px-2 py-1">Block</th>
               <th className="px-2 py-1">Details</th>
@@ -39,7 +39,7 @@ export default function AddressPage() {
               <tr key={idx} className="border-b last:border-none">
                 <td className="px-2 py-1">{t.blockIndex}</td>
                 <td className="px-2 py-1">
-                  <pre className="whitespace-pre-wrap break-all">{JSON.stringify(t.transaction, null, 2)}</pre>
+                  <pre className="whitespace-pre-wrap break-all bg-gray-700 p-2 rounded">{JSON.stringify(t.transaction, null, 2)}</pre>
                 </td>
               </tr>
             ))}

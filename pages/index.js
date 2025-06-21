@@ -107,9 +107,9 @@ export default function Home() {
     <div className="py-6">
       <div className="text-center mb-6">
         <h1 className="text-3xl font-bold flex justify-center items-center gap-2 mb-2">
-          <FaCubes className="text-purple-600" /> BYDChain Dashboard
+          <FaCubes className="text-purple-400" /> BYDChain Dashboard
         </h1>
-        <p className="text-gray-700">Explore a simple Proof-of-Stake blockchain.</p>
+        <p className="text-gray-300">Explore a simple Proof-of-Stake blockchain.</p>
       </div>
       <p className="text-center mb-6">
         <a href="/blocks" className="text-blue-600 hover:underline">Browse Blocks</a>
@@ -119,33 +119,33 @@ export default function Home() {
         <button onClick={searchAddressPage} className="px-4 py-2 bg-blue-500 text-white rounded">Search</button>
       </div>
 
-      <section className="mb-8 max-w-xl mx-auto bg-white p-6 rounded shadow">
+      <section className="mb-8 max-w-xl mx-auto bg-gray-800 p-6 rounded shadow">
         <h2 className="text-xl font-semibold mb-4">Wallet</h2>
         <button onClick={createWallet} className="px-4 py-2 bg-blue-500 text-white rounded">Create Wallet</button>
-        <pre className="mt-4 bg-gray-100 p-4 rounded overflow-auto">{wallet && JSON.stringify(wallet, null, 2)}</pre>
+        <pre className="mt-4 bg-gray-700 p-4 rounded overflow-auto">{wallet && JSON.stringify(wallet, null, 2)}</pre>
         <div className="mt-4 flex items-end gap-2">
-          <input value={balanceAddress} onChange={e => setBalanceAddress(e.target.value)} placeholder="address" className="flex-1 border p-2 rounded" />
+          <input value={balanceAddress} onChange={e => setBalanceAddress(e.target.value)} placeholder="address" className="flex-1 border p-2 rounded bg-gray-700 text-gray-100" />
           <button onClick={() => getBalance()} className="px-4 py-2 bg-blue-500 text-white rounded">Balance</button>
         </div>
-        <pre className="mt-2 bg-gray-100 p-4 rounded overflow-auto">{balance && JSON.stringify(balance, null, 2)}</pre>
+        <pre className="mt-2 bg-gray-700 p-4 rounded overflow-auto">{balance && JSON.stringify(balance, null, 2)}</pre>
       </section>
 
-      <section className="mb-8 max-w-xl mx-auto bg-white p-6 rounded shadow">
+      <section className="mb-8 max-w-xl mx-auto bg-gray-800 p-6 rounded shadow">
         <h2 className="text-xl font-semibold mb-4">Create Transaction</h2>
         <div className="flex flex-col gap-2">
-          <input value={recipient} onChange={e => setRecipient(e.target.value)} placeholder="recipient address" className="border p-2 rounded" />
-          <input value={amount} onChange={e => setAmount(e.target.value)} type="number" placeholder="amount" className="border p-2 rounded" />
+          <input value={recipient} onChange={e => setRecipient(e.target.value)} placeholder="recipient address" className="border p-2 rounded bg-gray-700 text-gray-100" />
+          <input value={amount} onChange={e => setAmount(e.target.value)} type="number" placeholder="amount" className="border p-2 rounded bg-gray-700 text-gray-100" />
           <button onClick={sendTransaction} className="px-4 py-2 bg-green-500 text-white rounded">Send</button>
         </div>
-        <pre className="mt-4 bg-gray-100 p-4 rounded overflow-auto">{transactionResult && JSON.stringify(transactionResult, null, 2)}</pre>
+        <pre className="mt-4 bg-gray-700 p-4 rounded overflow-auto">{transactionResult && JSON.stringify(transactionResult, null, 2)}</pre>
       </section>
 
-      <section className="mb-8 max-w-xl mx-auto bg-white p-6 rounded shadow">
+      <section className="mb-8 max-w-xl mx-auto bg-gray-800 p-6 rounded shadow">
         <h2 className="text-xl font-semibold mb-4">Store AI Data</h2>
         <div className="flex flex-col gap-2">
-          <input value={model} onChange={e => setModel(e.target.value)} placeholder="model name" className="border p-2 rounded" />
-          <input value={description} onChange={e => setDescription(e.target.value)} placeholder="description" className="border p-2 rounded" />
-          <input value={dataHash} onChange={e => setDataHash(e.target.value)} placeholder="data hash" className="border p-2 rounded" />
+          <input value={model} onChange={e => setModel(e.target.value)} placeholder="model name" className="border p-2 rounded bg-gray-700 text-gray-100" />
+          <input value={description} onChange={e => setDescription(e.target.value)} placeholder="description" className="border p-2 rounded bg-gray-700 text-gray-100" />
+          <input value={dataHash} onChange={e => setDataHash(e.target.value)} placeholder="data hash" className="border p-2 rounded bg-gray-700 text-gray-100" />
           <button onClick={storeAIData} className="px-4 py-2 bg-indigo-500 text-white rounded">Save AI Data</button>
         </div>
       </section>
@@ -154,34 +154,34 @@ export default function Home() {
         <button onClick={mineTransactions} className="px-4 py-2 bg-purple-500 text-white rounded">Mine Transactions</button>
       </section>
 
-      <section className="max-w-xl mx-auto bg-white p-6 rounded shadow">
+      <section className="max-w-xl mx-auto bg-gray-800 p-6 rounded shadow">
         <h2 className="text-xl font-semibold mb-4">Blocks</h2>
         <button onClick={refreshBlocks} className="px-4 py-2 bg-blue-500 text-white rounded">Refresh Blocks</button>
-        <pre className="mt-4 bg-gray-100 p-4 rounded overflow-auto">{JSON.stringify(blocks, null, 2)}</pre>
+        <pre className="mt-4 bg-gray-700 p-4 rounded overflow-auto">{JSON.stringify(blocks, null, 2)}</pre>
       </section>
 
-      <section className="max-w-xl mx-auto bg-white p-6 mt-8 rounded shadow">
+      <section className="max-w-xl mx-auto bg-gray-800 p-6 mt-8 rounded shadow">
         <h2 className="text-xl font-semibold mb-4">Chain</h2>
         <div className="flex items-end gap-2 mb-2">
           <button onClick={verifyChain} className="px-4 py-2 bg-green-600 text-white rounded">Verify</button>
-          <span className="ml-auto text-sm text-gray-600">{chainLength ? `${chainLength} blocks` : ''}</span>
+          <span className="ml-auto text-sm text-gray-400">{chainLength ? `${chainLength} blocks` : ''}</span>
         </div>
-        <pre className="bg-gray-100 p-4 rounded overflow-auto">{chainStatus && JSON.stringify(chainStatus, null, 2)}</pre>
+        <pre className="bg-gray-700 p-4 rounded overflow-auto">{chainStatus && JSON.stringify(chainStatus, null, 2)}</pre>
       </section>
 
-      <section className="max-w-xl mx-auto bg-white p-6 mt-8 rounded shadow">
+      <section className="max-w-xl mx-auto bg-gray-800 p-6 mt-8 rounded shadow">
         <h2 className="text-xl font-semibold mb-4">Validators</h2>
         <button onClick={loadValidators} className="px-4 py-2 bg-blue-500 text-white rounded">Load Validators</button>
-        <pre className="mt-4 bg-gray-100 p-4 rounded overflow-auto">{validators && JSON.stringify(validators, null, 2)}</pre>
+        <pre className="mt-4 bg-gray-700 p-4 rounded overflow-auto">{validators && JSON.stringify(validators, null, 2)}</pre>
       </section>
 
-      <section className="max-w-xl mx-auto bg-white p-6 mt-8 rounded shadow">
+      <section className="max-w-xl mx-auto bg-gray-800 p-6 mt-8 rounded shadow">
         <h2 className="text-xl font-semibold mb-4">Block Lookup</h2>
         <div className="flex items-end gap-2">
-          <input value={hashInput} onChange={e => setHashInput(e.target.value)} placeholder="block hash" className="flex-1 border p-2 rounded" />
+          <input value={hashInput} onChange={e => setHashInput(e.target.value)} placeholder="block hash" className="flex-1 border p-2 rounded bg-gray-700 text-gray-100" />
           <button onClick={getBlock} className="px-4 py-2 bg-blue-500 text-white rounded">Find</button>
         </div>
-        <pre className="mt-4 bg-gray-100 p-4 rounded overflow-auto">{blockInfo && JSON.stringify(blockInfo, null, 2)}</pre>
+        <pre className="mt-4 bg-gray-700 p-4 rounded overflow-auto">{blockInfo && JSON.stringify(blockInfo, null, 2)}</pre>
       </section>
     </div>
   );

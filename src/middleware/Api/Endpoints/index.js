@@ -16,6 +16,7 @@ import blockGet from './block_get.js';
 import balance from './balance.js';
 import addressTransactions from './address_transactions.js';
 import metrics from './metrics.js';
+import nodes from './nodes.js';
 
 const r = express.Router();
 
@@ -55,6 +56,9 @@ r.route('/ai/list')
 
 r.route('/metrics')
 .get(metrics);
+
+r.route('/nodes')
+  .get(nodes);
 
 
 /**
