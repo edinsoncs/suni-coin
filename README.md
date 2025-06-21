@@ -46,6 +46,14 @@ Each block will contain fields `model`, `description` and `hash` so you can
 track AI assets over time. List all recorded AI blocks via
 `GET /api/ai/list`.
 
+### Smart Contract Scripts
+
+Transactions may include a small JavaScript snippet stored in the `script`
+field. When new blocks are validated these scripts are executed in a sandboxed
+VM. The block is rejected if any script returns `false`. This allows simple
+conditions such as enforcing minimum payments or custom rules without a full
+virtual machine.
+
 ### API Endpoints
 
 The REST API exposes several helpers for querying the chain:

@@ -5,13 +5,14 @@ const REWARD = 1;
 
 class Transaction{
 
-	constructor(){
-		this.id = uuidv1();
-		this.input = null;
-		this.outputs = [];
-	}
+        constructor(){
+                this.id = uuidv1();
+                this.input = null;
+                this.outputs = [];
+                this.script = null;
+        }
 
-	static create(senderWallet, receptAddress, amount){
+        static create(senderWallet, receptAddress, amount, script = null){
 
 		const { balance, publicKey } = senderWallet;
 
@@ -19,7 +20,8 @@ class Transaction{
 			throw Error(`Tu envío es: ${amount}, excede tu balance`);
 		}
 
-		const tr = new Transaction();
+                const tr = new Transaction();
+                tr.script = script;
 		
 		tr.outputs.push(...[
 			{
@@ -32,32 +34,38 @@ class Transaction{
 			}
 		]);
 
-		tr.input = Transaction.sign(tr, senderWallet);
+                tr.input = Transaction.sign(tr, senderWallet);
 
 		return tr;
 
 	}
 
-	static reward(minerWallet, blockchainWallet){
-		return this.create(blockchainWallet, minerWallet.publicKey, REWARD);
-	}
+        static reward(minerWallet, blockchainWallet){
+                return this.create(blockchainWallet, minerWallet.publicKey, REWARD, null);
+        }
 
 
-	static verify(transaction){
-		const { input: { address, signature }, outputs } = transaction;
-   		return elliptic.verifySignature(address, signature, outputs);
-	}
+        static verify(transaction){
+                const { input: { address, signature }, outputs, script } = transaction;
+                return elliptic.verifySignature(
+                        address,
+                        signature,
+                        JSON.stringify(outputs) + (script || '')
+                );
+        }
 
-	static sign(transaction, senderWallet){
-		return {
-			timestamp: Date.now(),
-			amount: senderWallet.balance,
-			address: senderWallet.publicKey,
-			signature: senderWallet.sign(transaction.outputs)
-		}
-	}
+        static sign(transaction, senderWallet){
+                return {
+                        timestamp: Date.now(),
+                        amount: senderWallet.balance,
+                        address: senderWallet.publicKey,
+                        signature: senderWallet.sign(
+                                JSON.stringify(transaction.outputs) + (transaction.script || '')
+                        )
+                };
+        }
 
-	update(senderWallet, receptAddress, amount) {
+        update(senderWallet, receptAddress, amount, script = null) {
 
 		const sendOutput = this.outputs.find((ouput) =>
 		ouput.address === senderWallet.publicKey);
@@ -70,7 +78,8 @@ class Transaction{
 			amount,
 			address: receptAddress			
 		});
-		this.input = Transaction.sign(this, senderWallet);
+                if(script) this.script = script;
+                this.input = Transaction.sign(this, senderWallet);
 
 		return this;
 

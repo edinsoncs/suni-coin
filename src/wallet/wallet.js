@@ -45,7 +45,7 @@ class Wallet{
         }
 
 
-	createTransaction(receptAddress, amount){
+        createTransaction(receptAddress, amount, script = null){
 		const { blockchain: { memoryPool } } = this;
 
 		const balance = this.calculateBalance();
@@ -54,13 +54,13 @@ class Wallet{
 		   throw Error(`El monto es: ${amount} superior al balance: ${balance}`);
 		}
 
-		let tr = memoryPool.find(this.publicKey);
-		if(tr){
-			tr.update(this, receptAddress, amount);
-		} else {
-			tr = Transaction.create(this, receptAddress, amount);
-			memoryPool.addOrUpdate(tr);
-		}
+                let tr = memoryPool.find(this.publicKey);
+                if(tr){
+                        tr.update(this, receptAddress, amount, script);
+                } else {
+                        tr = Transaction.create(this, receptAddress, amount, script);
+                        memoryPool.addOrUpdate(tr);
+                }
 
 		return tr;
 
