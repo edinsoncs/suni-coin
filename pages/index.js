@@ -12,6 +12,7 @@ export default function Home() {
   const [recipient, setRecipient] = useState('');
   const [amount, setAmount] = useState('');
   const [transactionResult, setTransactionResult] = useState(null);
+  const [transactionInfo, setTransactionInfo] = useState(null);
   const [model, setModel] = useState('');
   const [description, setDescription] = useState('');
   const [dataHash, setDataHash] = useState('');
@@ -54,6 +55,13 @@ export default function Home() {
     });
     const json = await res.json();
     setTransactionResult(json);
+    if (json.id) {
+      const infoRes = await fetch(`${API_BASE}/api/transaction/${json.id}`);
+      if (infoRes.ok) {
+        const infoJson = await infoRes.json();
+        setTransactionInfo(infoJson);
+      }
+    }
   }
 
   async function storeAIData() {
@@ -137,7 +145,25 @@ export default function Home() {
           <input value={amount} onChange={e => setAmount(e.target.value)} type="number" placeholder="amount" className="border p-2 rounded bg-gray-700 text-gray-100" />
           <button onClick={sendTransaction} className="px-4 py-2 bg-green-500 text-white rounded">Send</button>
         </div>
-        <pre className="mt-4 bg-gray-700 p-4 rounded overflow-auto">{transactionResult && JSON.stringify(transactionResult, null, 2)}</pre>
+        {transactionResult && (
+          <div className="mt-4 bg-gray-700 p-4 rounded">
+            <p className="mb-2">Transaction submitted.</p>
+            <p>
+              ID:{' '}
+              <a
+                href={`/tx/${transactionResult.id}`}
+                className="text-blue-400 underline"
+              >
+                {transactionResult.id}
+              </a>
+            </p>
+            {transactionInfo && (
+              <pre className="mt-2 overflow-auto">
+                {JSON.stringify(transactionInfo, null, 2)}
+              </pre>
+            )}
+          </div>
+        )}
       </section>
 
       <section className="mb-8 max-w-xl mx-auto bg-gray-800 p-6 rounded shadow">
