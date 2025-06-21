@@ -10,6 +10,7 @@
     "start:3": "PORT=3002 P2P_PORT=6002 PORTS=ws:localhost:6000 node ./src/service/index.js",
     "start:4": "PORT=3003 P2P_PORT=6003 PORTS=ws:localhost:6000 node ./src/service/index.js",
     "start:ex": "node ./ejemplo_mine.js",
+    "auto-mine": "node ./autoMiner.js",
     "nodemon": "nodemon ./src/service/index.js",
     "front": "next dev -p 3000",
     "dev": "node ./dev.js",
