@@ -1,5 +1,5 @@
 import Block from '../block.js';
-import { elliptic } from '../../modules/index.js';
+import { elliptic, runScript } from '../../modules/index.js';
 
 export default(blockchain) => {
 	const [genesisBlock, ...blocks] = blockchain;
@@ -23,6 +23,17 @@ export default(blockchain) => {
                 }
                 if(!elliptic.verifySignature(validator, signature, hash)){
                         throw Error('La firma del bloque es invalida');
+                }
+
+                if(Array.isArray(data)){
+                        for(const tx of data){
+                                if(tx.script){
+                                        const ok = runScript(tx.script, { tx });
+                                        if(!ok){
+                                                throw Error('Script de transaccion invalido');
+                                        }
+                                }
+                        }
                 }
         }
 
