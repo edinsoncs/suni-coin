@@ -15,6 +15,7 @@ import verify from './verify.js';
 import blockGet from './block_get.js';
 import balance from './balance.js';
 import addressTransactions from './address_transactions.js';
+import metrics from './metrics.js';
 
 const r = express.Router();
 
@@ -51,6 +52,9 @@ r.route('/address/:address/transactions')
 
 r.route('/ai/list')
 .get(aiList);
+
+r.route('/metrics')
+.get(metrics);
 
 
 /**
