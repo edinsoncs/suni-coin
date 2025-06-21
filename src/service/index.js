@@ -10,6 +10,7 @@ import middleware from '../middleware/index.js';
 const app = express();
 const { PORT = 8000 } = process.env;
 global.newBlockchain = new Blockchain();
+global.wallets = [];
 //global.newWallet = new Wallet(newBlockchain, 0);
 global.newWalletMiner = new Wallet(newBlockchain, 0);
 global.p2pAction = new P2PAction(newBlockchain);
