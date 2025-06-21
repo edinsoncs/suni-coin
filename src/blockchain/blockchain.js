@@ -119,6 +119,23 @@ class Blockchain {
                 return entries[0][0];
         }
 
+        getStats(){
+                const chainLength = this.blocks.length;
+                let totalTransactions = 0;
+                this.blocks.forEach(({ data }) => {
+                        if(Array.isArray(data)){
+                                totalTransactions += data.length;
+                        } else if(data && data !== 'S-U-N-I') {
+                                totalTransactions += 1;
+                        }
+                });
+                return {
+                        chainLength,
+                        totalTransactions,
+                        validators: this.getValidators()
+                };
+        }
+
         getTransactionsForAddress(address){
                 const txs = [];
                 this.blocks.forEach((block, index) => {

@@ -64,6 +64,7 @@ The REST API exposes several helpers for querying the chain:
 - `GET /api/balance/:address` – show the balance of a wallet address
 - `GET /api/address/:address/transactions` – list all transactions involving an address
 - `GET /api/ai/list` – list all blocks that contain AI data
+- `GET /api/metrics` – retrieve overall blockchain statistics
 
 ### Blockchain Utilities
 
