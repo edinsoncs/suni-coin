@@ -27,7 +27,7 @@ export default function Profile() {
           value={password}
           onChange={e => setPassword(e.target.value)}
           placeholder="password"
-          className="border p-2 rounded"
+          className="border p-2 rounded bg-gray-700 text-gray-100"
         />
         <button
           onClick={createWallet}
@@ -37,7 +37,7 @@ export default function Profile() {
         </button>
       </div>
       {wallet && (
-        <pre className="bg-gray-100 p-4 rounded overflow-auto">
+        <pre className="bg-gray-700 p-4 rounded overflow-auto">
           {JSON.stringify(wallet, null, 2)}
         </pre>
       )}
