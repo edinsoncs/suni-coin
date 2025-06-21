@@ -16,6 +16,7 @@ import mempool from './mempool.js';
 import validators from './validators.js';
 import verify from './verify.js';
 import blockGet from './block_get.js';
+import transactionGet from './transaction_get.js';
 import balance from './balance.js';
 import addressTransactions from './address_transactions.js';
 import metrics from './metrics.js';
@@ -47,6 +48,9 @@ r.route('/verify')
 
 r.route('/block/:hash')
 .get(blockGet);
+
+r.route('/transaction/:id')
+  .get(transactionGet);
 
 r.route('/balance/:address')
 .get(balance);
