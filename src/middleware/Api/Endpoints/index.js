@@ -5,6 +5,9 @@ import mineTransactions from './transactions_mine.js';
 import walletNew from './wallet_new.js';
 import walletAccess from './wallet_access.js';
 import walletStake from './wallet_stake.js';
+import walletList from './wallet_list.js';
+import walletExport from './wallet_export.js';
+import walletImport from './wallet_import.js';
 import mine from './mine.js';
 import transactionsNew from './transactions_new.js';
 import aiStore from './ai_store.js';
@@ -60,6 +63,9 @@ r.route('/metrics')
 r.route('/nodes')
   .get(nodes);
 
+r.route('/wallet/list')
+  .get(walletList);
+
 
 /**
  * Methods Post
@@ -73,6 +79,12 @@ r.route('/wallet/access')
 
 r.route('/wallet/stake')
 .post(walletStake);
+
+r.route('/wallet/export')
+  .post(walletExport);
+
+r.route('/wallet/import')
+  .post(walletImport);
 
 
 r.route('/mine')
