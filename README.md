@@ -65,6 +65,7 @@ The REST API exposes several helpers for querying the chain:
 - `GET /api/address/:address/transactions` – list all transactions involving an address
 - `GET /api/ai/list` – list all blocks that contain AI data
 - `GET /api/metrics` – retrieve overall blockchain statistics
+- `GET /api/metrics/extended` – retrieve advanced network statistics
 
 ### Blockchain Utilities
 
@@ -77,6 +78,7 @@ Several helper methods are exposed through the `Blockchain` class:
   for a wallet.
 - `getStakeOf(key)` returns how many tokens a validator has staked.
 - `getValidators()` gives the full validator table.
+- `getExtendedStats()` provides advanced chain metrics.
 
 Validators are persisted to `src/storage/validators.json` and a random
 validator is now selected based on stake when new blocks are mined.
