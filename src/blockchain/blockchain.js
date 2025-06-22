@@ -153,6 +153,30 @@ class Blockchain {
                 return txs;
         }
 
+        getBlockByIndex(index){
+                if(index < 0 || index >= this.blocks.length) return null;
+                return this.blocks[index];
+        }
+
+        getAllTransactions(){
+                const txs = [];
+                this.blocks.forEach(({ data = [] }, idx) => {
+                        if(Array.isArray(data)){
+                                data.forEach(tx => txs.push({ blockIndex: idx, transaction: tx }));
+                        }
+                });
+                return txs;
+        }
+
+        getAverageBlockTime(){
+                if(this.blocks.length < 2) return 0;
+                let totalDiff = 0;
+                for(let i = 1; i < this.blocks.length; i++){
+                        totalDiff += this.blocks[i].timestamp - this.blocks[i-1].timestamp;
+                }
+                return totalDiff / (this.blocks.length - 1);
+        }
+
 }
 
 export default Blockchain;

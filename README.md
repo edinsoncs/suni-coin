@@ -77,6 +77,9 @@ Several helper methods are exposed through the `Blockchain` class:
   for a wallet.
 - `getStakeOf(key)` returns how many tokens a validator has staked.
 - `getValidators()` gives the full validator table.
+- `getBlockByIndex(i)` retrieves a block at a given chain index.
+- `getAllTransactions()` returns every transaction with its block index.
+- `getAverageBlockTime()` computes the average time difference between blocks in milliseconds.
 
 Validators are persisted to `src/storage/validators.json` and a random
 validator is now selected based on stake when new blocks are mined.
