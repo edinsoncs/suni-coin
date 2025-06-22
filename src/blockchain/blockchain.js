@@ -153,6 +153,37 @@ class Blockchain {
                 return txs;
         }
 
+        /**
+         * Retrieve a block by its index in the chain
+         * @param {number} index
+         * @returns {Block|null}
+         */
+        getBlockByIndex(index){
+                if(index < 0 || index >= this.blocks.length) return null;
+                return this.blocks[index];
+        }
+
+        /**
+         * Check if an address currently has staking power
+         * @param {string} address
+         * @returns {boolean}
+         */
+        isValidator(address){
+                return Boolean(this.validators[address] && this.validators[address] > 0);
+        }
+
+        /**
+         * Get all transactions contained in the blockchain
+         * @returns {Array}
+         */
+        getAllTransactions(){
+                const txs = [];
+                this.blocks.forEach(({ data = [] }) => {
+                        if(Array.isArray(data)) txs.push(...data);
+                });
+                return txs;
+        }
+
 }
 
 export default Blockchain;
