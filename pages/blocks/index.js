@@ -15,7 +15,7 @@ export default function BlocksPage() {
       <h1 className="text-2xl font-bold mb-4">Blocks</h1>
       <div className="overflow-x-auto">
         <table className="min-w-full text-sm text-left">
-          <thead className="bg-gray-800">
+          <thead className="bg-black border border-gray-700">
             <tr>
               <th className="px-2 py-1">#</th>
               <th className="px-2 py-1">Hash</th>
