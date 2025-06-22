@@ -65,7 +65,7 @@ export default function Profile() {
           value={password}
           onChange={e => setPassword(e.target.value)}
           placeholder="password"
-          className="border p-2 rounded bg-gray-700 text-gray-100"
+          className="border p-2 rounded bg-gray-900 text-gray-100"
         />
         <button
           onClick={createWallet}
@@ -80,7 +80,7 @@ export default function Profile() {
           value={mnemonic}
           onChange={e => setMnemonic(e.target.value)}
           placeholder="mnemonic"
-          className="border p-2 rounded bg-gray-700 text-gray-100"
+          className="border p-2 rounded bg-gray-900 text-gray-100"
         />
         <button
           onClick={importWallet}
@@ -93,7 +93,7 @@ export default function Profile() {
       <section className="mb-6">
         <h2 className="text-xl font-semibold mb-2">My Wallets</h2>
         {wallets.map(w => (
-          <div key={w.publicKey} className="bg-gray-800 p-3 rounded mb-2 flex items-center gap-2">
+          <div key={w.publicKey} className="bg-black border border-gray-700 p-3 rounded mb-2 flex items-center gap-2">
             <button
               onClick={() => selectWallet(w.publicKey)}
               className="px-2 py-1 bg-green-500 text-white rounded"
@@ -114,7 +114,7 @@ export default function Profile() {
       {selected && (
         <section>
           <h2 className="text-xl font-semibold mb-2">Transactions</h2>
-          <pre className="bg-gray-700 p-4 rounded overflow-auto">
+          <pre className="bg-gray-900 p-4 rounded overflow-auto">
             {JSON.stringify(transactions, null, 2)}
           </pre>
         </section>

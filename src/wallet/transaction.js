@@ -14,25 +14,33 @@ class Transaction{
 
         static create(senderWallet, receptAddress, amount, script = null){
 
-		const { balance, publicKey } = senderWallet;
+                const { balance, publicKey } = senderWallet;
+                const amt = Number(amount);
 
-		if(amount > balance){
-			throw Error(`Tu envío es: ${amount}, excede tu balance`);
-		}
+                if(amt <= 0){
+                        throw Error('El monto debe ser mayor a cero');
+                }
+                if(receptAddress === publicKey){
+                        throw Error('No puedes enviarte fondos a ti mismo');
+                }
+
+                if(amt > balance){
+                        throw Error(`Tu envío es: ${amt}, excede tu balance`);
+                }
 
                 const tr = new Transaction();
                 tr.script = script;
 		
-		tr.outputs.push(...[
-			{
-				amount: balance - amount,
-				address: publicKey
-			},
-			{
-				amount,
-				address: receptAddress
-			}
-		]);
+                tr.outputs.push(...[
+                        {
+                                amount: balance - amt,
+                                address: publicKey
+                        },
+                        {
+                                amount: amt,
+                                address: receptAddress
+                        }
+                ]);
 
                 tr.input = Transaction.sign(tr, senderWallet);
 
@@ -67,17 +75,23 @@ class Transaction{
 
         update(senderWallet, receptAddress, amount, script = null) {
 
-		const sendOutput = this.outputs.find((ouput) =>
-		ouput.address === senderWallet.publicKey);
+                const sendOutput = this.outputs.find((ouput) =>
+                ouput.address === senderWallet.publicKey);
+                const amt = Number(amount);
 
-		if(amount > sendOutput.amount) 
-			throw Error(`Tu envío es: ${amount}, excede tu balance`);
+                if(amt <= 0)
+                        throw Error('El monto debe ser mayor a cero');
+                if(receptAddress === senderWallet.publicKey)
+                        throw Error('No puedes enviarte fondos a ti mismo');
 
-		sendOutput.amount -= amount;
-		this.outputs.push({
-			amount,
-			address: receptAddress			
-		});
+                if(amt > sendOutput.amount)
+                        throw Error(`Tu envío es: ${amt}, excede tu balance`);
+
+                sendOutput.amount -= amt;
+                this.outputs.push({
+                        amount: amt,
+                        address: receptAddress
+                });
                 if(script) this.script = script;
                 this.input = Transaction.sign(this, senderWallet);
 

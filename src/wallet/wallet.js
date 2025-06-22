@@ -67,19 +67,26 @@ class Wallet{
 
 
         createTransaction(receptAddress, amount, script = null){
-		const { blockchain: { memoryPool } } = this;
+                const { blockchain: { memoryPool } } = this;
 
-		const balance = this.calculateBalance();
+                const balance = this.calculateBalance();
+                const amt = Number(amount);
 
-		if(amount > balance){
-		   throw Error(`El monto es: ${amount} superior al balance: ${balance}`);
-		}
+                if(amt <= 0){
+                   throw Error('El monto debe ser mayor a cero');
+                }
+                if(receptAddress === this.publicKey){
+                   throw Error('No puedes enviarte fondos a ti mismo');
+                }
+                if(amt > balance){
+                   throw Error(`El monto es: ${amt} superior al balance: ${balance}`);
+                }
 
                 let tr = memoryPool.find(this.publicKey);
                 if(tr){
-                        tr.update(this, receptAddress, amount, script);
+                        tr.update(this, receptAddress, amt, script);
                 } else {
-                        tr = Transaction.create(this, receptAddress, amount, script);
+                        tr = Transaction.create(this, receptAddress, amt, script);
                         memoryPool.addOrUpdate(tr);
                 }
 

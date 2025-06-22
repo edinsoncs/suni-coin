@@ -27,7 +27,7 @@ export default function TransactionDetail() {
   return (
     <div className="max-w-xl mx-auto py-6">
       <h1 className="text-2xl font-bold mb-4 break-all">Transaction {id}</h1>
-      <pre className="bg-gray-700 p-4 rounded overflow-auto">
+      <pre className="bg-gray-900 p-4 rounded overflow-auto">
         {JSON.stringify(info, null, 2)}
       </pre>
     </div>

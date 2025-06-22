@@ -3,8 +3,8 @@ import { FaHome, FaCubes, FaUser, FaDatabase, FaTools } from 'react-icons/fa';
 
 export default function Layout({ children }) {
   return (
-    <div className="min-h-screen bg-gray-900 text-gray-100">
-      <header className="bg-gray-800 text-white">
+    <div className="min-h-screen bg-black text-white">
+      <header className="bg-black border-b border-gray-700">
         <nav className="max-w-5xl mx-auto flex justify-between items-center p-4">
           <Link href="/" className="font-semibold hover:underline flex items-center gap-1">
             <FaHome /> Home

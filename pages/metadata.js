@@ -28,19 +28,19 @@ export default function Metadata() {
           value={model}
           onChange={e => setModel(e.target.value)}
           placeholder="model name"
-          className="border p-2 rounded bg-gray-700 text-gray-100"
+          className="border p-2 rounded bg-gray-900 text-gray-100"
         />
         <input
           value={description}
           onChange={e => setDescription(e.target.value)}
           placeholder="description"
-          className="border p-2 rounded bg-gray-700 text-gray-100"
+          className="border p-2 rounded bg-gray-900 text-gray-100"
         />
         <input
           value={dataHash}
           onChange={e => setDataHash(e.target.value)}
           placeholder="data hash"
-          className="border p-2 rounded bg-gray-700 text-gray-100"
+          className="border p-2 rounded bg-gray-900 text-gray-100"
         />
         <button
           onClick={storeData}
@@ -50,7 +50,7 @@ export default function Metadata() {
         </button>
       </div>
       {result && (
-        <pre className="mt-4 bg-gray-700 p-4 rounded overflow-auto">
+        <pre className="mt-4 bg-gray-900 p-4 rounded overflow-auto">
           {JSON.stringify(result, null, 2)}
         </pre>
       )}
