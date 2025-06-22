@@ -1,9 +1,10 @@
 import { MESSAGE } from '../../../service/p2p.js';
+import { currentWallet, p2pAction } from '../../../service/context.js';
 
 export default (req, res, next) => {
         const { body: { recipient, amount, script }} = req;
         try{
-                const tr = wallet_new.createTransaction(recipient, amount, script);
+                const tr = currentWallet.createTransaction(recipient, amount, script);
                 p2pAction.broadcast(MESSAGE.TR, tr);
                 res.json(tr);
 	}catch(error){

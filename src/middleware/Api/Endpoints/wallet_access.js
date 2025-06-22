@@ -1,19 +1,18 @@
-import Wallet from '../../../wallet/index.js';
+import { currentWallet } from '../../../service/context.js';
 
+export default (req, res) => {
 
-export default (req, res, next) => {
+        const my_wallet = currentWallet.sign(req.body.private);
 
-	const my_wallet = wallet_new.sign(req.body.private);
+        console.log(my_wallet);
 
-	console.log(my_wallet);
-
-	res.json({
-		status: 'ok',
-		data: {
-			publicKey: wallet_new.publicKey,
-			balance: wallet_new.balance
-		}
-	});
+        res.json({
+                status: 'ok',
+                data: {
+                        publicKey: currentWallet.publicKey,
+                        balance: currentWallet.balance
+                }
+        });
 
 
 };

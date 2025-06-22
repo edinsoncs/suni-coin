@@ -1,6 +1,8 @@
-export default (req, res, next) => {
+import { blockchain } from '../../../service/context.js';
 
-	const { memoryPool: { transactions } }  = Blockchain;
-	res.json(transactions);
+export default (req, res) => {
+
+        const { memoryPool: { transactions } }  = blockchain;
+        res.json(transactions);
 
 };

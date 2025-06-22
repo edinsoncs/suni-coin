@@ -1,4 +1,5 @@
+import { wallets } from '../../../service/context.js';
+
 export default (req, res) => {
-    const wallets = global.wallets || [];
     res.json(wallets.map(w => w.blockchainWallet()));
 };

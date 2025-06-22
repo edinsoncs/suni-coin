@@ -1,6 +1,8 @@
+import { blockchain } from '../../../service/context.js';
+
 export default (req, res) => {
     const { hash } = req.params;
-    const block = newBlockchain.findBlockByHash(hash);
+    const block = blockchain.findBlockByHash(hash);
     if(block) {
         res.json(block);
     } else {

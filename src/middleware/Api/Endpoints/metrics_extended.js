@@ -1,4 +1,6 @@
+import { blockchain } from '../../../service/context.js';
+
 export default (req, res) => {
-    const stats = newBlockchain.getExtendedStats();
+    const stats = blockchain.getExtendedStats();
     res.json(stats);
 };
