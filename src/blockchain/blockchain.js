@@ -184,6 +184,40 @@ class Blockchain {
                 return txs;
         }
 
+        /**
+         * Calculate extended network statistics
+         * @returns {Object}
+         */
+        getExtendedStats(){
+                const stats = this.getStats();
+
+                if(this.blocks.length > 1){
+                        const intervals = [];
+                        for(let i = 1; i < this.blocks.length; i++){
+                                intervals.push(this.blocks[i].timestamp - this.blocks[i - 1].timestamp);
+                        }
+                        stats.avgBlockTime = intervals.reduce((t, v) => t + v, 0) / intervals.length;
+                } else {
+                        stats.avgBlockTime = 0;
+                }
+
+                stats.totalStake = Object.values(this.validators)
+                        .reduce((t, v) => t + Number(v), 0);
+
+                stats.mempoolSize = this.memoryPool.transactions.length;
+
+                const addresses = new Set();
+                this.getAllTransactions().forEach(tx => {
+                        if(tx.input?.address) addresses.add(tx.input.address);
+                        if(Array.isArray(tx.outputs)){
+                                tx.outputs.forEach(o => addresses.add(o.address));
+                        }
+                });
+                stats.uniqueAddresses = addresses.size;
+
+                return stats;
+        }
+
 }
 
 export default Blockchain;

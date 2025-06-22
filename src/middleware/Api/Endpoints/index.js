@@ -20,6 +20,7 @@ import transactionGet from './transaction_get.js';
 import balance from './balance.js';
 import addressTransactions from './address_transactions.js';
 import metrics from './metrics.js';
+import metricsExtended from './metrics_extended.js';
 import nodes from './nodes.js';
 
 const r = express.Router();
@@ -63,6 +64,9 @@ r.route('/ai/list')
 
 r.route('/metrics')
 .get(metrics);
+
+r.route('/metrics/extended')
+  .get(metricsExtended);
 
 r.route('/nodes')
   .get(nodes);
