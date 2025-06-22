@@ -37,9 +37,22 @@ class Blockchain {
                         typeof validatorWallet === 'string'
                                 ? validatorWallet
                                 : validatorWallet.publicKey;
+
                 if(!this.validators[vKey]){
-                        throw Error('Validator has no stake');
+                        if(Object.keys(this.validators).length === 0){
+                                this.registerStake(vKey, 1);
+                        } else {
+                                throw Error('Validator has no stake');
+                        }
                 }
+
+                if(Object.keys(this.validators).length > 0){
+                        const selected = this.selectValidator();
+                        if(selected && selected !== vKey){
+                                throw Error('Validator not selected');
+                        }
+                }
+
                 const previousBlock = this.blocks[this.blocks.length - 1];
                 const block = Block.mine(previousBlock, data, validatorWallet);
                 this.blocks.push(block);

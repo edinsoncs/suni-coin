@@ -1,3 +1,5 @@
+import { p2pAction } from '../../../service/context.js';
+
 export default (req, res) => {
     const nodes = p2pAction.sockets.map(s => {
         const addr = s._socket.remoteAddress;

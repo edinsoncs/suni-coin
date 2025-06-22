@@ -1,12 +1,14 @@
+import { blockchain } from '../../../service/context.js';
+
 export default (req, res) => {
   const { id } = req.params;
-  const memTx = newBlockchain.memoryPool.transactions.find(t => t.id === id);
+  const memTx = blockchain.memoryPool.transactions.find(t => t.id === id);
   if (memTx) {
     return res.json({ status: 'pending', transaction: memTx });
   }
 
-  for (let i = newBlockchain.blocks.length - 1; i >= 0; i--) {
-    const { data } = newBlockchain.blocks[i];
+  for (let i = blockchain.blocks.length - 1; i >= 0; i--) {
+    const { data } = blockchain.blocks[i];
     if (Array.isArray(data)) {
       const found = data.find(t => t.id === id);
       if (found) {

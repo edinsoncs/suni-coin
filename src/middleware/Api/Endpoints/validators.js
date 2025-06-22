@@ -1,3 +1,5 @@
+import { blockchain } from '../../../service/context.js';
+
 export default (req, res) => {
-    res.json(newBlockchain.getValidators());
+    res.json(blockchain.getValidators());
 };

@@ -12,13 +12,13 @@ export default(blockchain) => {
 	}
 
         for(let i = 0; i < blocks.length; i++){
-                const { previousHash, timestamp, data, hash, validator, signature } = blocks[i];
+                const { previousHash, timestamp, data, hash, validator, signature, difficulty } = blocks[i];
                 const previousBlock = blockchain[i];
 
                 if(previousHash !== previousBlock.hash){
                         throw Error('El anterior (Previous) hash es incorrecto');
                 }
-                if(hash !== Block.hash(timestamp, previousHash, data, validator)){
+                if(hash !== Block.hash(timestamp, previousHash, data, validator, difficulty)){
                         throw Error('El hash es invalido');
                 }
                 if(!elliptic.verifySignature(validator, signature, hash)){

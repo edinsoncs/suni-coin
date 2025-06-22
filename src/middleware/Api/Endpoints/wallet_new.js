@@ -1,13 +1,12 @@
 import Wallet from '../../../wallet/index.js';
-
+import context, { blockchain, wallets } from '../../../service/context.js';
 
 export default (req, res) => {
         const { password } = req.body || {};
-        const wallet = new Wallet(newBlockchain, 20);
+        const wallet = new Wallet(blockchain, 20);
         wallet.password = password;
-        global.wallet_new = wallet;
-        if(!global.wallets) global.wallets = [];
-        global.wallets.push(wallet);
+        context.currentWallet = wallet;
+        wallets.push(wallet);
 
         res.json({
                 status: 'ok',

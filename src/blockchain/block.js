@@ -1,13 +1,15 @@
 import { gnHash } from '../modules/index.js';
+import adjustDifficulty from './modules/mdDifficulty.js';
 
 class Block {
-        constructor(timestamp, previousHash, data, hash, validator, signature) {
+        constructor(timestamp, previousHash, data, hash, validator, signature, difficulty = 1) {
                 this.timestamp = timestamp;
                 this.previousHash = previousHash;
                 this.data = data;
                 this.hash = hash;
                 this.validator = validator;
                 this.signature = signature;
+                this.difficulty = difficulty;
         }
 
         static get genesis() {
@@ -18,29 +20,31 @@ class Block {
                         'S-U-N-I',
                         'hash-genesis',
                         'genesis',
-                        'genesis'
+                        'genesis',
+                        1
                 );
         }
 
         static mine(previousBlock, data, validatorWallet) {
                 const { hash: previousHash } = previousBlock;
                 const timestamp = Date.now();
+                const difficulty = adjustDifficulty(previousBlock, timestamp);
                 const validator =
                         typeof validatorWallet === 'string'
                                 ? validatorWallet
                                 : validatorWallet.publicKey;
-                const hash = Block.hash(timestamp, previousHash, data, validator);
+                const hash = Block.hash(timestamp, previousHash, data, validator, difficulty);
                 let signature;
                 if (validatorWallet && typeof validatorWallet.sign === 'function') {
                         const sig = validatorWallet.sign(hash);
                         // store as hex string for serialization
                         signature = typeof sig.toDER === 'function' ? sig.toDER('hex') : sig;
                 }
-                return new this(timestamp, previousHash, data, hash, validator, signature);
+                return new this(timestamp, previousHash, data, hash, validator, signature, difficulty);
         }
 
-        static hash(timestamp, previousHash, data, validator){
-                return gnHash(`${timestamp}${previousHash}${JSON.stringify(data)}${validator}`).toString();
+        static hash(timestamp, previousHash, data, validator, difficulty){
+                return gnHash(`${timestamp}${previousHash}${JSON.stringify(data)}${validator}${difficulty}`).toString();
         }
 
 	toString(){
@@ -51,7 +55,8 @@ class Block {
                         data,
                         hash,
                         validator,
-                        signature
+                        signature,
+                        difficulty
                 } = this;
 
 		return ` BLOCK
@@ -61,6 +66,7 @@ class Block {
                 Hash: ${hash}
                 Validator: ${validator}
                 Signature: ${signature}
+                Difficulty: ${difficulty}
                 `;
         }
 

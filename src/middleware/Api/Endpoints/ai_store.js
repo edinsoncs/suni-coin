@@ -1,10 +1,12 @@
 
+import { blockchain, walletMiner, p2pAction } from '../../../service/context.js';
+
 export default (req, res) => {
     const { model, description, dataHash } = req.body;
     try {
-        const block = newBlockchain.addBlock(
+        const block = blockchain.addBlock(
             { type: 'AI_DATA', model, description, hash: dataHash },
-            newWalletMiner
+            walletMiner
         );
         p2pAction.sync();
         res.json({ status: 'ok', block });
