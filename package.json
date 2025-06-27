@@ -23,7 +23,7 @@
     "desktop:mac": "electron-builder --mac"
   },
   "build": {
-    "files": ["out", "main.js"]
+    "files": ["out", "main.js", "src/**/*"]
   },
   "repository": {
     "type": "git",

@@ -2,6 +2,10 @@ import { app, BrowserWindow } from 'electron';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 
+async function startApiServer() {
+  await import('./src/service/index.js');
+}
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
@@ -19,4 +23,9 @@ function createWindow() {
   }
 }
 
-app.whenReady().then(createWindow);
+app.whenReady().then(() => {
+  if (app.isPackaged) {
+    startApiServer();
+  }
+  createWindow();
+});
