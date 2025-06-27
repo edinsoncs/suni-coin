@@ -32,6 +32,17 @@ Chain data is automatically saved to disk so blocks remain after you restart the
 Multiple nodes can be launched using the extra `start:*` scripts in
 `package.json`.
 
+### Desktop Builds
+
+The same interface can be wrapped in an Electron shell so it runs like a
+regular application on Windows or macOS.
+
+```bash
+npm run build            # export the Next.js frontend
+npm run desktop:win      # create a Windows installer
+npm run desktop:mac      # create a macOS installer
+```
+
 ## How It Works
 
 BYDChain keeps a chain of blocks linked with hashes. Transactions are collected in a
