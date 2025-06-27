@@ -2,7 +2,7 @@
   "name": "bydchain",
   "version": "0.0.1",
   "description": "bydchain.org",
-  "main": "index.js",
+  "main": "main.js",
   "type": "module",
   "scripts": {
     "start": "node ./src/service/index.js",
@@ -14,9 +14,16 @@
     "nodemon": "nodemon ./src/service/index.js",
     "front": "next dev -p 3000",
     "dev": "node ./dev.js",
+    "desktop:dev": "concurrently \"npm run front\" \"electron .\"",
     "eslint": "eslint index.js src",
     "test": "jest",
-    "test:watch": "jest --watchAll"
+    "test:watch": "jest --watchAll",
+    "build": "next build && next export",
+    "desktop:win": "electron-builder --win",
+    "desktop:mac": "electron-builder --mac"
+  },
+  "build": {
+    "files": ["out", "main.js"]
   },
   "repository": {
     "type": "git",
@@ -34,7 +41,10 @@
     "eslint-plugin-import": "^2.20.1",
     "jest": "^25.1.0",
     "nodemon": "^2.0.2",
-    "@babel/preset-env": "^7.8.6"
+    "@babel/preset-env": "^7.8.6",
+    "electron": "^28.2.1",
+    "electron-builder": "^24.6.0",
+    "concurrently": "^8.2.0"
   },
   "dependencies": {
     "body-parser": "^1.19.0",
