@@ -25,6 +25,7 @@ import metricsExtended from './metrics_extended.js';
 import metricsPrometheus from './metrics_prometheus.js';
 import nodes from './nodes.js';
 import proof from './proof.js';
+import search from './search.js';
 
 const r = express.Router();
 
@@ -82,6 +83,9 @@ r.route('/metrics/prometheus')
 
 r.route('/nodes')
   .get(nodes);
+
+r.route('/search')
+  .get(search);
 
 r.route('/wallet/list')
   .get(walletList);
