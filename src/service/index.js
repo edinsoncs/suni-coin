@@ -2,10 +2,12 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import context from './context.js';
 import middleware from '../middleware/index.js';
+import Metrics from './metrics.js';
 
 
 const app = express();
 const { PORT = 8000 } = process.env;
+const metrics = new Metrics(context.blockchain, context.p2pAction);
 
 
 app.use(bodyParser.json());
@@ -21,6 +23,7 @@ app.use((req, res, next) => {
 });
 middleware(app);
 
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
         context.p2pAction.listen();
+        metrics.listen(server);
 });
