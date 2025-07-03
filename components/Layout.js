@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { FaHome, FaCubes, FaUser, FaDatabase, FaTools } from 'react-icons/fa';
+import ThemeToggle from './ThemeToggle';
 
 export default function Layout({ children }) {
   return (
@@ -22,6 +23,7 @@ export default function Layout({ children }) {
             <Link href="/admin" className="hover:underline flex items-center gap-1">
               <FaTools /> Admin
             </Link>
+            <ThemeToggle />
           </div>
         </nav>
       </header>

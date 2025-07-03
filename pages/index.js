@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { FaCubes } from 'react-icons/fa';
+import Modal from '../components/Modal';
 import { useRouter } from 'next/router';
 
 const API_BASE = 'http://localhost:8000';
@@ -23,6 +24,7 @@ export default function Home() {
   const [hashInput, setHashInput] = useState('');
   const [blockInfo, setBlockInfo] = useState(null);
   const [searchAddress, setSearchAddress] = useState('');
+  const [showTxModal, setShowTxModal] = useState(false);
 
   useEffect(() => {
     refreshBlocks();
@@ -55,6 +57,7 @@ export default function Home() {
     });
     const json = await res.json();
     setTransactionResult(json);
+    setShowTxModal(true);
     if (json.id) {
       const infoRes = await fetch(`${API_BASE}/api/transaction/${json.id}`);
       if (infoRes.ok) {
@@ -145,25 +148,24 @@ export default function Home() {
           <input value={amount} onChange={e => setAmount(e.target.value)} type="number" placeholder="amount" className="border p-2 rounded bg-gray-900 text-gray-100" />
           <button onClick={sendTransaction} className="px-4 py-2 bg-green-500 text-white rounded">Send</button>
         </div>
-        {transactionResult && (
-          <div className="mt-4 bg-gray-900 p-4 rounded">
-            <p className="mb-2">Transaction submitted.</p>
-            <p>
-              ID:{' '}
-              <a
-                href={`/tx/${transactionResult.id}`}
-                className="text-blue-400 underline"
-              >
-                {transactionResult.id}
-              </a>
-            </p>
-            {transactionInfo && (
-              <pre className="mt-2 overflow-auto">
-                {JSON.stringify(transactionInfo, null, 2)}
-              </pre>
-            )}
-          </div>
-        )}
+        <Modal open={showTxModal} onClose={() => setShowTxModal(false)}>
+          {transactionResult && (
+            <div>
+              <h3 className="text-lg font-semibold mb-2">Transaction Submitted</h3>
+              <p className="mb-2">
+                ID{' '}
+                <a href={`/tx/${transactionResult.id}`} className="text-blue-400 underline">
+                  {transactionResult.id}
+                </a>
+              </p>
+              {transactionInfo && (
+                <pre className="bg-gray-900 p-2 rounded overflow-auto">
+                  {JSON.stringify(transactionInfo, null, 2)}
+                </pre>
+              )}
+            </div>
+          )}
+        </Modal>
       </section>
 
       <section className="mb-8 max-w-xl mx-auto bg-black border border-gray-700 p-6 rounded shadow">
