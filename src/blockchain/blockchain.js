@@ -2,6 +2,7 @@ import Block from './block.js';
 import validator from './modules/validator.js';
 import MemoryPool from './memPool.js';
 import { loadBlocks, saveBlocks, loadValidators, saveValidators } from './modules/storage.js';
+import { verifyProof } from './modules/merkle.js';
 
 const DELEGATE_COUNT = 5;
 
@@ -17,7 +18,9 @@ class Blockchain {
                                         b.data,
                                         b.hash,
                                         b.validator,
-                                        b.signature
+                                        b.signature,
+                                        b.difficulty,
+                                        b.merkleRoot
                                 )
                         );
                 } else {
@@ -244,6 +247,10 @@ class Blockchain {
                         if(Array.isArray(data)) txs.push(...data);
                 });
                 return txs;
+        }
+
+        verifyMerkleProof(tx, proof, index, merkleRoot){
+                return verifyProof(tx, proof, merkleRoot, index);
         }
 
         /**
