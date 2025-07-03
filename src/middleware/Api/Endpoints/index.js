@@ -23,6 +23,7 @@ import addressStats from './address_stats.js';
 import metrics from './metrics.js';
 import metricsExtended from './metrics_extended.js';
 import nodes from './nodes.js';
+import proof from './proof.js';
 
 const r = express.Router();
 
@@ -53,6 +54,9 @@ r.route('/block/:hash')
 
 r.route('/transaction/:id')
   .get(transactionGet);
+
+r.route('/proof/:txId')
+  .get(proof);
 
 r.route('/balance/:address')
 .get(balance);
