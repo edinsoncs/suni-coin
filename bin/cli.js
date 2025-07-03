@@ -25,14 +25,14 @@ function runEndpoint(handler, body = {}) {
 
 const program = new Command();
 program
-  .option('--api <port>', 'Puerto API')
-  .option('--p2p-port <port>', 'Puerto P2P')
-  .option('--tls-key <path>', 'Ruta clave TLS')
-  .option('--tls-cert <path>', 'Ruta certificado TLS');
+  .option('--api <port>', 'API port')
+  .option('--p2p-port <port>', 'P2P port')
+  .option('--tls-key <path>', 'TLS key path')
+  .option('--tls-cert <path>', 'TLS certificate path');
 
 program
   .command('start')
-  .description('Arranca el nodo')
+  .description('Start the node')
   .action(() => {
     const opts = program.opts();
     if (opts.api) process.env.PORT = opts.api;
@@ -42,11 +42,11 @@ program
     import('../src/service/index.js');
   });
 
-const wallet = program.command('wallet').description('Operaciones de wallet');
+const wallet = program.command('wallet').description('Wallet operations');
 
 wallet
   .command('new')
-  .option('-p, --password <password>', 'Contraseña para encriptar')
+  .option('-p, --password <password>', 'Password for encryption')
   .action((opts) => {
     runEndpoint(walletNew, { password: opts.password });
   });
@@ -77,7 +77,7 @@ wallet
 
 program
   .command('stake <amount>')
-  .description('Aportar stake')
+  .description('Delegate stake')
   .action((amount) => {
     runEndpoint(walletStake, { amount: Number(amount) });
   });
@@ -85,7 +85,7 @@ program
 program
   .command('send <recipient> <amount>')
   .option('-s, --script <script>')
-  .description('Enviar transacción')
+  .description('Send transaction')
   .action((recipient, amount, opts) => {
     runEndpoint(transactionsNew, {
       recipient,
@@ -96,9 +96,9 @@ program
 
 program
   .command('auto-mine')
-  .description('Minar automáticamente transacciones pendientes')
-  .option('-u, --url <url>', 'URL base del API', 'http://localhost:8000')
-  .option('-i, --interval <ms>', 'Intervalo de comprobación en milisegundos', '5000')
+  .description('Automatically mine pending transactions')
+  .option('-u, --url <url>', 'Base API URL', 'http://localhost:8000')
+  .option('-i, --interval <ms>', 'Check interval in milliseconds', '5000')
   .action((opts) => {
     const api = opts.url;
     const interval = Number(opts.interval) || 5000;
