@@ -87,7 +87,37 @@ program
   .option('-s, --script <script>')
   .description('Enviar transacción')
   .action((recipient, amount, opts) => {
-    runEndpoint(transactionsNew, { recipient, amount: Number(amount), script: opts.script });
+    runEndpoint(transactionsNew, {
+      recipient,
+      amount: Number(amount),
+      script: opts.script,
+    });
+  });
+
+program
+  .command('auto-mine')
+  .description('Minar automáticamente transacciones pendientes')
+  .option('-u, --url <url>', 'URL base del API', 'http://localhost:8000')
+  .option('-i, --interval <ms>', 'Intervalo de comprobación en milisegundos', '5000')
+  .action((opts) => {
+    const api = opts.url;
+    const interval = Number(opts.interval) || 5000;
+
+    async function mineIfPending() {
+      try {
+        const memRes = await fetch(`${api}/api/mempool`);
+        const mem = await memRes.json();
+        if (Array.isArray(mem) && mem.length > 0) {
+          await fetch(`${api}/api/mine/transactions`);
+          console.log(`Mined ${mem.length} transaction(s)`);
+        }
+      } catch (err) {
+        console.error('Auto mining failed:', err.message);
+      }
+    }
+
+    setInterval(mineIfPending, interval);
+    console.log('Auto miner running...');
   });
 
 program.parse(process.argv);
