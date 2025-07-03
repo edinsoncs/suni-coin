@@ -103,11 +103,12 @@ class Blockchain {
                 return this.blocks.find((block) => block.hash === hash);
         }
 
-        getBalance(address){
+        getBalance(address, assetType = 'COIN'){
                 let balance = 0;
                 this.blocks.forEach(({data = []}) => {
                         if(Array.isArray(data)){
-                                data.forEach(({input, outputs}) => {
+                                data.forEach(({input, outputs, asset = { type: 'COIN' }}) => {
+                                        if((asset.type || 'COIN') !== assetType) return;
                                         outputs.forEach(({address: addr, amount}) => {
                                                 if(addr === address) balance += Number(amount);
                                         });
