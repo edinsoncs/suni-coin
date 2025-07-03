@@ -7,8 +7,12 @@ export type Wallet = {
 
 interface WalletContextType {
   wallet: Wallet | null
+  wallets: Wallet[]
   createWallet: () => Promise<void>
+  selectWallet: (address: string) => void
+  logout: () => void
   exportMnemonic: () => Promise<string | null>
+  exportKeys: () => Promise<{ privateKey: string; publicKey: string } | null>
   refreshBalance: () => Promise<number | null>
 }
 
@@ -18,10 +22,13 @@ const API_BASE = 'http://localhost:8000'
 
 export function WalletProvider({ children }: { children: ReactNode }) {
   const [wallet, setWallet] = useState<Wallet | null>(null)
+  const [wallets, setWallets] = useState<Wallet[]>([])
 
   useEffect(() => {
     const stored = localStorage.getItem('wallet')
+    const list = localStorage.getItem('wallets')
     if (stored) setWallet(JSON.parse(stored))
+    if (list) setWallets(JSON.parse(list))
   }, [])
 
   useEffect(() => {
@@ -29,14 +36,31 @@ export function WalletProvider({ children }: { children: ReactNode }) {
     else localStorage.removeItem('wallet')
   }, [wallet])
 
+  useEffect(() => {
+    localStorage.setItem('wallets', JSON.stringify(wallets))
+  }, [wallets])
+
   async function createWallet() {
+    if (wallets.length >= 10) return
     const res = await fetch(`${API_BASE}/api/wallet/new`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({})
     })
     const json = await res.json()
-    if (json.data) setWallet(json.data)
+    if (json.data) {
+      setWallet(json.data)
+      setWallets((w) => [...w, json.data])
+    }
+  }
+
+  function selectWallet(address: string) {
+    const w = wallets.find((wl) => wl.publicKey === address) || null
+    setWallet(w)
+  }
+
+  function logout() {
+    setWallet(null)
   }
 
   async function exportMnemonic() {
@@ -50,6 +74,18 @@ export function WalletProvider({ children }: { children: ReactNode }) {
     return json.mnemonic || null
   }
 
+  async function exportKeys() {
+    if (!wallet) return null
+    const res = await fetch(`${API_BASE}/api/wallet/keys`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ address: wallet.publicKey })
+    })
+    const json = await res.json()
+    if (json.status === 'ok') return { privateKey: json.privateKey, publicKey: json.publicKey }
+    return null
+  }
+
   async function refreshBalance() {
     if (!wallet) return null
     const res = await fetch(`${API_BASE}/api/balance/${wallet.publicKey}`)
@@ -59,7 +95,18 @@ export function WalletProvider({ children }: { children: ReactNode }) {
   }
 
   return (
-    <WalletContext.Provider value={{ wallet, createWallet, exportMnemonic, refreshBalance }}>
+    <WalletContext.Provider
+      value={{
+        wallet,
+        wallets,
+        createWallet,
+        selectWallet,
+        logout,
+        exportMnemonic,
+        exportKeys,
+        refreshBalance
+      }}
+    >
       {children}
     </WalletContext.Provider>
   )

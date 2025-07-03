@@ -8,6 +8,7 @@ import walletStake from './wallet_stake.js';
 import walletList from './wallet_list.js';
 import walletExport from './wallet_export.js';
 import walletImport from './wallet_import.js';
+import walletKeys from './wallet_keys.js';
 import mine from './mine.js';
 import transactionsNew from './transactions_new.js';
 import aiStore from './ai_store.js';
@@ -109,6 +110,9 @@ r.route('/wallet/export')
 
 r.route('/wallet/import')
   .post(walletImport);
+
+r.route('/wallet/keys')
+  .post(walletKeys);
 
 
 r.route('/mine')

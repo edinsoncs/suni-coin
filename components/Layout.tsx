@@ -1,5 +1,6 @@
 import { ReactNode, useEffect, useState } from 'react'
 import { Blocks, Sun, Moon, Network } from 'lucide-react'
+import { FaSignOutAlt } from 'react-icons/fa'
 import { Button } from './ui/button'
 import { Badge } from './ui/badge'
 import { Switch } from './ui/switch'
@@ -11,7 +12,7 @@ import Link from 'next/link'
 
 export default function Layout({ children }: { children: ReactNode }) {
   const { theme, setTheme } = useTheme()
-  const { wallet } = useWallet()
+  const { wallet, logout } = useWallet()
   const [modal, setModal] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
   const [height, setHeight] = useState<number | null>(null)
@@ -88,26 +89,38 @@ export default function Layout({ children }: { children: ReactNode }) {
                     {wallet.publicKey.slice(0, 6)}...{wallet.publicKey.slice(-4)}
                   </Badge>
                   {menuOpen && (
-                    <div className="absolute right-0 mt-2 w-48 bg-card border border-border rounded shadow z-50">
-                      <Link
-                        href="/send"
-                        className="block px-4 py-2 text-sm hover:bg-accent"
-                      >
-                        Send Transaction
-                      </Link>
-                      <Link
-                        href="/wallet"
-                        className="block px-4 py-2 text-sm hover:bg-accent"
-                      >
-                        Wallet
-                      </Link>
-                      <Link
-                        href="/analytics"
-                        className="block px-4 py-2 text-sm hover:bg-accent"
-                      >
-                        Analytics
-                      </Link>
-                    </div>
+                    <>
+                      <div className="fixed inset-0 bg-black/50 z-40" />
+                      <div className="absolute right-0 mt-2 w-48 bg-card border border-border rounded shadow z-50">
+                        <Link
+                          href="/send"
+                          className="block px-4 py-2 text-sm hover:bg-accent"
+                        >
+                          Send Transaction
+                        </Link>
+                        <Link
+                          href="/wallet"
+                          className="block px-4 py-2 text-sm hover:bg-accent"
+                        >
+                          Wallet
+                        </Link>
+                        <Link
+                          href="/analytics"
+                          className="block px-4 py-2 text-sm hover:bg-accent"
+                        >
+                          Analytics
+                        </Link>
+                        <button
+                          onClick={() => {
+                            logout()
+                            setMenuOpen(false)
+                          }}
+                          className="w-full text-left px-4 py-2 text-sm hover:bg-accent flex items-center gap-2"
+                        >
+                          <FaSignOutAlt className="inline" /> Logout
+                        </button>
+                      </div>
+                    </>
                   )}
                 </div>
               ) : (

@@ -64,6 +64,10 @@ class Wallet{
                 return Wallet.encryptPrivateKey(this.keyPair.getPrivate('hex'), password);
         }
 
+        exportPrivateKey(){
+                return this.keyPair.getPrivate('hex');
+        }
+
         static fromMnemonic(blockchain, mnemonic, initBalance = INIT_BL, path = "m/44'/0'/0'/0/0"){ 
                 return new Wallet(blockchain, initBalance, mnemonic, path);
         }
