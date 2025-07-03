@@ -3,6 +3,8 @@ import validator from './modules/validator.js';
 import MemoryPool from './memPool.js';
 import { loadBlocks, saveBlocks, loadValidators, saveValidators } from './modules/storage.js';
 
+const DELEGATE_COUNT = 5;
+
 class Blockchain {
 
         constructor(){
@@ -24,12 +26,15 @@ class Blockchain {
                 this.memoryPool = new MemoryPool();
                 const storedValidators = loadValidators();
                 this.validators = storedValidators && typeof storedValidators === 'object' ? storedValidators : {};
+                this.delegateIndex = 0;
+                this.delegates = this.computeDelegates();
         }
 
         registerStake(publicKey, amount){
                 if(!this.validators[publicKey]) this.validators[publicKey] = 0;
                 this.validators[publicKey] += amount;
                 saveValidators(this.validators);
+                this.delegates = this.computeDelegates();
         }
 
         addBlock(data, validatorWallet) {
@@ -47,9 +52,9 @@ class Blockchain {
                 }
 
                 if(Object.keys(this.validators).length > 0){
-                        const selected = this.selectValidator();
-                        if(selected && selected !== vKey){
-                                throw Error('Validator not selected');
+                        const delegate = this.getCurrentDelegate();
+                        if(delegate && delegate !== vKey){
+                                throw Error('Validator not selected as delegate');
                         }
                 }
 
@@ -57,6 +62,7 @@ class Blockchain {
                 const block = Block.mine(previousBlock, data, validatorWallet);
                 this.blocks.push(block);
                 saveBlocks(this.blocks);
+                this.rotateDelegate();
 
                 return block;
         }
@@ -118,6 +124,24 @@ class Blockchain {
 
         getValidators(){
                 return { ...this.validators };
+        }
+
+        computeDelegates(){
+                const entries = Object.entries(this.validators);
+                if(entries.length === 0) return [];
+                entries.sort((a, b) => Number(b[1]) - Number(a[1]));
+                return entries.slice(0, DELEGATE_COUNT).map(([addr]) => addr);
+        }
+
+        getCurrentDelegate(){
+                if(this.delegates.length === 0) return null;
+                return this.delegates[this.delegateIndex % this.delegates.length];
+        }
+
+        rotateDelegate(){
+                if(this.delegates.length > 0){
+                        this.delegateIndex = (this.delegateIndex + 1) % this.delegates.length;
+                }
         }
 
         selectValidator(){

@@ -1,6 +1,6 @@
 # BYDChain
 
-BYDChain is an experimental Proof‑of‑Stake blockchain written in Node.js. It includes
+BYDChain is an experimental Delegated Proof‑of‑Stake blockchain written in Node.js. It includes
 a lightweight wallet, mining utilities and a web interface styled with
 Tailwind CSS. The Next.js frontend now offers a basic explorer in the spirit of
 Etherscan or Solscan. The project is focused on exploring how blockchain technology can
@@ -47,8 +47,8 @@ npm run desktop:mac      # create a macOS installer
 
 BYDChain keeps a chain of blocks linked with hashes. Transactions are collected in a
 pool and can be mined via the "Mine Transactions" button on the web interface.
-Blocks are minted using a basic Proof‑of‑Stake algorithm that randomly selects a
-validator proportionally to their stake.
+Blocks are minted using a Delegated Proof‑of‑Stake model where the top
+validators by stake take turns producing blocks.
 
 ### AI Data Blocks
 
@@ -148,8 +148,8 @@ blocks are created in real time.
 ## Professional Overview
 
 BYDChain is designed to showcase core blockchain concepts in a clear and
-research‑friendly way. The validator selection process follows a simple
-Proof‑of‑Stake mechanism and the API provides endpoints for inspecting
+research‑friendly way. The validator selection process now uses a Delegated
+Proof‑of‑Stake system and the API provides endpoints for inspecting
 every aspect of the chain. Tokens are awarded when a wallet is created so
 new users can immediately experiment with transactions and staking.
 
