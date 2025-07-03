@@ -4,7 +4,7 @@ import { useEffect, useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 
-const API_BASE = "http://localhost:8000"
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE || "http://localhost:8000"
 
 interface Stats {
   chainLength: number
@@ -31,16 +31,34 @@ export default function BYDChainDashboard() {
   const [mempool, setMempool] = useState<any[]>([])
 
   useEffect(() => {
-    fetch(`${API_BASE}/api/metrics/extended`).then(r => r.json()).then(setStats).catch(console.error)
-    fetch(`${API_BASE}/api/blocks`).then(r => r.json()).then(data => {
-      if(Array.isArray(data)) setBlocks(data.slice(-5).reverse())
-    }).catch(console.error)
-    fetch(`${API_BASE}/api/validators`).then(r => r.json()).then(v => {
-      if(v && typeof v === 'object'){
-        setValidators(Object.entries(v).map(([address, stake]) => ({ address, stake: Number(stake) })))
+    let active = true
+
+    const load = async () => {
+      try {
+        const s = await fetch(`${API_BASE}/api/metrics/extended`).then(r => r.json())
+        if (active) setStats(s)
+
+        const blks = await fetch(`${API_BASE}/api/blocks`).then(r => r.json())
+        if (active && Array.isArray(blks)) setBlocks(blks.slice(-5).reverse())
+
+        const v = await fetch(`${API_BASE}/api/validators`).then(r => r.json())
+        if (active && v && typeof v === 'object') {
+          setValidators(Object.entries(v).map(([address, stake]) => ({ address, stake: Number(stake) })))
+        }
+
+        const mp = await fetch(`${API_BASE}/api/mempool`).then(r => r.json())
+        if (active) setMempool(mp)
+      } catch (e) {
+        console.error(e)
       }
-    }).catch(console.error)
-    fetch(`${API_BASE}/api/mempool`).then(r => r.json()).then(setMempool).catch(console.error)
+    }
+
+    load()
+    const id = setInterval(load, 5000)
+    return () => {
+      active = false
+      clearInterval(id)
+    }
   }, [])
 
   if(!stats) return <p>Loading...</p>
