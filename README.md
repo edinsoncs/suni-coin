@@ -130,6 +130,11 @@ Validators are persisted to `src/storage/validators.json` and a random
 validator is now selected based on stake when new blocks are mined.
 
 You can inspect pending transactions via `GET /api/mempool`.
+Pending transactions are now saved to `src/storage/mempool.json` so they survive
+node restarts. Storage can also be redirected to a remote database by setting
+the `DB_TYPE` environment variable and connection details in
+`src/config/database.js`. Supported types include **mongodb**, **mysql**,
+**postgres** and **firebase**.
 
 ### Mining Transactions
 
@@ -144,6 +149,9 @@ interval and API URL with `--interval` and `--url` options.
 
 The chain is loaded from `src/storage/chain.json` on start and saved back to
 this file whenever new blocks are added, ensuring persistence between restarts.
+The mempool is likewise persisted to `src/storage/mempool.json`. Set the
+`DB_TYPE` variable if you want to store this data in a remote database instead
+of local JSON files.
 
 
 ### For Developers
