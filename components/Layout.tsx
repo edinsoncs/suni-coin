@@ -1,4 +1,4 @@
-import { ReactNode, useState } from 'react'
+import { ReactNode, useEffect, useState } from 'react'
 import { Blocks, Sun, Moon, Network } from 'lucide-react'
 import { Button } from './ui/button'
 import { Badge } from './ui/badge'
@@ -6,10 +6,28 @@ import { Switch } from './ui/switch'
 import { useTheme } from './ThemeContext'
 import ConnectWalletModal from './ConnectWalletModal'
 import SearchBar from './SearchBar'
+import { useWallet } from './WalletContext'
 
 export default function Layout({ children }: { children: ReactNode }) {
   const { theme, setTheme } = useTheme()
+  const { wallet } = useWallet()
   const [modal, setModal] = useState(false)
+  const [height, setHeight] = useState<number | null>(null)
+
+  useEffect(() => {
+    async function fetchHeight() {
+      try {
+        const res = await fetch('http://localhost:8000/api/metrics')
+        const json = await res.json()
+        setHeight(json.chainLength)
+      } catch (e) {
+        console.error(e)
+      }
+    }
+    fetchHeight()
+    const id = setInterval(fetchHeight, 10000)
+    return () => clearInterval(id)
+  }, [])
   return (
     <div className="min-h-screen bg-background text-foreground">
       <header className="border-b bg-card shadow-sm">
@@ -41,16 +59,25 @@ export default function Layout({ children }: { children: ReactNode }) {
                 <Moon className="h-4 w-4" />
               </div>
               <div className="text-sm text-muted-foreground">
-                Block Height: <span className="font-mono font-semibold">1,247,892</span>
+                Block Height:{' '}
+                <span className="font-mono font-semibold">
+                  {height !== null ? height.toLocaleString() : '...'}
+                </span>
               </div>
-              <Button
-                variant="outline"
-                className="gap-2"
-                onClick={() => setModal(true)}
-              >
-                <Network className="w-4 h-4" />
-                Connect Wallet
-              </Button>
+              {wallet ? (
+                <Badge variant="outline" className="font-mono">
+                  {wallet.publicKey.slice(0, 6)}...{wallet.publicKey.slice(-4)}
+                </Badge>
+              ) : (
+                <Button
+                  variant="outline"
+                  className="gap-2"
+                  onClick={() => setModal(true)}
+                >
+                  <Network className="w-4 h-4" />
+                  Connect Wallet
+                </Button>
+              )}
             </div>
           </div>
         </div>
