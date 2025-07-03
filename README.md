@@ -196,6 +196,8 @@ blocks are created in real time.
 - Export and import wallets using password‑encrypted keys
 - Search for an address to view its balance and transactions
 - Monitor real-time analytics from the **Analytics** page
+- View extended network statistics like total stake and unique addresses on the
+  **Analytics** page
 
 ## Professional Overview
 
