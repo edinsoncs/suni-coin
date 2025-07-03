@@ -143,6 +143,7 @@ blocks are created in real time.
 - Search for a block by its hash
 - Browse blocks in a table via the new **Blocks** section
 - Manage your wallet from the **Profile** page and submit metadata to the chain
+- Export and import wallets using password‑encrypted keys
 - Search for an address to view its balance and transactions
 - Monitor real-time analytics from the **Analytics** page
 

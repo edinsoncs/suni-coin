@@ -3,15 +3,27 @@ import { gnHash, elliptic } from '../modules/index.js';
 import * as bip39 from 'bip39';
 import * as bip32 from 'bip32';
 import crypto from 'crypto';
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 const INIT_BL = 100;
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const WALLET_DIR = path.join(__dirname, '../storage/wallets');
 
 class Wallet{
 
-        constructor(blockchain, initBalance = INIT_BL, mnemonic = null, path = "m/44'/0'/0'/0/0"){
+        constructor(blockchain, initBalance = INIT_BL, mnemonic = null, path = "m/44'/0'/0'/0/0", privateKey = null){
                 this.balance = initBalance;
                 this.blockchain = blockchain;
                 this.stakeBalance = 0;
+
+                if(privateKey){
+                        this.mnemonic = null;
+                        this.keyPair = elliptic.fromPrivate(privateKey);
+                        this.publicKey = this.keyPair.getPublic().encode('hex');
+                        return;
+                }
 
                 if(mnemonic){
                         this.mnemonic = mnemonic;
@@ -48,8 +60,34 @@ class Wallet{
                 return this.mnemonic;
         }
 
-        static fromMnemonic(blockchain, mnemonic, initBalance = INIT_BL, path = "m/44'/0'/0'/0/0"){
+        exportEncrypted(password){
+                return Wallet.encryptPrivateKey(this.keyPair.getPrivate('hex'), password);
+        }
+
+        static fromMnemonic(blockchain, mnemonic, initBalance = INIT_BL, path = "m/44'/0'/0'/0/0"){ 
                 return new Wallet(blockchain, initBalance, mnemonic, path);
+        }
+
+        static fromPrivateKey(blockchain, privateKey, initBalance = INIT_BL){
+                return new Wallet(blockchain, initBalance, null, "m/44'/0'/0'/0/0", privateKey);
+        }
+
+        static fromEncrypted(blockchain, encrypted, password, initBalance = INIT_BL){
+                const pk = Wallet.decryptPrivateKey(encrypted, password);
+                return Wallet.fromPrivateKey(blockchain, pk, initBalance);
+        }
+
+        saveEncrypted(password){
+                const data = this.exportEncrypted(password);
+                if(!existsSync(WALLET_DIR)) mkdirSync(WALLET_DIR, { recursive: true });
+                writeFileSync(path.join(WALLET_DIR, `${this.publicKey}.key`), data);
+        }
+
+        static loadEncrypted(blockchain, address, password, initBalance = INIT_BL){
+                const file = path.join(WALLET_DIR, `${address}.key`);
+                if(!existsSync(file)) throw Error('Wallet file not found');
+                const data = readFileSync(file, 'utf8');
+                return Wallet.fromEncrypted(blockchain, data, password, initBalance);
         }
 
         sign(data){
@@ -98,8 +136,34 @@ class Wallet{
                 return this.blockchain.getBalance(this.publicKey, assetType);
         }
 
+        static encryptPrivateKey(privateKeyHex, password){
+                const iv = crypto.randomBytes(16);
+                const key = crypto.scryptSync(password, 'wallet-salt', 32);
+                const cipher = crypto.createCipheriv('aes-256-cbc', key, iv);
+                const encrypted = Buffer.concat([
+                        cipher.update(Buffer.from(privateKeyHex, 'hex')),
+                        cipher.final()
+                ]);
+                return `${iv.toString('hex')}:${encrypted.toString('hex')}`;
+        }
+
+        static decryptPrivateKey(encrypted, password){
+                const [ivHex, dataHex] = encrypted.split(':');
+                const key = crypto.scryptSync(password, 'wallet-salt', 32);
+                const decipher = crypto.createDecipheriv(
+                        'aes-256-cbc',
+                        key,
+                        Buffer.from(ivHex, 'hex')
+                );
+                const decrypted = Buffer.concat([
+                        decipher.update(Buffer.from(dataHex, 'hex')),
+                        decipher.final()
+                ]);
+                return decrypted.toString('hex');
+        }
+
 }
 
-export { INIT_BL }
+export { INIT_BL, WALLET_DIR }
 
 export default Wallet;

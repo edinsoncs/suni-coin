@@ -8,3 +8,4 @@ storage/
 !storage/validators.json
 !src/storage/chain.json
 !src/storage/validators.json
+src/storage/wallets/
