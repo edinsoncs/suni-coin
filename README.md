@@ -32,6 +32,33 @@ Chain data is automatically saved to disk so blocks remain after you restart the
 Multiple nodes can be launched using the extra `start:*` scripts in
 `package.json`.
 
+### Command Line Interface
+
+The project also ships with a small CLI. Run `npm run cli` followed by a
+subcommand to manage the node directly from your terminal.
+
+- `start` – launches a node instance. Use `--api` to select the HTTP port and
+  `--p2p-port` for the P2P layer. TLS can be enabled with `--tls-key` and
+  `--tls-cert`.
+- `wallet` – manage wallets with `new`, `import`, `export` and `list` subcommands.
+- `stake <amount>` – delegate stake from your wallet.
+- `send <recipient> <amount>` – transfer tokens between addresses. A `--script`
+  option lets you attach a validation script.
+- `auto-mine` – repeatedly check the mempool and mine transactions
+  automatically. Adjust the API URL with `--url` and the polling interval with
+  `--interval`.
+
+Examples:
+
+```bash
+# start a node on custom ports
+npm run cli -- start --api 3001 --p2p-port 6001
+
+# start a TLS-enabled node
+npm run cli -- start --api 3002 --p2p-port 6002 \
+  --tls-key ./certs/key.pem --tls-cert ./certs/cert.pem
+```
+
 ### Desktop Builds
 
 The same interface can be wrapped in an Electron shell so it runs like a
