@@ -10,6 +10,11 @@ export default function Document(): ReactElement {
             __html: `(() => { try { const t = localStorage.getItem('theme') || 'dark'; document.documentElement.classList.add(t); } catch (_) {} })();`,
           }}
         />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `tailwind.config = { darkMode: 'class' }`,
+          }}
+        />
         <script src="https://cdn.tailwindcss.com"></script>
         <link
           href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&family=Raleway:wght@400;700&display=swap"
