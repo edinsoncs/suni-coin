@@ -1,8 +1,20 @@
-import { createContext, useContext, useEffect, useState } from 'react';
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  ReactNode,
+  Dispatch,
+  SetStateAction,
+} from 'react';
+type ThemeContextType = {
+  theme: string;
+  setTheme: Dispatch<SetStateAction<string>>;
+};
 
-const ThemeContext = createContext();
+const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
-export function ThemeProvider({ children }) {
+export function ThemeProvider({ children }: { children: ReactNode }) {
   const [theme, setTheme] = useState('dark');
 
   useEffect(() => {
@@ -24,5 +36,9 @@ export function ThemeProvider({ children }) {
 }
 
 export function useTheme() {
-  return useContext(ThemeContext);
+  const ctx = useContext(ThemeContext);
+  if (!ctx) {
+    throw new Error('ThemeContext not found');
+  }
+  return ctx;
 }
