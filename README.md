@@ -65,6 +65,12 @@ VM. The block is rejected if any script returns `false`. This allows simple
 conditions such as enforcing minimum payments or custom rules without a full
 virtual machine.
 
+For more advanced logic the chain now also accepts WebAssembly contracts. To
+use this, include an object `{ type: 'wasm', code: '<base64>' }` in the
+`script` field where `code` is a base64 encoded WebAssembly module exporting a
+`main` function that returns `1` on success. These modules run in a minimal
+environment, providing the transaction data through the `env` import object.
+
 ### API Endpoints
 
 The REST API exposes several helpers for querying the chain:
