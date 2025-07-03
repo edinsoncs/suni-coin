@@ -2,12 +2,21 @@
 
 
 import { currentWallet } from '../../../service/context.js';
+import Joi from '../../../utils/validator.js';
+
+const schema = Joi.object({
+    amount: Joi.number().positive().required()
+});
 
 export default (req, res) => {
 
-    const { body: { amount } } = req;
+    const { error, value } = schema.validate(req.body || {});
+    if (error) {
+        return res.status(400).json({ status: 0, error });
+    }
+
     try {
-        currentWallet.stake(Number(amount));
+        currentWallet.stake(value.amount);
         res.json({ status: 'ok', stake: currentWallet.stakeBalance });
     } catch (error) {
         res.json({ status: 0, error: error.message });
