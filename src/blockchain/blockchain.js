@@ -167,6 +167,30 @@ class Blockchain {
         }
 
         /**
+         * Summarize activity for an address
+         * @param {string} address
+         * @returns {{txCount:number,sent:number,received:number}}
+         */
+        getAddressStats(address){
+                const txs = this.getTransactionsForAddress(address);
+                let sent = 0;
+                let received = 0;
+                txs.forEach(({ transaction }) => {
+                        if(transaction.input?.address === address){
+                                transaction.outputs.forEach(o => {
+                                        if(o.address !== address) sent += Number(o.amount);
+                                });
+                        }
+                        if(Array.isArray(transaction.outputs)){
+                                transaction.outputs.forEach(o => {
+                                        if(o.address === address) received += Number(o.amount);
+                                });
+                        }
+                });
+                return { txCount: txs.length, sent, received };
+        }
+
+        /**
          * Retrieve a block by its index in the chain
          * @param {number} index
          * @returns {Block|null}

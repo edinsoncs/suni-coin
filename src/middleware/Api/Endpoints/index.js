@@ -19,6 +19,7 @@ import blockGet from './block_get.js';
 import transactionGet from './transaction_get.js';
 import balance from './balance.js';
 import addressTransactions from './address_transactions.js';
+import addressStats from './address_stats.js';
 import metrics from './metrics.js';
 import metricsExtended from './metrics_extended.js';
 import nodes from './nodes.js';
@@ -58,6 +59,9 @@ r.route('/balance/:address')
 
 r.route('/address/:address/transactions')
 .get(addressTransactions);
+
+r.route('/address/:address/stats')
+  .get(addressStats);
 
 r.route('/ai/list')
 .get(aiList);
