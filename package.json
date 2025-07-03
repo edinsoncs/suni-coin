@@ -62,7 +62,11 @@
     "react-loading-skeleton": "^3.3.1",
     "bip39": "^3.0.4",
     "bip32": "^2.0.6",
-    "commander": "^10.0.0"
+    "commander": "^10.0.0",
+    "mongodb": "^5.7.0",
+    "mysql2": "^3.2.0",
+    "pg": "^8.10.0",
+    "firebase-admin": "^11.10.0"
   },
   "jest": {
     "silent": false,

@@ -1,10 +1,11 @@
 import { Transaction } from '../wallet/index.js';
+import { saveMempool, loadMempool } from './modules/storage.js';
 
 class MemoryPool{
 
-	constructor(){
-		this.transactions = [];
-	}
+    constructor(){
+            this.transactions = loadMempool();
+    }
 
 	addOrUpdate(transaction){
 
@@ -19,11 +20,12 @@ class MemoryPool{
 			throw Error(`La firma es invalida: ${input.address}`);
 		}
 		const tIndex = this.transactions.findIndex(({ id }) => id === transaction.id);
-		if(tIndex >= 0){
-			this.transactions[tIndex] = transaction;
-		} else {
-			this.transactions.push(transaction);
-		}
+            if(tIndex >= 0){
+                    this.transactions[tIndex] = transaction;
+            } else {
+                    this.transactions.push(transaction);
+            }
+            saveMempool(this.transactions);
 	}
 
 	find(address){
@@ -31,7 +33,8 @@ class MemoryPool{
 	}
 
 	wipe(){
-		this.transactions = [];
+            this.transactions = [];
+            saveMempool(this.transactions);
 	}
 
 }
