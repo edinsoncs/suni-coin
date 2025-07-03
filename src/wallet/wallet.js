@@ -66,10 +66,11 @@ class Wallet{
         }
 
 
-        createTransaction(receptAddress, amount, script = null){
+        createTransaction(receptAddress, amount, script = null, asset = { type: 'COIN', id: null }){
                 const { blockchain: { memoryPool } } = this;
 
-                const balance = this.calculateBalance();
+                const isCoin = asset.type === 'COIN';
+                const balance = isCoin ? this.calculateBalance('COIN') : 0;
                 const amt = Number(amount);
 
                 if(amt <= 0){
@@ -78,57 +79,24 @@ class Wallet{
                 if(receptAddress === this.publicKey){
                    throw Error('No puedes enviarte fondos a ti mismo');
                 }
-                if(amt > balance){
+                if(isCoin && amt > balance){
                    throw Error(`El monto es: ${amt} superior al balance: ${balance}`);
                 }
 
                 let tr = memoryPool.find(this.publicKey);
-                if(tr){
+                if(isCoin && tr && tr.asset.type === 'COIN'){
                         tr.update(this, receptAddress, amt, script);
                 } else {
-                        tr = Transaction.create(this, receptAddress, amt, script);
+                        tr = Transaction.create(this, receptAddress, amt, script, asset);
                         memoryPool.addOrUpdate(tr);
                 }
 
-		return tr;
+                return tr;
+        }
 
-	}
-
-	calculateBalance(){
-
-		const { blockchain: { blocks = [] }, publicKey} = this;
-		let { balance } = this;
-
-		const tr = [];
-
-		blocks.forEach(( { data = []} ) => {
-			if(Array.isArray(data)){
-				data.forEach((trs) => tr.push(trs));
-			}
-		});
-
-		const walletInputTr = tr.filter((trs) => trs.input.address === publicKey);
-		let timestamp = 0;
-
-		if(walletInputTr.length > 0){
-			const recentInpuTr = walletInputTr.sort((a, b) => a.input.timestamp - b.input.timestamp).pop();
-			balance = recentInpuTr.outputs.find(( {address} ) => address === publicKey).amount;
-			
-			timestamp = recentInpuTr.input.timestamp;
-		}
-
-		tr
-		.filter(( {input } ) =>  input.timestamp > timestamp)
-		.forEach(( {outputs} ) => {
-			outputs.find(( {address, amount}) => {
-				if(address === publicKey) balance += amount;
-			});
-		});
-
-		return balance;
-
-	}
-
+        calculateBalance(assetType = 'COIN'){
+                return this.blockchain.getBalance(this.publicKey, assetType);
+        }
 
 }
 

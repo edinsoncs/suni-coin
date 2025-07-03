@@ -5,16 +5,17 @@ const REWARD = 1;
 
 class Transaction{
 
-        constructor(){
+        constructor(asset = { type: 'COIN', id: null }){
                 this.id = uuidv1();
                 this.input = null;
                 this.outputs = [];
                 this.script = null;
+                this.asset = asset;
         }
 
-        static create(senderWallet, receptAddress, amount, script = null){
+        static create(senderWallet, receptAddress, amount, script = null, asset = { type: 'COIN', id: null }){
 
-                const { balance, publicKey } = senderWallet;
+                const { publicKey } = senderWallet;
                 const amt = Number(amount);
 
                 if(amt <= 0){
@@ -24,56 +25,70 @@ class Transaction{
                         throw Error('No puedes enviarte fondos a ti mismo');
                 }
 
-                if(amt > balance){
-                        throw Error(`Tu envío es: ${amt}, excede tu balance`);
-                }
-
-                const tr = new Transaction();
+                const tr = new Transaction(asset);
                 tr.script = script;
-		
-                tr.outputs.push(...[
-                        {
-                                amount: balance - amt,
-                                address: publicKey
-                        },
-                        {
+
+                if(asset.type === 'COIN'){
+                        const balance = senderWallet.calculateBalance('COIN');
+                        if(amt > balance){
+                                throw Error(`Tu envío es: ${amt}, excede tu balance`);
+                        }
+
+                        tr.outputs.push(...[
+                                {
+                                        amount: balance - amt,
+                                        address: publicKey
+                                },
+                                {
+                                        amount: amt,
+                                        address: receptAddress
+                                }
+                        ]);
+
+                        tr.input = Transaction.sign(tr, senderWallet, balance);
+                } else {
+                        tr.outputs.push({
                                 amount: amt,
                                 address: receptAddress
-                        }
-                ]);
+                        });
 
-                tr.input = Transaction.sign(tr, senderWallet);
+                        tr.input = Transaction.sign(tr, senderWallet, amt);
+                }
 
-		return tr;
+                return tr;
 
-	}
+        }
 
         static reward(minerWallet, blockchainWallet){
-                return this.create(blockchainWallet, minerWallet.publicKey, REWARD, null);
+                return this.create(blockchainWallet, minerWallet.publicKey, REWARD, null, { type: 'COIN', id: null });
         }
 
 
         static verify(transaction){
-                const { input: { address, signature }, outputs, script } = transaction;
+                const { input: { address, signature }, outputs, script, asset = { type: 'COIN', id: null } } = transaction;
                 return elliptic.verifySignature(
                         address,
                         signature,
-                        JSON.stringify(outputs) + (script || '')
+                        JSON.stringify(outputs) + JSON.stringify(asset) + (script || '')
                 );
         }
 
-        static sign(transaction, senderWallet){
+        static sign(transaction, senderWallet, inputAmount){
                 return {
                         timestamp: Date.now(),
-                        amount: senderWallet.balance,
+                        amount: inputAmount,
                         address: senderWallet.publicKey,
                         signature: senderWallet.sign(
-                                JSON.stringify(transaction.outputs) + (transaction.script || '')
+                                JSON.stringify(transaction.outputs) + JSON.stringify(transaction.asset || {}) + (transaction.script || '')
                         )
                 };
         }
 
         update(senderWallet, receptAddress, amount, script = null) {
+
+                if(this.asset.type !== 'COIN'){
+                        throw Error('Solo las transacciones de tipo COIN pueden actualizarse');
+                }
 
                 const sendOutput = this.outputs.find((ouput) =>
                 ouput.address === senderWallet.publicKey);
@@ -93,7 +108,7 @@ class Transaction{
                         address: receptAddress
                 });
                 if(script) this.script = script;
-                this.input = Transaction.sign(this, senderWallet);
+                this.input = Transaction.sign(this, senderWallet, senderWallet.calculateBalance('COIN'));
 
 		return this;
 
