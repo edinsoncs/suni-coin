@@ -1,12 +1,14 @@
-import { ReactNode } from 'react'
+import { ReactNode, useState } from 'react'
 import { Blocks, Search as SearchIcon, Sun, Moon, Network } from 'lucide-react'
 import { Button } from './ui/button'
 import { Badge } from './ui/badge'
 import { Switch } from './ui/switch'
 import { useTheme } from './ThemeContext'
+import ConnectWalletModal from './ConnectWalletModal'
 
 export default function Layout({ children }: { children: ReactNode }) {
   const { theme, setTheme } = useTheme()
+  const [modal, setModal] = useState(false)
   return (
     <div className="min-h-screen bg-background text-foreground">
       <header className="border-b bg-card shadow-sm">
@@ -46,7 +48,11 @@ export default function Layout({ children }: { children: ReactNode }) {
               <div className="text-sm text-muted-foreground">
                 Block Height: <span className="font-mono font-semibold">1,247,892</span>
               </div>
-              <Button variant="outline" className="gap-2">
+              <Button
+                variant="outline"
+                className="gap-2"
+                onClick={() => setModal(true)}
+              >
                 <Network className="w-4 h-4" />
                 Connect Wallet
               </Button>
@@ -55,6 +61,7 @@ export default function Layout({ children }: { children: ReactNode }) {
         </div>
       </header>
       <main className="container mx-auto px-4 py-6">{children}</main>
+      <ConnectWalletModal open={modal} onClose={() => setModal(false)} />
     </div>
   )
 }
