@@ -1,6 +1,9 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import { useTheme } from "@/components/ThemeContext"
+import { Tooltip } from "react-tooltip"
+import "react-tooltip/dist/react-tooltip.css"
 import { Activity, Blocks, Network, Zap, ArrowLeft, Copy, ExternalLink, CheckCircle, Clock } from "lucide-react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -14,7 +17,7 @@ import { Switch } from "@/components/ui/switch"
 import { Separator } from "@/components/ui/separator"
 
 // Enhanced hardcoded demo data
-const networkStats = {
+const defaultNetworkStats = {
   blockHeight: 1247892,
   totalTransactions: 5847293,
   activeNodes: 47,
@@ -161,7 +164,7 @@ const recentTransactions = [
   },
 ]
 
-const validators = [
+const defaultValidators = [
   {
     address: "0x742d35Cc6634C0532925a3b8D4C0532925a3b8D4",
     stake: "50,000 BYD",
@@ -242,11 +245,32 @@ const mempoolData = {
 
 export default function BYDChainDashboard() {
   const [activeTab, setActiveTab] = useState("overview")
-  const [isDarkMode, setIsDarkMode] = useState(true)
+  const { theme, setTheme } = useTheme()
+  const [networkStats, setNetworkStats] = useState(defaultNetworkStats)
+  const [validators, setValidators] = useState(defaultValidators)
   const [searchQuery, setSearchQuery] = useState("")
   const [searchResults, setSearchResults] = useState<any[]>([])
   const [currentView, setCurrentView] = useState<"dashboard" | "block" | "transaction" | "address">("dashboard")
   const [selectedItem, setSelectedItem] = useState<any>(null)
+
+  useEffect(() => {
+    async function load() {
+      try {
+        const metrics = await fetch('http://localhost:8000/api/metrics/extended').then(r => r.json())
+        setNetworkStats((s) => ({
+          ...s,
+          blockHeight: metrics.chainLength || s.blockHeight,
+          totalTransactions: metrics.totalTransactions || s.totalTransactions,
+          totalValidators: Object.keys(metrics.validators || {}).length,
+        }))
+        const vals = await fetch('http://localhost:8000/api/validators').then(r => r.json())
+        if (Array.isArray(vals)) setValidators(vals)
+      } catch (e) {
+        console.error(e)
+      }
+    }
+    load()
+  }, [])
 
   const handleSearch = (query: string) => {
     setSearchQuery(query)
@@ -314,7 +338,7 @@ export default function BYDChainDashboard() {
 
   if (currentView === "block" && selectedItem) {
     return (
-      <div className={`min-h-screen ${isDarkMode ? "dark" : ""}`}>
+      <div className="min-h-screen">
         <div className="min-h-screen bg-background text-foreground">
           {/* Header */}
           <header className="border-b bg-card">
@@ -334,7 +358,7 @@ export default function BYDChainDashboard() {
                 </div>
                 <div className="flex items-center space-x-2">
                   <Sun className="h-4 w-4" />
-                  <Switch checked={isDarkMode} onCheckedChange={setIsDarkMode} />
+                  <Switch checked={theme === 'dark'} onCheckedChange={(c) => setTheme(c ? 'dark' : 'light')} />
                   <Moon className="h-4 w-4" />
                 </div>
               </div>
@@ -400,7 +424,7 @@ export default function BYDChainDashboard() {
                       <span className="text-sm font-medium text-muted-foreground">Block Hash</span>
                       <div className="flex items-center space-x-2">
                         <span className="text-sm font-mono break-all">{selectedItem.hash}</span>
-                        <Button variant="ghost" size="sm" onClick={() => copyToClipboard(selectedItem.hash)}>
+                        <Button variant="ghost" size="sm" onClick={() => copyToClipboard(selectedItem.hash)} data-tooltip-id="copy-tip" data-tooltip-content="Copy hash">
                           <Copy className="w-3 h-3" />
                         </Button>
                       </div>
@@ -410,7 +434,7 @@ export default function BYDChainDashboard() {
                       <span className="text-sm font-medium text-muted-foreground">Parent Hash</span>
                       <div className="flex items-center space-x-2">
                         <span className="text-sm font-mono break-all">{selectedItem.parentHash}</span>
-                        <Button variant="ghost" size="sm" onClick={() => copyToClipboard(selectedItem.parentHash)}>
+                        <Button variant="ghost" size="sm" onClick={() => copyToClipboard(selectedItem.parentHash)} data-tooltip-id="copy-tip" data-tooltip-content="Copy hash">
                           <Copy className="w-3 h-3" />
                         </Button>
                       </div>
@@ -456,6 +480,7 @@ export default function BYDChainDashboard() {
                     </div>
                   </div>
                 </CardContent>
+                <Tooltip id="copy-tip" />
               </Card>
 
               <Card>
@@ -577,7 +602,7 @@ export default function BYDChainDashboard() {
 
   if (currentView === "transaction" && selectedItem) {
     return (
-      <div className={`min-h-screen ${isDarkMode ? "dark" : ""}`}>
+      <div className="min-h-screen">
         <div className="min-h-screen bg-background text-foreground">
           {/* Header */}
           <header className="border-b bg-card">
@@ -597,7 +622,7 @@ export default function BYDChainDashboard() {
                 </div>
                 <div className="flex items-center space-x-2">
                   <Sun className="h-4 w-4" />
-                  <Switch checked={isDarkMode} onCheckedChange={setIsDarkMode} />
+                  <Switch checked={theme === 'dark'} onCheckedChange={(c) => setTheme(c ? 'dark' : 'light')} />
                   <Moon className="h-4 w-4" />
                 </div>
               </div>
@@ -835,86 +860,9 @@ export default function BYDChainDashboard() {
 
   // Main Dashboard View
   return (
-    <div className={`min-h-screen ${isDarkMode ? "dark" : ""}`}>
+    <div className="min-h-screen">
       <div className="min-h-screen bg-background text-foreground">
-        {/* Enhanced Header */}
-        <header className="border-b bg-card shadow-sm">
-          <div className="container mx-auto px-4 py-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-4">
-                <div className="flex items-center space-x-2">
-                  <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
-                    <Blocks className="w-5 h-5 text-white" />
-                  </div>
-                  <h1 className="text-2xl font-bold">BYDChain</h1>
-                  <Badge variant="outline" className="text-xs">
-                    Mainnet
-                  </Badge>
-                </div>
-                <Badge
-                  variant="secondary"
-                  className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300"
-                >
-                  <div className="w-2 h-2 bg-green-500 rounded-full mr-2 animate-pulse" />
-                  {networkStats.networkStatus}
-                </Badge>
-              </div>
 
-              {/* Enhanced Search Bar */}
-              <div className="flex-1 max-w-md mx-8 relative">
-                <div className="relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
-                  <Input
-                    placeholder="Search blocks, transactions, addresses..."
-                    value={searchQuery}
-                    onChange={(e) => handleSearch(e.target.value)}
-                    className="pl-10 bg-background"
-                  />
-                </div>
-                {searchResults.length > 0 && (
-                  <div className="absolute top-full left-0 right-0 mt-1 bg-card border rounded-md shadow-lg z-50">
-                    {searchResults.map((result, index) => (
-                      <div
-                        key={index}
-                        className="p-3 hover:bg-accent cursor-pointer border-b last:border-b-0"
-                        onClick={() => handleSearchResultClick(result)}
-                      >
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <Badge variant="outline" className="text-xs mb-1">
-                              {result.type}
-                            </Badge>
-                            <div className="font-medium">{result.value}</div>
-                            <div className="text-xs text-muted-foreground">{result.subtitle}</div>
-                          </div>
-                          <ExternalLink className="w-4 h-4 text-muted-foreground" />
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-
-              <div className="flex items-center space-x-4">
-                {/* Theme Toggle */}
-                <div className="flex items-center space-x-2">
-                  <Sun className="h-4 w-4" />
-                  <Switch checked={isDarkMode} onCheckedChange={setIsDarkMode} />
-                  <Moon className="h-4 w-4" />
-                </div>
-
-                <div className="text-sm text-muted-foreground">
-                  Block Height: {" "}
-                  <span className="font-mono font-semibold">{networkStats.blockHeight.toLocaleString()}</span>
-                </div>
-                <Button variant="outline" size="sm">
-                  <Network className="w-4 h-4 mr-2" />
-                  Connect Wallet
-                </Button>
-              </div>
-            </div>
-          </div>
-        </header>
 
         <div className="container mx-auto px-4 py-6">
           <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
