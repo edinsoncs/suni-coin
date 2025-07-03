@@ -1,8 +1,16 @@
 import Link from 'next/link';
-import { FaHome, FaCubes, FaUser, FaDatabase, FaTools, FaChartLine } from 'react-icons/fa';
+import { ReactNode } from 'react';
+import {
+  FaHome,
+  FaCubes,
+  FaUser,
+  FaDatabase,
+  FaTools,
+  FaChartLine,
+} from 'react-icons/fa';
 import ThemeToggle from './ThemeToggle';
 
-export default function Layout({ children }) {
+export default function Layout({ children }: { children: ReactNode }) {
   return (
     <div className="min-h-screen bg-black text-white">
       <header className="bg-black border-b border-gray-700">
