@@ -12,6 +12,8 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Progress } from "@/components/ui/progress"
 import { Search, Sun, Moon, TrendingUp, Fuel, Shield, Wallet, PieChart, Database, Code, FileText } from "lucide-react"
+import Skeleton from "react-loading-skeleton"
+import "react-loading-skeleton/dist/skeleton.css"
 import { Input } from "@/components/ui/input"
 import { Switch } from "@/components/ui/switch"
 import { Separator } from "@/components/ui/separator"
@@ -248,6 +250,7 @@ export default function BYDChainDashboard() {
   const { theme, setTheme } = useTheme()
   const [networkStats, setNetworkStats] = useState(defaultNetworkStats)
   const [validators, setValidators] = useState(defaultValidators)
+  const [loading, setLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState("")
   const [searchResults, setSearchResults] = useState<any[]>([])
   const [currentView, setCurrentView] = useState<"dashboard" | "block" | "transaction" | "address">("dashboard")
@@ -265,8 +268,11 @@ export default function BYDChainDashboard() {
         }))
         const vals = await fetch('http://localhost:8000/api/validators').then(r => r.json())
         if (Array.isArray(vals)) setValidators(vals)
+        setLoading(false)
       } catch (e) {
         console.error(e)
+      } finally {
+        setLoading(false)
       }
     }
     load()
@@ -882,8 +888,12 @@ export default function BYDChainDashboard() {
                     <TrendingUp className="h-4 w-4 text-green-500" />
                   </CardHeader>
                   <CardContent>
-                    <div className="text-2xl font-bold">{marketData.price}</div>
-                    <p className="text-xs text-green-500 font-medium">{marketData.change24h}</p>
+                    <div className="text-2xl font-bold">
+                      {loading ? <Skeleton width={60} /> : marketData.price}
+                    </div>
+                    <p className="text-xs text-green-500 font-medium">
+                      {loading ? <Skeleton width={40} /> : marketData.change24h}
+                    </p>
                   </CardContent>
                 </Card>
 
@@ -893,7 +903,9 @@ export default function BYDChainDashboard() {
                     <Blocks className="h-4 w-4 text-muted-foreground" />
                   </CardHeader>
                   <CardContent>
-                    <div className="text-2xl font-bold">{networkStats.blockHeight.toLocaleString()}</div>
+                    <div className="text-2xl font-bold">
+                      {loading ? <Skeleton width={80} /> : networkStats.blockHeight.toLocaleString()}
+                    </div>
                     <p className="text-xs text-muted-foreground">+12 from last hour</p>
                   </CardContent>
                 </Card>
@@ -904,7 +916,9 @@ export default function BYDChainDashboard() {
                     <Fuel className="h-4 w-4 text-muted-foreground" />
                   </CardHeader>
                   <CardContent>
-                    <div className="text-2xl font-bold">{gasTracker.avgGasPrice}</div>
+                    <div className="text-2xl font-bold">
+                      {loading ? <Skeleton width={60} /> : gasTracker.avgGasPrice}
+                    </div>
                     <p className="text-xs text-muted-foreground">Base: {gasTracker.baseFee}</p>
                   </CardContent>
                 </Card>
@@ -915,7 +929,9 @@ export default function BYDChainDashboard() {
                     <Activity className="h-4 w-4 text-muted-foreground" />
                   </CardHeader>
                   <CardContent>
-                    <div className="text-2xl font-bold">{networkStats.totalTransactions.toLocaleString()}</div>
+                    <div className="text-2xl font-bold">
+                      {loading ? <Skeleton width={80} /> : networkStats.totalTransactions.toLocaleString()}
+                    </div>
                     <p className="text-xs text-muted-foreground">+2.1% from yesterday</p>
                   </CardContent>
                 </Card>
@@ -926,7 +942,9 @@ export default function BYDChainDashboard() {
                     <Shield className="h-4 w-4 text-muted-foreground" />
                   </CardHeader>
                   <CardContent>
-                    <div className="text-2xl font-bold">{networkStats.totalValidators}</div>
+                    <div className="text-2xl font-bold">
+                      {loading ? <Skeleton width={40} /> : networkStats.totalValidators}
+                    </div>
                     <p className="text-xs text-muted-foreground">Staking: {networkStats.stakingRatio}</p>
                   </CardContent>
                 </Card>
@@ -937,7 +955,9 @@ export default function BYDChainDashboard() {
                     <Zap className="h-4 w-4 text-muted-foreground" />
                   </CardHeader>
                   <CardContent>
-                    <div className="text-2xl font-bold">{networkStats.hashRate}</div>
+                    <div className="text-2xl font-bold">
+                      {loading ? <Skeleton width={80} /> : networkStats.hashRate}
+                    </div>
                     <p className="text-xs text-muted-foreground">+5.2% from last hour</p>
                   </CardContent>
                 </Card>
@@ -956,19 +976,19 @@ export default function BYDChainDashboard() {
                   <CardContent className="space-y-3">
                     <div className="flex justify-between">
                       <span className="text-sm">Market Cap</span>
-                      <span className="font-medium">{marketData.marketCap}</span>
+                      <span className="font-medium">{loading ? <Skeleton width={80} /> : marketData.marketCap}</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-sm">24h Volume</span>
-                      <span className="font-medium">{marketData.volume24h}</span>
+                      <span className="font-medium">{loading ? <Skeleton width={80} /> : marketData.volume24h}</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-sm">TVL</span>
-                      <span className="font-medium text-blue-600">{marketData.totalValueLocked}</span>
+                      <span className="font-medium text-blue-600">{loading ? <Skeleton width={80} /> : marketData.totalValueLocked}</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-sm">Staking APR</span>
-                      <span className="font-medium text-green-600">{marketData.stakingAPR}</span>
+                      <span className="font-medium text-green-600">{loading ? <Skeleton width={60} /> : marketData.stakingAPR}</span>
                     </div>
                   </CardContent>
                 </Card>
@@ -984,22 +1004,22 @@ export default function BYDChainDashboard() {
                   <CardContent className="space-y-3">
                     <div className="flex justify-between">
                       <span className="text-sm">Slow</span>
-                      <Badge variant="secondary">{gasTracker.slow}</Badge>
+                      <Badge variant="secondary">{loading ? <Skeleton width={40} /> : gasTracker.slow}</Badge>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-sm">Standard</span>
-                      <Badge variant="default">{gasTracker.standard}</Badge>
+                      <Badge variant="default">{loading ? <Skeleton width={40} /> : gasTracker.standard}</Badge>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-sm">Fast</span>
-                      <Badge variant="destructive">{gasTracker.fast}</Badge>
+                      <Badge variant="destructive">{loading ? <Skeleton width={40} /> : gasTracker.fast}</Badge>
                     </div>
                     <div className="space-y-2">
                       <div className="flex justify-between text-sm">
                         <span>Network Usage</span>
-                        <span>{gasTracker.gasUsedPercent}%</span>
+                        <span>{loading ? <Skeleton width={30} /> : `${gasTracker.gasUsedPercent}%`}</span>
                       </div>
-                      <Progress value={gasTracker.gasUsedPercent} />
+                      <Progress value={loading ? 0 : gasTracker.gasUsedPercent} />
                     </div>
                   </CardContent>
                 </Card>
@@ -1015,15 +1035,15 @@ export default function BYDChainDashboard() {
                   <CardContent className="space-y-3">
                     <div className="flex justify-between">
                       <span className="text-sm">Pending Txs</span>
-                      <span className="font-medium">{mempoolData.pendingTxs.toLocaleString()}</span>
+                      <span className="font-medium">{loading ? <Skeleton width={50} /> : mempoolData.pendingTxs.toLocaleString()}</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-sm">Queued Txs</span>
-                      <span className="font-medium">{mempoolData.queuedTxs.toLocaleString()}</span>
+                      <span className="font-medium">{loading ? <Skeleton width={50} /> : mempoolData.queuedTxs.toLocaleString()}</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-sm">Total Size</span>
-                      <span className="font-medium">{mempoolData.totalSize}</span>
+                      <span className="font-medium">{loading ? <Skeleton width={60} /> : mempoolData.totalSize}</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-sm">Congestion</span>
@@ -1031,7 +1051,7 @@ export default function BYDChainDashboard() {
                         variant="secondary"
                         className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300"
                       >
-                        {mempoolData.congestionLevel}
+                        {loading ? <Skeleton width={40} /> : mempoolData.congestionLevel}
                       </Badge>
                     </div>
                   </CardContent>
@@ -1046,22 +1066,26 @@ export default function BYDChainDashboard() {
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-3">
-                    {topAddresses.slice(0, 4).map((addr, index) => (
-                      <div key={index} className="flex items-center justify-between">
-                        <div className="flex items-center space-x-2">
-                          <Badge variant="outline" className="text-xs">
-                            {addr.type}
-                          </Badge>
-                          <span className="text-sm font-mono">
-                            {addr.address.slice(0, 6)}...{addr.address.slice(-4)}
-                          </span>
+                    {loading ? (
+                      <Skeleton count={4} height={20} className="my-1" />
+                    ) : (
+                      topAddresses.slice(0, 4).map((addr, index) => (
+                        <div key={index} className="flex items-center justify-between">
+                          <div className="flex items-center space-x-2">
+                            <Badge variant="outline" className="text-xs">
+                              {addr.type}
+                            </Badge>
+                            <span className="text-sm font-mono">
+                              {addr.address.slice(0, 6)}...{addr.address.slice(-4)}
+                            </span>
+                          </div>
+                          <div className="text-right">
+                            <div className="text-xs font-medium">{addr.balance.split(" ")[0]}K</div>
+                            <div className="text-xs text-muted-foreground">{addr.txCount} txs</div>
+                          </div>
                         </div>
-                        <div className="text-right">
-                          <div className="text-xs font-medium">{addr.balance.split(" ")[0]}K</div>
-                          <div className="text-xs text-muted-foreground">{addr.txCount} txs</div>
-                        </div>
-                      </div>
-                    ))}
+                      ))
+                    )}
                   </CardContent>
                 </Card>
               </div>
@@ -1076,23 +1100,23 @@ export default function BYDChainDashboard() {
                   <CardContent className="space-y-4">
                     <div className="flex justify-between items-center">
                       <span className="text-sm font-medium text-muted-foreground">Difficulty</span>
-                      <span className="text-sm font-mono">{networkStats.difficulty}</span>
+                      <span className="text-sm font-mono">{loading ? <Skeleton width={80} /> : networkStats.difficulty}</span>
                     </div>
                     <div className="flex justify-between items-center">
                       <span className="text-sm font-medium text-muted-foreground">Avg Block Time</span>
-                      <span className="text-sm font-mono">{networkStats.avgBlockTime}</span>
+                      <span className="text-sm font-mono">{loading ? <Skeleton width={60} /> : networkStats.avgBlockTime}</span>
                     </div>
                     <div className="flex justify-between items-center">
                       <span className="text-sm font-medium text-muted-foreground">Total Supply</span>
-                      <span className="text-sm font-mono">{networkStats.totalSupply}</span>
+                      <span className="text-sm font-mono">{loading ? <Skeleton width={80} /> : networkStats.totalSupply}</span>
                     </div>
                     <div className="flex justify-between items-center">
                       <span className="text-sm font-medium text-muted-foreground">Circulating Supply</span>
-                      <span className="text-sm font-mono">{networkStats.circulatingSupply}</span>
+                      <span className="text-sm font-mono">{loading ? <Skeleton width={80} /> : networkStats.circulatingSupply}</span>
                     </div>
                     <div className="flex justify-between items-center">
                       <span className="text-sm font-medium text-muted-foreground">Inflation Rate</span>
-                      <span className="text-sm font-mono">{networkStats.inflationRate}</span>
+                      <span className="text-sm font-mono">{loading ? <Skeleton width={40} /> : networkStats.inflationRate}</span>
                     </div>
                     <div className="space-y-2">
                       <div className="flex justify-between items-center">
