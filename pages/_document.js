@@ -10,7 +10,10 @@ export default function Document() {
           rel="stylesheet"
         />
       </Head>
-      <body className="bg-black text-white" style={{ fontFamily: 'Nunito, Raleway, sans-serif' }}>
+      <body
+        className="bg-white text-black dark:bg-black dark:text-white"
+        style={{ fontFamily: 'Nunito, Raleway, sans-serif' }}
+      >
         <Main />
         <NextScript />
       </body>
