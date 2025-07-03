@@ -1,56 +1,100 @@
 import WebSocket from 'ws';
+import https from 'https';
+import fs from 'fs';
 
-const { P2P_PORT = 6000, PORTS} = process.env;
-const ports = (PORTS) ? PORTS.split(',') : [];
-const MESSAGE = { 
-	BLOCKS: 'blocks',
-	TR: 'transaction' ,
-	WIPE: 'wipe_memorypool'
+const {
+  P2P_PORT = 6000,
+  PORTS,
+  WSS_KEY_PATH,
+  WSS_CERT_PATH,
+  P2P_AUTH_TOKEN = '',
+} = process.env;
+const ports = PORTS ? PORTS.split(',') : [];
+const MESSAGE = {
+        BLOCKS: 'blocks',
+        TR: 'transaction' ,
+        WIPE: 'wipe_memorypool',
+        AUTH: 'auth'
 };
 
 
 class P2PAction{
 
-	constructor(blockchain){
-		this.blockchain = blockchain;
-		this.sockets = [];
-	}
+        constructor(blockchain){
+                this.blockchain = blockchain;
+                this.sockets = [];
+                this.authToken = P2P_AUTH_TOKEN;
+                this.tlsOptions = {};
+                if (WSS_KEY_PATH && WSS_CERT_PATH) {
+                        this.tlsOptions.key = fs.readFileSync(WSS_KEY_PATH);
+                        this.tlsOptions.cert = fs.readFileSync(WSS_CERT_PATH);
+                }
+        }
 
-	listen(){
-		const server = new WebSocket.Server({port: P2P_PORT});
-		server.on('connection', (socket) => this.Connection(socket));
+        listen(){
+                let wss;
+                if (this.tlsOptions.key && this.tlsOptions.cert) {
+                        const httpsServer = https.createServer(this.tlsOptions);
+                        wss = new WebSocket.Server({ server: httpsServer });
+                        httpsServer.listen(P2P_PORT);
+                } else {
+                        wss = new WebSocket.Server({ port: P2P_PORT });
+                }
+                wss.on('connection', (socket) => this.handleIncoming(socket));
 
-		ports.forEach((port) => {
-			const socket = new WebSocket(port);
-			socket.on('open', () => this.Connection(socket));
-		});
+                ports.forEach((port) => {
+                        const socket = new WebSocket(port, {
+                                rejectUnauthorized: false,
+                        });
+                        socket.on('open', () => {
+                                socket.send(JSON.stringify({ type: MESSAGE.AUTH, value: this.authToken }));
+                                this.initSocket(socket);
+                        });
+                });
 
-		console.log(`ws:port => ${P2P_PORT}`);
-	}
+                console.log(`wss:port => ${P2P_PORT}`);
+        }
 
-	Connection(socket){
-		const { blockchain } = this;
-		this.sockets.push(socket);
-		
-		console.log('Socket conectado');
-		
-		socket.on('message', (message) =>{
-			const { type, value} = JSON.parse(message);
-			
-			try{
-				if(type === MESSAGE.BLOCKS) blockchain.replace(value);
-				else if(type === MESSAGE.TR) blockchain.memoryPool.addOrUpdate(value);
-				else if(type === MESSAGE.WIPE) blockchain.memoryPool.wipe();
+        handleIncoming(socket){
+                socket.once('message', (message) => {
+                        let data;
+                        try {
+                                data = JSON.parse(message);
+                        } catch (err) {
+                                socket.close();
+                                return;
+                        }
 
-			} catch(err){
-				console.log(`ws_error ${err}`);
-				throw Error(err);
-			}
+                        if (data.type !== MESSAGE.AUTH || data.value !== this.authToken) {
+                                socket.close();
+                                return;
+                        }
 
-		});
+                        this.initSocket(socket);
+                        socket.send(JSON.stringify({ type: MESSAGE.BLOCKS, value: this.blockchain.blocks }));
+                });
+        }
 
-		socket.send(JSON.stringify({type: MESSAGE.BLOCKS,value: blockchain.blocks}));
-	}
+        initSocket(socket){
+                const { blockchain } = this;
+                this.sockets.push(socket);
+
+                console.log('Socket conectado');
+
+                socket.on('message', (message) => {
+                        const { type, value } = JSON.parse(message);
+
+                        try {
+                                if (type === MESSAGE.BLOCKS) blockchain.replace(value);
+                                else if (type === MESSAGE.TR) blockchain.memoryPool.addOrUpdate(value);
+                                else if (type === MESSAGE.WIPE) blockchain.memoryPool.wipe();
+
+                        } catch (err) {
+                                console.log(`ws_error ${err}`);
+                        }
+
+                });
+        }
 
 	sync() {
 		const { blockchain : {blocks} } = this;
