@@ -136,6 +136,18 @@ the `DB_TYPE` environment variable and connection details in
 `src/config/database.js`. Supported types include **mongodb**, **mysql**,
 **postgres** and **firebase**.
 
+### Environment Variables
+
+The database adapter is controlled through the following variables:
+
+- `DB_TYPE` selects the backend. Use `json` for local files or one of
+  `mongodb`, `mysql`, `postgres` or `firebase` to store data remotely.
+- `DB_URI` sets the connection string or database URL.
+- `DB_USER` and `DB_PASSWORD` provide credentials for MySQL and PostgreSQL.
+- `FIREBASE_CERT` should point to the Firebase service account JSON file.
+
+If no variables are supplied the node defaults to the local JSON backend.
+
 ### Mining Transactions
 
 Pending transfers remain in the mempool until a block is produced. You can
