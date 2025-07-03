@@ -19,6 +19,10 @@ import { Switch } from "@/components/ui/switch"
 import { Separator } from "@/components/ui/separator"
 import { useRouter } from "next/router"
 
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE || "http://localhost:8000"
+
+const TOTAL_SUPPLY = 21_000_000
+
 // Enhanced hardcoded demo data
 const defaultNetworkStats = {
   blockHeight: 1247892,
@@ -259,32 +263,44 @@ export default function BYDChainDashboard() {
   const [selectedItem, setSelectedItem] = useState<any>(null)
 
   useEffect(() => {
-    async function load() {
+    let isMounted = true
+
+    const load = async () => {
       try {
-        const metrics = await fetch('http://localhost:8000/api/metrics/extended').then(r => r.json())
-        setNetworkStats((s) => ({
-          ...s,
-          blockHeight: metrics.chainLength || s.blockHeight,
-          totalTransactions: metrics.totalTransactions || s.totalTransactions,
-          totalValidators: Object.keys(metrics.validators || {}).length,
-        }))
-        const vals = await fetch('http://localhost:8000/api/validators').then(r => r.json())
-        if (Array.isArray(vals)) setValidators(vals)
-        setLoading(false)
+        const metrics = await fetch(`${API_BASE}/api/metrics/extended`).then(r => r.json())
+
+        if (isMounted) {
+          setNetworkStats((s) => ({
+            ...s,
+            blockHeight: metrics.chainLength ?? s.blockHeight,
+            totalTransactions: metrics.totalTransactions ?? s.totalTransactions,
+            totalValidators: Object.keys(metrics.validators || {}).length,
+            stakingRatio: metrics.totalStake ? `${((metrics.totalStake / TOTAL_SUPPLY) * 100).toFixed(1)}%` : s.stakingRatio,
+          }))
+        }
+
+        const vals = await fetch(`${API_BASE}/api/validators`).then(r => r.json())
+        if (isMounted && Array.isArray(vals)) setValidators(vals)
       } catch (e) {
         console.error(e)
       } finally {
-        setLoading(false)
+        if (isMounted) setLoading(false)
       }
     }
+
     load()
+    const id = setInterval(load, 5000)
+    return () => {
+      isMounted = false
+      clearInterval(id)
+    }
   }, [])
 
   const handleSearch = async (query: string) => {
     setSearchQuery(query)
     if (query.length > 1) {
       try {
-        const res = await fetch(`http://localhost:8000/api/search?q=${encodeURIComponent(query)}`)
+        const res = await fetch(`${API_BASE}/api/search?q=${encodeURIComponent(query)}`)
         if (res.ok) {
           const json = await res.json()
           setSearchResults(json)
