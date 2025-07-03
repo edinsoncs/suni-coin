@@ -1,10 +1,11 @@
 import { ReactNode, useState } from 'react'
-import { Blocks, Search as SearchIcon, Sun, Moon, Network } from 'lucide-react'
+import { Blocks, Sun, Moon, Network } from 'lucide-react'
 import { Button } from './ui/button'
 import { Badge } from './ui/badge'
 import { Switch } from './ui/switch'
 import { useTheme } from './ThemeContext'
 import ConnectWalletModal from './ConnectWalletModal'
+import SearchBar from './SearchBar'
 
 export default function Layout({ children }: { children: ReactNode }) {
   const { theme, setTheme } = useTheme()
@@ -30,14 +31,8 @@ export default function Layout({ children }: { children: ReactNode }) {
                 Healthy
               </Badge>
             </div>
-            <div className="flex-1 max-w-md mx-8 relative">
-              <div className="relative">
-                <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground w-4 h-4" />
-                <input
-                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 pl-10 text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                  placeholder="Search blocks, transactions, addresses..."
-                />
-              </div>
+            <div className="flex-1 max-w-md mx-8">
+              <SearchBar />
             </div>
             <div className="flex items-center space-x-4">
               <div className="flex items-center space-x-2">
