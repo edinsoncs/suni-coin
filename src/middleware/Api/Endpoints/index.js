@@ -22,6 +22,7 @@ import addressTransactions from './address_transactions.js';
 import addressStats from './address_stats.js';
 import metrics from './metrics.js';
 import metricsExtended from './metrics_extended.js';
+import metricsPrometheus from './metrics_prometheus.js';
 import nodes from './nodes.js';
 import proof from './proof.js';
 
@@ -75,6 +76,9 @@ r.route('/metrics')
 
 r.route('/metrics/extended')
   .get(metricsExtended);
+
+r.route('/metrics/prometheus')
+  .get(metricsPrometheus);
 
 r.route('/nodes')
   .get(nodes);
