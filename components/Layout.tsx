@@ -7,11 +7,13 @@ import { useTheme } from './ThemeContext'
 import ConnectWalletModal from './ConnectWalletModal'
 import SearchBar from './SearchBar'
 import { useWallet } from './WalletContext'
+import Link from 'next/link'
 
 export default function Layout({ children }: { children: ReactNode }) {
   const { theme, setTheme } = useTheme()
   const { wallet } = useWallet()
   const [modal, setModal] = useState(false)
+  const [menuOpen, setMenuOpen] = useState(false)
   const [height, setHeight] = useState<number | null>(null)
 
   useEffect(() => {
@@ -28,6 +30,18 @@ export default function Layout({ children }: { children: ReactNode }) {
     const id = setInterval(fetchHeight, 10000)
     return () => clearInterval(id)
   }, [])
+
+  useEffect(() => {
+    function handleClick(e: MouseEvent) {
+      if (!(e.target as HTMLElement).closest('#wallet-dropdown')) {
+        setMenuOpen(false)
+      }
+    }
+    if (menuOpen) {
+      document.addEventListener('click', handleClick)
+    }
+    return () => document.removeEventListener('click', handleClick)
+  }, [menuOpen])
   return (
     <div className="min-h-screen bg-background text-foreground">
       <header className="border-b bg-card shadow-sm">
@@ -65,9 +79,37 @@ export default function Layout({ children }: { children: ReactNode }) {
                 </span>
               </div>
               {wallet ? (
-                <Badge variant="outline" className="font-mono">
-                  {wallet.publicKey.slice(0, 6)}...{wallet.publicKey.slice(-4)}
-                </Badge>
+                <div className="relative" id="wallet-dropdown">
+                  <Badge
+                    variant="outline"
+                    className="font-mono cursor-pointer"
+                    onClick={() => setMenuOpen((o) => !o)}
+                  >
+                    {wallet.publicKey.slice(0, 6)}...{wallet.publicKey.slice(-4)}
+                  </Badge>
+                  {menuOpen && (
+                    <div className="absolute right-0 mt-2 w-48 bg-card border border-border rounded shadow z-50">
+                      <Link
+                        href="/send"
+                        className="block px-4 py-2 text-sm hover:bg-accent"
+                      >
+                        Send Transaction
+                      </Link>
+                      <Link
+                        href="/wallet"
+                        className="block px-4 py-2 text-sm hover:bg-accent"
+                      >
+                        Wallet
+                      </Link>
+                      <Link
+                        href="/analytics"
+                        className="block px-4 py-2 text-sm hover:bg-accent"
+                      >
+                        Analytics
+                      </Link>
+                    </div>
+                  )}
+                </div>
               ) : (
                 <Button
                   variant="outline"
