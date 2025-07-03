@@ -11,13 +11,11 @@ import { Button } from "@/components/ui/button"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Progress } from "@/components/ui/progress"
-import { Search, Sun, Moon, TrendingUp, Fuel, Shield, Wallet, PieChart, Database, Code, FileText } from "lucide-react"
+import { Sun, Moon, TrendingUp, Fuel, Shield, Wallet, PieChart, Database, Code, FileText } from "lucide-react"
 import Skeleton from "react-loading-skeleton"
 import "react-loading-skeleton/dist/skeleton.css"
-import { Input } from "@/components/ui/input"
 import { Switch } from "@/components/ui/switch"
 import { Separator } from "@/components/ui/separator"
-import { useRouter } from "next/router"
 
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE || "http://localhost:8000"
 
@@ -256,9 +254,6 @@ export default function BYDChainDashboard() {
   const [networkStats, setNetworkStats] = useState(defaultNetworkStats)
   const [validators, setValidators] = useState(defaultValidators)
   const [loading, setLoading] = useState(true)
-  const [searchQuery, setSearchQuery] = useState("")
-  const [searchResults, setSearchResults] = useState<any[]>([])
-  const router = useRouter()
   const [currentView, setCurrentView] = useState<"dashboard" | "block" | "transaction" | "address">("dashboard")
   const [selectedItem, setSelectedItem] = useState<any>(null)
 
@@ -296,38 +291,6 @@ export default function BYDChainDashboard() {
     }
   }, [])
 
-  const handleSearch = async (query: string) => {
-    setSearchQuery(query)
-    if (query.length > 1) {
-      try {
-        const res = await fetch(`${API_BASE}/api/search?q=${encodeURIComponent(query)}`)
-        if (res.ok) {
-          const json = await res.json()
-          setSearchResults(json)
-        } else {
-          setSearchResults([])
-        }
-      } catch (e) {
-        console.error(e)
-        setSearchResults([])
-      }
-    } else {
-      setSearchResults([])
-    }
-  }
-
-  const handleSearchResultClick = (result: any) => {
-    setSearchResults([])
-    setSearchQuery("")
-
-    if (result.type === "block") {
-      router.push(`/blocks/${result.hash}`)
-    } else if (result.type === "transaction") {
-      router.push(`/tx/${result.id}`)
-    } else if (result.type === "address") {
-      router.push(`/address/${result.address}`)
-    }
-  }
 
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text)
@@ -877,32 +840,6 @@ export default function BYDChainDashboard() {
 
 
         <div className="container mx-auto px-4 py-6">
-          <div className="mb-4 relative">
-            <Input
-              value={searchQuery}
-              onChange={(e) => handleSearch(e.target.value)}
-              placeholder="Search blocks, transactions or addresses"
-              className="bg-black text-white placeholder-gray-400"
-            />
-            {searchResults.length > 0 && (
-              <div className="absolute z-10 w-full bg-black text-white border border-gray-700 mt-1 rounded">
-                {searchResults.map((r, i) => (
-                  <div
-                    key={i}
-                    className="p-2 cursor-pointer hover:bg-gray-700"
-                    onClick={() => handleSearchResultClick(r)}
-                  >
-                    <div className="flex justify-between">
-                      <span className="truncate mr-2">
-                        {r.hash || r.id || r.address}
-                      </span>
-                      <span className="text-xs text-gray-400 uppercase">{r.type}</span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
           <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
             <TabsList className="grid w-full grid-cols-4">
               <TabsTrigger value="overview">Overview</TabsTrigger>

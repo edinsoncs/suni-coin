@@ -17,7 +17,7 @@ export default function Document(): ReactElement {
         />
       </Head>
       <body
-        className="bg-white text-black dark:bg-black dark:text-white"
+        className="bg-white text-black dark:bg-black dark:text-white transition-colors duration-300"
         style={{ fontFamily: 'Nunito, Raleway, sans-serif' }}
       >
         <Main />

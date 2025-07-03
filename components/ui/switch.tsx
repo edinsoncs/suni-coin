@@ -8,6 +8,11 @@ export interface SwitchProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
 
 export function Switch({ className, checked = false, onCheckedChange, ...props }: SwitchProps) {
   const [isChecked, setChecked] = React.useState(checked)
+
+  React.useEffect(() => {
+    setChecked(checked)
+  }, [checked])
+
   const toggle = () => {
     const val = !isChecked
     setChecked(val)
