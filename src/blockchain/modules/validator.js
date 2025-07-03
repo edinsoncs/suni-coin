@@ -1,5 +1,5 @@
 import Block from '../block.js';
-import { elliptic, runScript } from '../../modules/index.js';
+import { elliptic, runScript, runWasm } from '../../modules/index.js';
 
 export default(blockchain) => {
 	const [genesisBlock, ...blocks] = blockchain;
@@ -26,10 +26,15 @@ export default(blockchain) => {
                 }
 
                 if(Array.isArray(data)){
-                        for(const tx of data){
-                                if(tx.script){
-                                        const ok = runScript(tx.script, { tx });
-                                        if(!ok){
+                        for (const tx of data) {
+                                if (tx.script) {
+                                        let ok;
+                                        if (typeof tx.script === 'object' && tx.script.type === 'wasm') {
+                                                ok = runWasm(tx.script.code, { tx });
+                                        } else {
+                                                ok = runScript(tx.script, { tx });
+                                        }
+                                        if (!ok) {
                                                 throw Error('Script de transaccion invalido');
                                         }
                                 }
