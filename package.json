@@ -20,7 +20,8 @@
     "test:watch": "jest --watchAll",
     "build": "next build && next export",
     "desktop:win": "electron-builder --win",
-    "desktop:mac": "electron-builder --mac"
+    "desktop:mac": "electron-builder --mac",
+    "cli": "node ./bin/cli.js"
   },
   "build": {
     "files": ["out", "main.js", "src/**/*"]
@@ -61,7 +62,8 @@
     "react-tooltip": "^5.11.0",
     "react-loading-skeleton": "^3.3.1",
     "bip39": "^3.0.4",
-    "bip32": "^2.0.6"
+    "bip32": "^2.0.6",
+    "commander": "^10.0.0"
   },
   "jest": {
     "silent": false,
