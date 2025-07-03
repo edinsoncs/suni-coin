@@ -1,5 +1,6 @@
 import Wallet from '../../../wallet/index.js';
 import context, { blockchain, wallets } from '../../../service/context.js';
+import { saveWallets } from '../../../service/walletStorage.js';
 
 export default (req, res) => {
     const { mnemonic, encrypted, password, address } = req.body || {};
@@ -13,6 +14,7 @@ export default (req, res) => {
             wallet = Wallet.fromMnemonic(blockchain, mnemonic, 20);
         }
         wallets.push(wallet);
+        saveWallets(wallets);
         context.currentWallet = wallet;
         res.json({ status: 'ok', data: wallet.blockchainWallet() });
     } catch (err) {

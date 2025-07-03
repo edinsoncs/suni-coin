@@ -1,5 +1,6 @@
 import Wallet from '../../../wallet/index.js';
 import context, { blockchain, wallets } from '../../../service/context.js';
+import { saveWallets } from '../../../service/walletStorage.js';
 
 export default (req, res) => {
         const { password } = req.body || {};
@@ -9,6 +10,7 @@ export default (req, res) => {
         }
         context.currentWallet = wallet;
         wallets.push(wallet);
+        saveWallets(wallets);
 
         res.json({
                 status: 'ok',
