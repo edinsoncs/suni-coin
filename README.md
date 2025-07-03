@@ -110,9 +110,10 @@ Pending transfers remain in the mempool until a block is produced. You can
 manually confirm them from the UI by pressing **Mine Transactions** or by
 calling `GET /api/mine/transactions`.
 
-For unattended nodes run `npm run auto-mine` in a separate terminal. The script
-checks the mempool every few seconds and mines a new block whenever pending
-transactions are detected.
+For unattended nodes run `npm run cli -- auto-mine` in a separate terminal.
+This command checks the mempool every few seconds and mines a new block
+whenever pending transactions are detected. You can adjust the polling
+interval and API URL with `--interval` and `--url` options.
 
 The chain is loaded from `src/storage/chain.json` on start and saved back to
 this file whenever new blocks are added, ensuring persistence between restarts.
