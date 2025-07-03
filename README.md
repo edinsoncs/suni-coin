@@ -111,6 +111,8 @@ The REST API exposes several helpers for querying the chain:
 - `GET /api/ai/list` – list all blocks that contain AI data
 - `GET /api/metrics` – retrieve overall blockchain statistics
 - `GET /api/metrics/extended` – retrieve advanced network statistics
+- `GET /api/metrics/prometheus` – metrics in Prometheus text format
+- `WS  /api/metrics/live` – live metrics over WebSocket
 
 ### Blockchain Utilities
 
