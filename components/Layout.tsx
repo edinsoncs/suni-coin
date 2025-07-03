@@ -9,11 +9,13 @@ import {
   FaChartLine,
 } from 'react-icons/fa';
 import ThemeToggle from './ThemeToggle';
+import { useTheme } from './ThemeContext';
 
 export default function Layout({ children }: { children: ReactNode }) {
+  const { theme } = useTheme();
   return (
-    <div className="min-h-screen bg-black text-white">
-      <header className="bg-black border-b border-gray-700">
+    <div className="min-h-screen bg-background text-foreground">
+      <header className="border-b border-gray-700 bg-background">
         <nav className="max-w-5xl mx-auto flex justify-between items-center p-4">
           <Link href="/" className="font-semibold hover:underline flex items-center gap-1">
             <FaHome /> Home
