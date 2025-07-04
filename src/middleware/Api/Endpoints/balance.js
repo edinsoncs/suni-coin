@@ -1,7 +1,13 @@
-import { blockchain } from '../../../service/context.js';
+import { blockchain, wallets } from '../../../service/context.js';
 
 export default (req, res) => {
     const { address } = req.params;
-    const balance = blockchain.getBalance(address);
+    let balance;
+    const wallet = wallets.find(w => w.publicKey === address);
+    if(wallet){
+        balance = wallet.calculateBalance('COIN');
+    } else {
+        balance = blockchain.getBalance(address);
+    }
     res.json({ address, balance });
 };

@@ -137,7 +137,11 @@ class Wallet{
         }
 
         calculateBalance(assetType = 'COIN'){
-                return this.blockchain.getBalance(this.publicKey, assetType);
+                const chainBalance = this.blockchain.getBalance(this.publicKey, assetType);
+                if(assetType === 'COIN'){
+                        return this.balance + chainBalance;
+                }
+                return chainBalance;
         }
 
         static encryptPrivateKey(privateKeyHex, password){
