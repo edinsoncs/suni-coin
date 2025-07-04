@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useRouter } from 'next/router'
 import { useWallet } from '../components/WalletContext'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
@@ -7,9 +8,9 @@ const API_BASE = 'http://localhost:8000'
 
 export default function Send() {
   const { wallet, refreshBalance } = useWallet()
+  const router = useRouter()
   const [recipient, setRecipient] = useState('')
   const [amount, setAmount] = useState('')
-  const [result, setResult] = useState<any>(null)
 
   async function handleSend() {
     if (!wallet) return
@@ -19,8 +20,10 @@ export default function Send() {
       body: JSON.stringify({ recipient, amount: parseFloat(amount) })
     })
     const json = await res.json()
-    setResult(json)
     await refreshBalance()
+    if (json && json.id) {
+      router.push(`/tx/${json.id}`)
+    }
   }
 
   return (
@@ -42,11 +45,6 @@ export default function Send() {
             onChange={(e) => setAmount(e.target.value)}
           />
           <Button onClick={handleSend}>Send</Button>
-          {result && (
-            <pre className="bg-gray-900 p-3 rounded overflow-auto">
-              {JSON.stringify(result, null, 2)}
-            </pre>
-          )}
         </>
       )}
     </div>
