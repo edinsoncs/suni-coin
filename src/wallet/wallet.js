@@ -7,7 +7,7 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
-const INIT_BL = 100;
+const INIT_BL = 20;
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const WALLET_DIR = path.join(__dirname, '../storage/wallets');
 
