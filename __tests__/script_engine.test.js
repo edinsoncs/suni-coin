@@ -36,4 +36,13 @@ describe('Transaction script validation', () => {
         bc.addBlock([tx], wallet);
         expect(bc.verifyChain()).toBe(false);
     });
+
+    test('infinite wasm script times out and invalidates chain', () => {
+        const infinite = 'AGFzbQEAAAABBQFgAAF/AwIBAAcIAQRtYWluAAAKCwEJAANADAALQQEL';
+        const bc = new Blockchain();
+        const wallet = new Wallet(bc, 50);
+        const tx = Transaction.create(wallet, 'receiver', 10, { type: 'wasm', code: infinite });
+        bc.addBlock([tx], wallet);
+        expect(bc.verifyChain()).toBe(false);
+    });
 });
