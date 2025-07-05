@@ -24,3 +24,39 @@ Este repositorio implementa una cadena de bloques Delegated Proof‑of‑Stake e
 - `pages/` y `components/` conforman el frontend Next.js.
 - `bin/cli.js` provee una herramienta de línea de comandos.
 - Los datos persistentes viven en `src/storage/`.
+
+## Descripción de archivos clave
+- `README.md` explica el propósito general del proyecto.
+- `index.js` es un ejemplo de creación de bloques en consola.
+- `dev.js` lanza API y frontend simultáneamente para desarrollo.
+- `main.js` inicia la versión de escritorio con Electron.
+- `bin/cli.js` ofrece comandos para interactuar con el nodo y las carteras.
+- `next.config.cjs` define la configuración de Next.js.
+- `next-env.d.ts` contiene declaraciones de tipos generadas por Next.
+- `tsconfig.json` configura el compilador TypeScript.
+- `package.json` lista las dependencias y scripts disponibles.
+- `package-lock.json` fija las versiones exactas de dichas dependencias.
+- `components/` alberga los componentes React reutilizables.
+- `pages/` define las rutas del frontend.
+- `lib/` incluye utilidades compartidas.
+- `__tests__/` contiene la suite de Jest.
+- `src/blockchain/` implementa la cadena de bloques y el minado.
+- `src/service/` expone la API HTTP.
+- `src/middleware/` agrupa los endpoints de la API.
+- `src/modules/` provee módulos auxiliares.
+- `src/storage/` guarda la cadena, mempool y datos de wallets.
+- `src/utils/` reúne funciones de apoyo.
+- `src/wallet/` maneja las claves y operaciones de monedero.
+- `src/public/` expone recursos estáticos.
+- `src/miner/` ofrece utilidades para la minería automática.
+
+## Variables de entorno
+- `DB_TYPE` selecciona el backend de datos (`json`, `mongodb`, `mysql`, `postgres`, `firebase`).
+- `DB_URI` define la URL de conexión.
+- `DB_USER` y `DB_PASSWORD` configuran credenciales para MySQL y PostgreSQL.
+- `FIREBASE_CERT` apunta al JSON de la cuenta de servicio de Firebase.
+
+## Contribución
+- Escribe los mensajes de commit en español y describe brevemente el cambio.
+- Ejecuta `npm test` y `npm run eslint` antes de cada commit.
+- Las Pull Requests deben incluir un resumen en español de los cambios y los resultados de las pruebas.
