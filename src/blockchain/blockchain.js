@@ -148,6 +148,21 @@ class Blockchain {
                 }
         }
 
+        /**
+         * Ensure the given address is the current delegate
+         * @param {string} address
+         * @returns {boolean} true if delegate changed
+         */
+        setCurrentDelegate(address){
+                this.delegates = this.computeDelegates();
+                const idx = this.delegates.indexOf(address);
+                if(idx !== -1){
+                        this.delegateIndex = idx;
+                        return true;
+                }
+                return false;
+        }
+
         selectValidator(){
                 const entries = Object.entries(this.validators);
                 const total = entries.reduce((t, [, stake]) => t + Number(stake), 0);
