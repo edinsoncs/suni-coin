@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useRouter } from 'next/router'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { useWallet, Wallet } from '../components/WalletContext'
@@ -24,6 +25,7 @@ function randomHash() {
 }
 
 export default function SendTransactionPage() {
+  const router = useRouter()
   const { wallets, wallet, copyToClipboard, refreshBalance } = useWallet()
   const [from, setFrom] = useState('')
   const [to, setTo] = useState('')
@@ -76,8 +78,12 @@ export default function SendTransactionPage() {
         setTxHash(data.id || null)
         setToast('Transaction sent!')
         await refreshBalance()
+        if (data.id) {
+          router.push(`/tx/${data.id}`)
+        }
       } else {
-        setToast(data.error || 'Transaction failed')
+        const err = typeof data.error === 'object' ? data.error.message : data.error
+        setToast(err || 'Transaction failed')
       }
     } catch {
       setToast('Transaction failed')
