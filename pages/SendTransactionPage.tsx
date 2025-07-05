@@ -69,7 +69,7 @@ export default function SendTransactionPage() {
       const res = await fetch(`${API_BASE}/api/transactions`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ recipient: to, amount: parseFloat(amount) })
+        body: JSON.stringify({ recipient: to, amount: parseFloat(amount), sender: from })
       })
       const data = await res.json()
       if (res.ok) {
