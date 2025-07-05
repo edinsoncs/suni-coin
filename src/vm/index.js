@@ -13,7 +13,7 @@ const handlers = {
 
 export default function execute(script, state, debug = false) {
   if (typeof script !== 'string' && !Array.isArray(script)) {
-    return { newState: state, events: [], status: 'error', error: 'Invalid script format' };
+    return { newState: state, events: [], status: 'error', error: 'Invalid script format', logs: [] };
   }
   if (Array.isArray(script)) {
     try {
@@ -24,19 +24,22 @@ export default function execute(script, state, debug = false) {
   }
   const lines = script.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
   if (lines.length > 100) {
-    return { newState: state, events: [], status: 'error', error: 'Instruction limit exceeded' };
+    return { newState: state, events: [], status: 'error', error: 'Instruction limit exceeded', logs: [] };
   }
   const context = JSON.parse(JSON.stringify(state));
   const events = [];
+  const logs = [];
+  logs.push(`Prev: ${JSON.stringify(state)}`);
   for (const line of lines) {
-    if (debug) console.log('EXEC', line);
+    if (debug) logs.push(`EXEC ${line}`);
     const tokens = tokenizeLine(line);
-    const res = executeTokens(tokens, context, events, debug);
+    const res = executeTokens(tokens, context, events, debug, logs);
     if (!res.ok) {
-      return { newState: state, events, status: 'error', error: res.error };
+      return { newState: state, events, status: 'error', error: res.error, logs };
     }
   }
-  return { newState: context, events, status: 'success' };
+  logs.push(`New: ${JSON.stringify(context)}`);
+  return { newState: context, events, status: 'success', logs };
 }
 
 function serializeScript(arr) {
@@ -65,16 +68,16 @@ function tokenizeLine(line) {
   return line.match(/"[^"]*"|\(|\)|\S+/g) || [];
 }
 
-function executeTokens(tokens, state, events, debug) {
+function executeTokens(tokens, state, events, debug, logs) {
   const op = tokens[0] ? tokens[0].toUpperCase() : '';
   const handler = handlers[op];
   if (!handler) {
     return { ok: false, error: `Unknown operation: ${op}` };
   }
-  return handler(tokens, state, events, debug);
+  return handler(tokens, state, events, debug, logs);
 }
 
-function doIf(tokens, state, events, debug) {
+function doIf(tokens, state, events, debug, logs) {
   const thenIndex = tokens.findIndex(t => t.toUpperCase() === 'THEN');
   if (thenIndex === -1) {
     return { ok: false, error: 'Malformed IF' };
@@ -86,10 +89,10 @@ function doIf(tokens, state, events, debug) {
     return { ok: false, error: condition.error };
   }
   if (condition.value) {
-    if (debug) console.log('COND true');
-    return executeTokens(actionTokens, state, events, debug);
+    if (debug) logs.push(`IF ${condTokens.join(' ')} -> true`);
+    return executeTokens(actionTokens, state, events, debug, logs);
   }
-  if (debug) console.log('COND false');
+  if (debug) logs.push(`IF ${condTokens.join(' ')} -> false`);
   return { ok: true };
 }
 
