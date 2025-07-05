@@ -7,7 +7,23 @@ import { useTheme } from '@/components/ThemeContext'
 
 const Monaco = dynamic(() => import('@monaco-editor/react'), { ssr: false })
 
-const suggestions = [
+const KEYWORDS = [
+  'TRANSFER',
+  'STAKE',
+  'LOG',
+  'EMIT',
+  'IF',
+  'THEN',
+  'BALANCE',
+  'AND',
+  'OR',
+  'LOOP',
+  'ASSERT',
+  'state.get',
+  'state.set'
+]
+
+const baseSnippets = [
   {
     label: 'Contrato base',
     insertText: 'TRANSFER alice bob 10\nSTAKE alice 10',
@@ -42,13 +58,75 @@ export default function VmPlayground() {
   const handleMount = (_: any, monaco: any) => {
     monaco.languages.register({ id: 'bydlang' })
     monaco.languages.setMonarchTokensProvider('bydlang', {
-      keywords: ['TRANSFER', 'STAKE', 'LOG', 'EMIT', 'IF', 'THEN', 'BALANCE', 'AND', 'OR'],
       tokenizer: {
-        root: [[/[A-Z]+/, 'keyword']]
+        root: [
+          [new RegExp(`\\b(?:${KEYWORDS.map(k => k.replace('.', '\\.')).join('|')})\\b`), 'keyword'],
+          [/".*?"/, 'string'],
+          [/[0-9]+/, 'number'],
+          [/[a-zA-Z_][a-zA-Z0-9_]*/, 'identifier']
+        ]
       }
     })
+
+    const keywordSuggestions = KEYWORDS.map(k => ({
+      label: k.toLowerCase(),
+      kind: monaco.languages.CompletionItemKind.Keyword,
+      insertText: k
+    }))
+
+    const snippetSuggestions = [
+      {
+        label: 'state.get',
+        kind: monaco.languages.CompletionItemKind.Function,
+        insertText: 'state.get("${1:key}")',
+        insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet
+      },
+      {
+        label: 'state.set',
+        kind: monaco.languages.CompletionItemKind.Function,
+        insertText: 'state.set("${1:key}", ${2:value})',
+        insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet
+      },
+      {
+        label: 'if',
+        kind: monaco.languages.CompletionItemKind.Snippet,
+        insertText: 'IF ${1:COND} THEN ${2:ACTION}',
+        insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet
+      },
+      {
+        label: 'loop',
+        kind: monaco.languages.CompletionItemKind.Snippet,
+        insertText: 'LOOP ${1:times}\\n  ${2:ACTIONS}\\nEND',
+        insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet
+      }
+    ]
+
     monaco.languages.registerCompletionItemProvider('bydlang', {
-      provideCompletionItems: () => ({ suggestions })
+      provideCompletionItems: () => ({
+        suggestions: [...baseSnippets, ...snippetSuggestions, ...keywordSuggestions]
+      })
+    })
+
+    monaco.languages.registerHoverProvider('bydlang', {
+      provideHover(model, position) {
+        const word = model.getWordAtPosition(position)
+        if (!word) return null
+        if (word.word === 'state.get') {
+          return {
+            contents: [
+              { value: '**state.get(key)**\\n\\nReturns the value of a key from the current state.\\nUsage: `let x = state.get("key")`' }
+            ]
+          }
+        }
+        if (word.word === 'assert') {
+          return {
+            contents: [
+              { value: '**assert(condition)**\\n\\nThrows an error if condition is false.\\nUsage: `assert(balance >= 10)`' }
+            ]
+          }
+        }
+        return null
+      }
     })
   }
 
