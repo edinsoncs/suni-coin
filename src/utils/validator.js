@@ -53,4 +53,12 @@ function object(schema) {
   };
 }
 
-export default { string, number, object };
+function any() {
+  return {
+    validate(value) {
+      return { value };
+    }
+  };
+}
+
+export default { string, number, object, any };
