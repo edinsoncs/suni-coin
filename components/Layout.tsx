@@ -1,6 +1,5 @@
 import { ReactNode, useEffect, useState } from 'react'
 import { Blocks, Sun, Moon, Network } from 'lucide-react'
-import { FaSignOutAlt } from 'react-icons/fa'
 import { Button } from './ui/button'
 import { Badge } from './ui/badge'
 import { Switch } from './ui/switch'
@@ -9,6 +8,7 @@ import ConnectWalletModal from './ConnectWalletModal'
 import SearchBar from './SearchBar'
 import { useWallet } from './WalletContext'
 import Link from 'next/link'
+import UserDropdown from './UserDropdown'
 
 export default function Layout({ children }: { children: ReactNode }) {
   const { theme, setTheme } = useTheme()
@@ -91,35 +91,13 @@ export default function Layout({ children }: { children: ReactNode }) {
                   {menuOpen && (
                     <>
                       <div className="fixed inset-0 bg-black/50 z-40" />
-                      <div className="absolute right-0 mt-2 w-48 bg-card border border-border rounded shadow z-50">
-                        <Link
-                          href="/send"
-                          className="block px-4 py-2 text-sm hover:bg-accent"
-                        >
-                          Send Transaction
-                        </Link>
-                        <Link
-                          href="/wallet"
-                          className="block px-4 py-2 text-sm hover:bg-accent"
-                        >
-                          Wallet
-                        </Link>
-                        <Link
-                          href="/analytics"
-                          className="block px-4 py-2 text-sm hover:bg-accent"
-                        >
-                          Analytics
-                        </Link>
-                        <button
-                          onClick={() => {
-                            logout()
-                            setMenuOpen(false)
-                          }}
-                          className="w-full text-left px-4 py-2 text-sm hover:bg-accent flex items-center gap-2"
-                        >
-                          <FaSignOutAlt className="inline" /> Logout
-                        </button>
-                      </div>
+                      <UserDropdown
+                        onLogout={() => {
+                          logout()
+                          setMenuOpen(false)
+                        }}
+                        className="z-50"
+                      />
                     </>
                   )}
                 </div>
