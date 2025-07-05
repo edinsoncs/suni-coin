@@ -1,4 +1,4 @@
-export default function stake(tokens, state, events) {
+export default function stake(tokens, state, events, debug, logs) {
   if (tokens.length !== 3) {
     return { ok: false, error: 'Malformed STAKE' };
   }
@@ -16,5 +16,6 @@ export default function stake(tokens, state, events) {
   state.balances[user] -= amount;
   state.stakes[user] = (state.stakes[user] || 0) + amount;
   events.push('stake');
+  if (debug) logs.push(`stake ${user} : ${amount}`);
   return { ok: true };
 }

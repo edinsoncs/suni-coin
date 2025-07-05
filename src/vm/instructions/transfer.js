@@ -1,4 +1,4 @@
-export default function transfer(tokens, state, events) {
+export default function transfer(tokens, state, events, debug, logs) {
   if (tokens.length !== 4) {
     return { ok: false, error: 'Malformed TRANSFER' };
   }
@@ -19,5 +19,6 @@ export default function transfer(tokens, state, events) {
   state.balances[from] -= amount;
   state.balances[to] += amount;
   events.push('transfer');
+  if (debug) logs.push(`transfer ${from} -> ${to} : ${amount}`);
   return { ok: true };
 }
