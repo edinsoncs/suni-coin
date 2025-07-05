@@ -1,6 +1,8 @@
 import Wallet, { Transaction, blockchainWallet } from '../../../wallet/index.js';
 import { INIT_BL } from '../../../wallet/wallet.js';
-import context, { blockchain, wallets, walletMiner } from '../../../service/context.js';
+import context, { blockchain, wallets, walletMiner, CURRENT_WALLET_FILE } from '../../../service/context.js';
+import { writeFileSync, mkdirSync } from 'fs';
+import path from 'path';
 import Joi from '../../../utils/validator.js';
 
 const schema = Joi.object({
@@ -26,6 +28,13 @@ export default (req, res) => {
 
         context.currentWallet = wallet;
         wallets.push(wallet);
+        try {
+                const dir = path.dirname(CURRENT_WALLET_FILE);
+                mkdirSync(dir, { recursive: true });
+                writeFileSync(CURRENT_WALLET_FILE, JSON.stringify({ privateKey: wallet.exportPrivateKey() }));
+        } catch {
+                /* ignore persistence errors */
+        }
 
         const data = {
                 publicKey: wallet.publicKey,
