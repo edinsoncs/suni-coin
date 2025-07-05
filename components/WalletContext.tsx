@@ -4,6 +4,8 @@ export type Wallet = {
   publicKey: string
   balance: number
   favorite?: boolean
+  createdAt?: string
+  type?: 'imported' | 'generated'
 }
 
 interface WalletContextType {
@@ -21,6 +23,7 @@ interface WalletContextType {
   exportMnemonic: () => Promise<string | null>
   exportKeys: () => Promise<{ privateKey: string; publicKey: string } | null>
   refreshBalance: () => Promise<number | null>
+  importWallet: (mnemonic: string) => Promise<void>
 }
 
 const WalletContext = createContext<WalletContextType | undefined>(undefined)
@@ -58,8 +61,14 @@ export function WalletProvider({ children }: { children: ReactNode }) {
     })
     const json = await res.json()
     if (json.data) {
-      setWallet(json.data)
-      setWallets((w) => [...w, { ...json.data, favorite: false }])
+      const newWallet = {
+        ...json.data,
+        favorite: false,
+        createdAt: new Date().toISOString(),
+        type: 'generated' as const
+      }
+      setWallet(newWallet)
+      setWallets((w) => [...w, newWallet])
     }
   }
 
@@ -94,6 +103,25 @@ export function WalletProvider({ children }: { children: ReactNode }) {
     const res = await fetch(`${API_BASE}/api/balance/${address}`)
     const json = await res.json()
     return json.balance
+  }
+
+  async function importWallet(mnemonic: string) {
+    const res = await fetch(`${API_BASE}/api/wallet/import`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ mnemonic })
+    })
+    const json = await res.json()
+    if (json.status === 'ok' && json.data) {
+      const newWallet = {
+        ...json.data,
+        favorite: false,
+        createdAt: new Date().toISOString(),
+        type: 'imported' as const
+      }
+      setWallet(newWallet)
+      setWallets((w) => [...w, newWallet])
+    }
   }
 
   function exportAll() {
@@ -158,7 +186,8 @@ export function WalletProvider({ children }: { children: ReactNode }) {
         logout,
         exportMnemonic,
         exportKeys,
-        refreshBalance
+        refreshBalance,
+        importWallet
       }}
     >
       {children}
