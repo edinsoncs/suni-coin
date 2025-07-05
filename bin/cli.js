@@ -85,12 +85,22 @@ program
 program
   .command('send <recipient> <amount>')
   .option('-s, --script <script>')
+  .option('-m, --metadata <json>', 'Optional metadata as JSON')
   .description('Send transaction')
   .action((recipient, amount, opts) => {
+    let metadata;
+    if (opts.metadata) {
+      try {
+        metadata = JSON.parse(opts.metadata);
+      } catch {
+        metadata = opts.metadata;
+      }
+    }
     runEndpoint(transactionsNew, {
       recipient,
       amount: Number(amount),
       script: opts.script,
+      metadata,
     });
   });
 

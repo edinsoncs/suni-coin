@@ -108,7 +108,7 @@ class Wallet{
         }
 
 
-        createTransaction(receptAddress, amount, script = null, asset = { type: 'COIN', id: null }){
+        createTransaction(receptAddress, amount, script = null, asset = { type: 'COIN', id: null }, metadata = null){
                 const { blockchain: { memoryPool } } = this;
 
                 const isCoin = asset.type === 'COIN';
@@ -127,9 +127,9 @@ class Wallet{
 
                 let tr = memoryPool.find(this.publicKey);
                 if(isCoin && tr && tr.asset.type === 'COIN'){
-                        tr.update(this, receptAddress, amt, script);
+                        tr.update(this, receptAddress, amt, script, metadata);
                 } else {
-                        tr = Transaction.create(this, receptAddress, amt, script, asset);
+                        tr = Transaction.create(this, receptAddress, amt, script, asset, metadata);
                         memoryPool.addOrUpdate(tr);
                 }
 

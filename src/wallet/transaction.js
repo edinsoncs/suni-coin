@@ -5,15 +5,16 @@ const REWARD = 1;
 
 class Transaction{
 
-        constructor(asset = { type: 'COIN', id: null }){
+        constructor(asset = { type: 'COIN', id: null }, metadata = null){
                 this.id = uuidv1();
                 this.input = null;
                 this.outputs = [];
                 this.script = null;
                 this.asset = asset;
+                this.metadata = metadata;
         }
 
-        static create(senderWallet, receptAddress, amount, script = null, asset = { type: 'COIN', id: null }){
+        static create(senderWallet, receptAddress, amount, script = null, asset = { type: 'COIN', id: null }, metadata = null){
 
                 const { publicKey } = senderWallet;
                 const amt = Number(amount);
@@ -25,7 +26,7 @@ class Transaction{
                         throw Error('No puedes enviarte fondos a ti mismo');
                 }
 
-                const tr = new Transaction(asset);
+                const tr = new Transaction(asset, metadata);
                 tr.script = script;
 
                 if(asset.type === 'COIN'){
@@ -65,11 +66,11 @@ class Transaction{
 
 
         static verify(transaction){
-                const { input: { address, signature }, outputs, script, asset = { type: 'COIN', id: null } } = transaction;
+                const { input: { address, signature }, outputs, script, asset = { type: 'COIN', id: null }, metadata } = transaction;
                 return elliptic.verifySignature(
                         address,
                         signature,
-                        JSON.stringify(outputs) + JSON.stringify(asset) + (script || '')
+                        JSON.stringify(outputs) + JSON.stringify(asset) + (script || '') + JSON.stringify(metadata || {})
                 );
         }
 
@@ -79,12 +80,15 @@ class Transaction{
                         amount: inputAmount,
                         address: senderWallet.publicKey,
                         signature: senderWallet.sign(
-                                JSON.stringify(transaction.outputs) + JSON.stringify(transaction.asset || {}) + (transaction.script || '')
+                                JSON.stringify(transaction.outputs) +
+                                JSON.stringify(transaction.asset || {}) +
+                                (transaction.script || '') +
+                                JSON.stringify(transaction.metadata || {})
                         )
                 };
         }
 
-        update(senderWallet, receptAddress, amount, script = null) {
+        update(senderWallet, receptAddress, amount, script = null, metadata = null) {
 
                 if(this.asset.type !== 'COIN'){
                         throw Error('Solo las transacciones de tipo COIN pueden actualizarse');
@@ -108,6 +112,7 @@ class Transaction{
                         address: receptAddress
                 });
                 if(script) this.script = script;
+                if(metadata !== null) this.metadata = metadata;
                 this.input = Transaction.sign(this, senderWallet, senderWallet.calculateBalance('COIN'));
 
 		return this;

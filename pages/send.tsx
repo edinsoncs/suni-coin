@@ -13,16 +13,21 @@ export default function Send() {
   const [amount, setAmount] = useState('')
   const [message, setMessage] = useState<string | null>(null)
   const [sending, setSending] = useState(false)
+  const [metadata, setMetadata] = useState('')
 
   async function handleSend() {
     if (!wallet || sending) return
     setSending(true)
     setMessage(null)
     try {
+      let meta
+      if (metadata) {
+        try { meta = JSON.parse(metadata) } catch { meta = metadata }
+      }
       const res = await fetch(`${API_BASE}/api/transactions`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ recipient, amount: parseFloat(amount), sender: wallet.publicKey })
+        body: JSON.stringify({ recipient, amount: parseFloat(amount), sender: wallet.publicKey, metadata: meta })
       })
       const data = await res.json()
       await refreshBalance()
@@ -57,6 +62,11 @@ export default function Send() {
             type="number"
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
+          />
+          <Input
+            placeholder="Metadata (JSON optional)"
+            value={metadata}
+            onChange={(e) => setMetadata(e.target.value)}
           />
           <Button onClick={handleSend} disabled={sending}>
             {sending ? 'Sending...' : 'Send'}
