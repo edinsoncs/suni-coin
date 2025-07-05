@@ -104,7 +104,7 @@ export default function Send() {
             <div className="relative">
               <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400" data-tooltip-id="to-tip" />
               <Input
-                placeholder="0x..."
+                placeholder="0xabc123..."
                 className="pl-9 font-mono"
                 value={to}
                 onChange={e => setTo(e.target.value)}
@@ -119,6 +119,7 @@ export default function Send() {
               <Input
                 type="number"
                 step="0.000001"
+                placeholder="0.00"
                 className="pl-9"
                 value={amount}
                 onChange={e => setAmount(e.target.value)}
@@ -142,24 +143,24 @@ export default function Send() {
                   type="button"
                   onClick={() => setGas(opt.value)}
                   className={cn(
-                    'px-3 py-1 rounded-full text-sm transition-all',
+                    'px-4 py-1 rounded-full text-sm transition-all',
                     gas === opt.value
                       ? 'bg-green-600 text-white'
-                      : 'bg-white/10 hover:bg-white/20'
+                      : 'bg-neutral-800 text-white hover:bg-neutral-700'
                   )}
                 >
                   {opt.label}
                 </button>
               ))}
             </div>
-            <div className="text-xs text-neutral-400">Estimated total fee: {estimatedFee.toFixed(6)} BYD</div>
+            <div className="text-sm text-neutral-400">Estimated total fee: {estimatedFee.toFixed(6)} BYD</div>
           </div>
           <div>
             <label className="block text-sm mb-1">From Wallet</label>
             <div className="relative">
               <WalletIcon className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400" />
               <select
-                className="pl-9 pr-3 py-2 w-full rounded-md bg-background border focus:outline-none focus:ring-2 focus:ring-ring"
+                className="pl-9 pr-3 py-2 w-full rounded-lg bg-black border border-white/20 text-white focus:ring-2 transition-all duration-200"
                 value={from}
                 onChange={e => setFrom(e.target.value)}
               >
@@ -173,7 +174,7 @@ export default function Send() {
           </div>
           <Button
             onClick={handleSend}
-            className="w-full gap-2 bg-green-600 hover:bg-green-500"
+            className="w-full gap-2 bg-green-600 text-white px-6 py-2 rounded-lg transition-transform duration-200 hover:scale-105 hover:opacity-80"
             disabled={!valid}
           >
             {loading ? (
