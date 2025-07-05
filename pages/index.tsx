@@ -12,6 +12,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Progress } from "@/components/ui/progress"
 import { Sun, Moon, TrendingUp, Fuel, Shield, Wallet, PieChart, Database, Code, FileText } from "lucide-react"
+import SegmentedBar from "@/components/dashboard/SegmentedBar"
 import Skeleton from "react-loading-skeleton"
 import "react-loading-skeleton/dist/skeleton.css"
 import { Switch } from "@/components/ui/switch"
@@ -313,8 +314,8 @@ export default function BYDChainDashboard() {
 
   if (currentView === "block" && selectedItem) {
     return (
-      <div className="min-h-screen">
-        <div className="min-h-screen bg-background text-foreground">
+      <div className="min-h-screen bg-neutral-900 text-neutral-200">
+        <div className="min-h-screen">
           {/* Header */}
           <header className="border-b bg-card">
             <div className="container mx-auto px-4 py-4">
@@ -577,8 +578,8 @@ export default function BYDChainDashboard() {
 
   if (currentView === "transaction" && selectedItem) {
     return (
-      <div className="min-h-screen">
-        <div className="min-h-screen bg-background text-foreground">
+      <div className="min-h-screen bg-neutral-900 text-neutral-200">
+        <div className="min-h-screen">
           {/* Header */}
           <header className="border-b bg-card">
             <div className="container mx-auto px-4 py-4">
@@ -835,8 +836,8 @@ export default function BYDChainDashboard() {
 
   // Main Dashboard View
   return (
-    <div className="min-h-screen">
-      <div className="min-h-screen bg-background text-foreground">
+    <div className="min-h-screen bg-neutral-900 text-neutral-200">
+      <div className="min-h-screen">
 
 
         <div className="container mx-auto px-4 py-6">
@@ -963,32 +964,32 @@ export default function BYDChainDashboard() {
                 </Card>
 
                 {/* Enhanced Gas Tracker Widget */}
-                <Card className="hover:shadow-md transition-shadow">
+                <Card>
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2">
                       <Fuel className="w-4 h-4" />
                       Gas Tracker
                     </CardTitle>
                   </CardHeader>
-                  <CardContent className="space-y-3">
-                    <div className="flex justify-between">
-                      <span className="text-sm">Slow</span>
-                      <Badge variant="secondary">{loading ? <Skeleton width={40} /> : gasTracker.slow}</Badge>
+                  <CardContent className="space-y-4">
+                    <SegmentedBar
+                      segments={[
+                        { value: 1, color: '#22c55e' },
+                        { value: 1, color: '#3b82f6' },
+                        { value: 1, color: '#ef4444' },
+                      ]}
+                    />
+                    <div className="flex justify-between text-sm">
+                      <span>Slow</span>
+                      <span>{loading ? <Skeleton width={40} /> : gasTracker.slow}</span>
                     </div>
-                    <div className="flex justify-between">
-                      <span className="text-sm">Standard</span>
-                      <Badge variant="default">{loading ? <Skeleton width={40} /> : gasTracker.standard}</Badge>
+                    <div className="flex justify-between text-sm">
+                      <span>Standard</span>
+                      <span>{loading ? <Skeleton width={40} /> : gasTracker.standard}</span>
                     </div>
-                    <div className="flex justify-between">
-                      <span className="text-sm">Fast</span>
-                      <Badge variant="destructive">{loading ? <Skeleton width={40} /> : gasTracker.fast}</Badge>
-                    </div>
-                    <div className="space-y-2">
-                      <div className="flex justify-between text-sm">
-                        <span>Network Usage</span>
-                        <span>{loading ? <Skeleton width={30} /> : `${gasTracker.gasUsedPercent}%`}</span>
-                      </div>
-                      <Progress value={loading ? 0 : gasTracker.gasUsedPercent} />
+                    <div className="flex justify-between text-sm">
+                      <span>Fast</span>
+                      <span>{loading ? <Skeleton width={40} /> : gasTracker.fast}</span>
                     </div>
                   </CardContent>
                 </Card>

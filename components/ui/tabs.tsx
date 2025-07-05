@@ -29,7 +29,12 @@ export function Tabs({ className, value, onValueChange, children, ...props }: Ta
 }
 
 export function TabsList({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
-  return <div className={cn('inline-flex items-center justify-center rounded-md bg-muted p-1 text-muted-foreground', className)} {...props} />
+  return (
+    <div
+      className={cn('inline-flex items-center justify-start gap-6 border-b border-white/10 text-neutral-400', className)}
+      {...props}
+    />
+  )
 }
 
 export interface TabsTriggerProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -42,11 +47,11 @@ export function TabsTrigger({ className, value, ...props }: TabsTriggerProps) {
   return (
     <button
       className={cn(
-        'inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
+        'relative px-3 py-2 text-sm font-medium transition-colors focus-visible:outline-none',
         active
-          ? 'bg-background text-foreground shadow'
-          : 'text-muted-foreground hover:bg-accent/50',
-        className
+          ? 'text-white after:absolute after:-bottom-px after:left-0 after:right-0 after:h-px after:bg-white transition-all'
+          : 'text-neutral-400 hover:text-white',
+        className,
       )}
       onClick={() => context?.setValue(value)}
       {...props}
@@ -61,5 +66,5 @@ export interface TabsContentProps extends React.HTMLAttributes<HTMLDivElement> {
 export function TabsContent({ className, value, ...props }: TabsContentProps) {
   const context = React.useContext(TabsContext)
   if (context?.value !== value) return null
-  return <div className={cn('mt-2 rounded-lg border p-6', className)} {...props} />
+  return <div className={cn('mt-4', className)} {...props} />
 }
