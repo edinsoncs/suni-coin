@@ -14,7 +14,7 @@ class Miner {
                 const { memoryPool } = blockchain;
 
                 if(memoryPool.transactions.length === 0) {
-                        throw Error('La transacción no esta confirmada');
+                        throw Error('Transaction not confirmed');
                 }
 
                 memoryPool.transactions.push(Transaction.reward(wallet, blockchainWallet));

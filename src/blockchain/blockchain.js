@@ -72,15 +72,15 @@ class Blockchain {
 
         replace(newBlocks = []){
 		
-		if(newBlocks.length < this.blocks.length){
-			throw Error('La cadena no es mas larga que la actual');
-		}
+                if(newBlocks.length < this.blocks.length){
+                        throw Error('The chain is not longer than the current one');
+                }
 
 		try {
 			validator(newBlocks);
-		}catch(error) {
-			throw Error('La cadena es invalida');
-		}
+                }catch(error) {
+                        throw Error('The chain is invalid');
+                }
 
                 this.blocks = newBlocks;
                 saveBlocks(this.blocks);

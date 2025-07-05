@@ -1,10 +1,10 @@
 # BYDLang VM
 
-Esta carpeta contiene la maquina virtual que ejecuta los scripts BYDLang.
-Cada instrucción se implementa en un archivo dentro de `instructions/` y es
-registrada en `index.js`.
+This folder contains the virtual machine that runs BYDLang scripts.
+Each instruction is implemented in a file inside `instructions/` and registered
+in `index.js`.
 
-Para añadir una nueva instrucción crea un archivo exportando una función con la
-firma `(tokens, state, events, debug)` que modifique el estado y devuelva
-`{ ok: true }` o `{ ok: false, error }`. Luego agrega la referencia en el objeto
-`handlers` de `index.js`.
+To add a new instruction create a file exporting a function with the signature
+`(tokens, state, events, debug)` that modifies the state and returns
+`{ ok: true }` or `{ ok: false, error }`. Then add the reference in the
+`handlers` object of `index.js`.

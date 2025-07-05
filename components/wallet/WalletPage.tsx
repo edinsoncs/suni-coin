@@ -191,7 +191,7 @@ export default function WalletPage() {
     a.download = `${address}.json`
     a.click()
     URL.revokeObjectURL(url)
-    setToast('Clave exportada')
+    setToast('Key exported')
   }
 
   function handleExportAll() {
@@ -203,20 +203,20 @@ export default function WalletPage() {
     a.download = `wallets.json`
     a.click()
     URL.revokeObjectURL(url)
-    setToast('Exportadas todas las wallets')
+    setToast('All wallets exported')
   }
 
   function handleCopy() {
     if (wallet) {
       copyToClipboard(wallet.publicKey)
-      setToast('Copiado')
+      setToast('Copied')
     }
   }
 
   function confirmDelete() {
     if (toDelete) {
       deleteWallet(toDelete)
-      setToast('Wallet eliminada')
+      setToast('Wallet deleted')
       setToDelete(null)
     }
   }
@@ -248,11 +248,11 @@ export default function WalletPage() {
       </div>
       {toast && <div className="fixed bottom-4 right-4 bg-white/10 text-white px-4 py-2 rounded-xl">{toast}</div>}
       <Modal open={!!toDelete} onClose={() => setToDelete(null)}>
-        <h2 className="text-xl mb-4">¿Eliminar wallet?</h2>
+        <h2 className="text-xl mb-4">Delete wallet?</h2>
         <div className="flex gap-4">
-          <Button onClick={confirmDelete} className="bg-red-600 hover:bg-red-500">Eliminar</Button>
+          <Button onClick={confirmDelete} className="bg-red-600 hover:bg-red-500">Delete</Button>
           <Button variant="ghost" onClick={() => setToDelete(null)}>
-            Cancelar
+            Cancel
           </Button>
         </div>
       </Modal>

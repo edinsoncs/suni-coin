@@ -16,16 +16,16 @@ export default function ConnectWalletModal({ open, onClose }: Props) {
 
   return (
     <Modal open={open} onClose={onClose}>
-      <h2 className="text-xl font-semibold mb-4">Términos de Uso</h2>
+      <h2 className="text-xl font-semibold mb-4">Terms of Use</h2>
       <p className="mb-4 text-sm">
-        Al continuar confirma que acepta los términos y condiciones del uso de la
-        aplicación.
+        By continuing you confirm that you accept the application's terms and
+        conditions.
       </p>
       <button
         onClick={handleAccept}
         className="px-4 py-2 bg-blue-500 text-white rounded"
       >
-        Aceptar y Firmar
+        Accept and Sign
       </button>
     </Modal>
   )
