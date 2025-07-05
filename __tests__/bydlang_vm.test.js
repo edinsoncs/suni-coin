@@ -36,4 +36,39 @@ STAKE bob 50
     expect(result.newState.balances.bob).toBe(0);
     expect(result.status).toBe('success');
   });
+
+  test('handles complex conditions', () => {
+    const script = 'IF BALANCE alice >= 100 AND ( BALANCE bob >= 50 OR BALANCE carl >= 30 ) THEN TRANSFER alice bob 20';
+    const state = { balances: { alice: 150, bob: 60, carl: 0 }, stakes: {} };
+    const result = execute(script, state);
+    expect(result.newState.balances.bob).toBe(80);
+  });
+
+  test('logs and emits events', () => {
+    const script = `
+LOG "hello"
+EMIT payout
+`;
+    const state = { balances: { a: 1 }, stakes: {} };
+    const result = execute(script, state);
+    expect(result.events).toEqual(['log:hello', 'payout']);
+  });
+
+  test('json script executes', () => {
+    const script = [
+      { op: 'TRANSFER', from: 'alice', to: 'bob', amount: 10 },
+      { op: 'LOG', message: 'done' }
+    ];
+    const state = { balances: { alice: 20, bob: 0 }, stakes: {} };
+    const result = execute(script, state);
+    expect(result.newState.balances.bob).toBe(10);
+    expect(result.events).toEqual(['transfer', 'log:done']);
+  });
+
+  test('fails when instruction limit exceeded', () => {
+    const lines = Array.from({ length: 101 }, () => 'EMIT e').join('\n');
+    const state = { balances: {}, stakes: {} };
+    const result = execute(lines, state);
+    expect(result.status).toBe('error');
+  });
 });
