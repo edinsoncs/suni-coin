@@ -6,6 +6,7 @@ const schema = Joi.object({
     recipient: Joi.string().required(),
     amount: Joi.number().positive().required(),
     script: Joi.string().allow('', null),
+    metadata: Joi.any(),
     sender: Joi.string().allow('', null)
 });
 
@@ -14,7 +15,7 @@ export default (req, res) => {
         if (error) {
                 return res.status(400).json({ status: 0, error });
         }
-        let { recipient, amount, script, sender } = value;
+        let { recipient, amount, script, metadata, sender } = value;
         recipient = recipient.trim();
         if(recipient.startsWith('0x') || recipient.startsWith('0X')){
                 recipient = recipient.slice(2);
@@ -34,7 +35,7 @@ export default (req, res) => {
         }
 
         try{
-                const tr = wallet.createTransaction(recipient, amount, script);
+                const tr = wallet.createTransaction(recipient, amount, script, { type: 'COIN', id: null }, metadata);
                 p2pAction.broadcast(MESSAGE.TR, tr);
                 res.json(tr);
         }catch(error){

@@ -98,6 +98,14 @@ use this, include an object `{ type: 'wasm', code: '<base64>' }` in the
 `main` function that returns `1` on success. These modules run in a minimal
 environment, providing the transaction data through the `env` import object.
 
+### Transaction Metadata
+
+Each transaction may optionally include arbitrary metadata. This data is stored
+in the new `metadata` field and is signed along with the rest of the
+transaction contents. Use the CLI `send` command with `--metadata` or the web
+form to attach JSON data to a transfer. Metadata is verified when signatures are
+checked so it cannot be tampered with after the fact.
+
 ### API Endpoints
 
 The REST API exposes several helpers for querying the chain:
