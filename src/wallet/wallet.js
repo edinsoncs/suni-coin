@@ -100,7 +100,7 @@ class Wallet{
 
         stake(amount){
                 if(amount > this.balance){
-                        throw Error(`El monto es: ${amount} superior al balance: ${this.balance}`);
+                        throw Error(`Amount ${amount} exceeds balance ${this.balance}`);
                 }
                 this.balance -= amount;
                 this.stakeBalance += amount;
@@ -116,13 +116,13 @@ class Wallet{
                 const amt = Number(amount);
 
                 if(amt <= 0){
-                   throw Error('El monto debe ser mayor a cero');
+                   throw Error('Amount must be greater than zero');
                 }
                 if(receptAddress === this.publicKey){
-                   throw Error('No puedes enviarte fondos a ti mismo');
+                   throw Error('Cannot send funds to yourself');
                 }
                 if(isCoin && amt > balance){
-                   throw Error(`El monto es: ${amt} superior al balance: ${balance}`);
+                   throw Error(`Amount ${amt} exceeds balance ${balance}`);
                 }
 
                 let tr = memoryPool.find(this.publicKey);

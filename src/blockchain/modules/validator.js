@@ -8,7 +8,7 @@ export default(blockchain) => {
 		JSON.stringify(genesisBlock) !== 
 		JSON.stringify(Block.genesis))
 	{
-		throw Error('Genesis Block incorrecto!');
+                throw Error('Incorrect Genesis block!');
 	}
 
         for(let i = 0; i < blocks.length; i++){
@@ -16,13 +16,13 @@ export default(blockchain) => {
                 const previousBlock = blockchain[i];
 
                 if(previousHash !== previousBlock.hash){
-                        throw Error('El anterior (Previous) hash es incorrecto');
+                        throw Error('Previous hash is incorrect');
                 }
                 if(hash !== Block.hash(timestamp, previousHash, data, validator, difficulty)){
-                        throw Error('El hash es invalido');
+                        throw Error('Hash is invalid');
                 }
                 if(!elliptic.verifySignature(validator, signature, hash)){
-                        throw Error('La firma del bloque es invalida');
+                        throw Error('Block signature is invalid');
                 }
 
                 if(Array.isArray(data)){
@@ -35,7 +35,7 @@ export default(blockchain) => {
                                                 ok = runScript(tx.script, { tx });
                                         }
                                         if (!ok) {
-                                                throw Error('Script de transaccion invalido');
+                                                throw Error('Invalid transaction script');
                                         }
                                 }
                         }

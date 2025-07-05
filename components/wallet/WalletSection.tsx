@@ -215,7 +215,7 @@ export default function WalletSection() {
     a.download = `${address}.json`
     a.click()
     URL.revokeObjectURL(url)
-    setToast('Clave exportada')
+    setToast('Key exported')
   }
 
   function handleExportAll() {
@@ -227,20 +227,20 @@ export default function WalletSection() {
     a.download = 'wallets.json'
     a.click()
     URL.revokeObjectURL(url)
-    setToast('Exportación exitosa')
+    setToast('Export successful')
   }
 
   function handleCopy() {
     if (wallet) {
       copyToClipboard(wallet.publicKey)
-      setToast('Copiado')
+      setToast('Copied')
     }
   }
 
   function confirmDelete() {
     if (toDelete) {
       deleteWallet(toDelete)
-      setToast('Wallet eliminada')
+      setToast('Wallet deleted')
       setToDelete(null)
     }
   }
@@ -248,7 +248,7 @@ export default function WalletSection() {
   async function handleImport() {
     if (importValue) {
       await importWallet(importValue)
-      setToast('Wallet importada')
+      setToast('Wallet imported')
       setImportValue('')
       setShowNew(false)
     }

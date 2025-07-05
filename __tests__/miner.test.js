@@ -18,7 +18,7 @@ describe('Miner.mine', () => {
     const p2p = {};
     const wallet = {};
     const miner = new Miner(bc, p2p, wallet);
-    expect(() => miner.mine()).toThrow('La transacción no esta confirmada');
+    expect(() => miner.mine()).toThrow('Transaction not confirmed');
   });
 
   test('mines block and clears mempool', () => {

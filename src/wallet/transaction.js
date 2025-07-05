@@ -20,10 +20,10 @@ class Transaction{
                 const amt = Number(amount);
 
                 if(amt <= 0){
-                        throw Error('El monto debe ser mayor a cero');
+                        throw Error('Amount must be greater than zero');
                 }
                 if(receptAddress === publicKey){
-                        throw Error('No puedes enviarte fondos a ti mismo');
+                        throw Error('Cannot send funds to yourself');
                 }
 
                 const tr = new Transaction(asset, metadata);
@@ -32,7 +32,7 @@ class Transaction{
                 if(asset.type === 'COIN'){
                         const balance = senderWallet.calculateBalance('COIN');
                         if(amt > balance){
-                                throw Error(`Tu envío es: ${amt}, excede tu balance`);
+                                throw Error(`Your amount ${amt} exceeds your balance`);
                         }
 
                         tr.outputs.push(...[
@@ -91,7 +91,7 @@ class Transaction{
         update(senderWallet, receptAddress, amount, script = null, metadata = null) {
 
                 if(this.asset.type !== 'COIN'){
-                        throw Error('Solo las transacciones de tipo COIN pueden actualizarse');
+                        throw Error('Only transactions of type COIN can be updated');
                 }
 
                 const sendOutput = this.outputs.find((ouput) =>
@@ -99,12 +99,12 @@ class Transaction{
                 const amt = Number(amount);
 
                 if(amt <= 0)
-                        throw Error('El monto debe ser mayor a cero');
+                        throw Error('Amount must be greater than zero');
                 if(receptAddress === senderWallet.publicKey)
-                        throw Error('No puedes enviarte fondos a ti mismo');
+                        throw Error('Cannot send funds to yourself');
 
                 if(amt > sendOutput.amount)
-                        throw Error(`Tu envío es: ${amt}, excede tu balance`);
+                        throw Error(`Your amount ${amt} exceeds your balance`);
 
                 sendOutput.amount -= amt;
                 this.outputs.push({
