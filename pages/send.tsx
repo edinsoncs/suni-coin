@@ -17,7 +17,7 @@ export default function Send() {
     const res = await fetch(`${API_BASE}/api/transactions`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ recipient, amount: parseFloat(amount) })
+      body: JSON.stringify({ recipient, amount: parseFloat(amount), sender: wallet.publicKey })
     })
     const json = await res.json()
     await refreshBalance()
