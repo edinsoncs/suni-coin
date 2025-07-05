@@ -106,6 +106,7 @@ The REST API exposes several helpers for querying the chain:
 - `GET /api/verify` – check whether the chain is valid
 - `GET /api/block/:hash` – fetch a block by its hash
 - `GET /api/balance/:address` – show the balance of a wallet address
+- `GET /api/wallet/status` – check if a wallet is currently active
 - `GET /api/address/:address/transactions` – list all transactions involving an address
 - `GET /api/address/:address/stats` – summarize sent and received amounts for an address
 - `GET /api/ai/list` – list all blocks that contain AI data

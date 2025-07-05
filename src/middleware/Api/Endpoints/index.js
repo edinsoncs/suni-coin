@@ -6,6 +6,7 @@ import walletNew from './wallet_new.js';
 import walletAccess from './wallet_access.js';
 import walletStake from './wallet_stake.js';
 import walletList from './wallet_list.js';
+import walletStatus from './wallet_status.js';
 import walletExport from './wallet_export.js';
 import walletImport from './wallet_import.js';
 import walletKeys from './wallet_keys.js';
@@ -90,6 +91,9 @@ r.route('/search')
 
 r.route('/wallet/list')
   .get(walletList);
+
+r.route('/wallet/status')
+  .get(walletStatus);
 
 
 /**
