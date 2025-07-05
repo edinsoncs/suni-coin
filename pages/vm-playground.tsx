@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import dynamic from 'next/dynamic'
 import Ajv from 'ajv'
-import ReactJson from 'react-json-view'
+const ReactJson = dynamic(() => import('react-json-view'), { ssr: false })
 import { Button } from '@/components/ui/button'
 import { useTheme } from '@/components/ThemeContext'
 
