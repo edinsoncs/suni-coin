@@ -45,7 +45,7 @@ export default function Layout({ children }: { children: ReactNode }) {
   }, [menuOpen])
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <header className="border-b bg-card shadow-sm">
+      <header className="border-b bg-card shadow-sm" style={{ fontFamily: 'Nunito, sans-serif' }}>
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
