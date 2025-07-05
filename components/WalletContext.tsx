@@ -129,10 +129,14 @@ export function WalletProvider({ children }: { children: ReactNode }) {
 
   async function refreshBalance() {
     if (!wallet) return null
-    const res = await fetch(`${API_BASE}/api/balance/${wallet.publicKey}`)
-    const json = await res.json()
-    setWallet({ ...wallet, balance: json.balance })
-    return json.balance
+    try {
+      const res = await fetch(`${API_BASE}/api/balance/${wallet.publicKey}`)
+      const json = await res.json()
+      setWallet({ ...wallet, balance: json.balance })
+      return json.balance
+    } catch {
+      return null
+    }
   }
 
   return (

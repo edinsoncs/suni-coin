@@ -21,6 +21,7 @@ export default (req, res) => {
 
         // credit the new wallet on chain so balance persists
         const tx = Transaction.create(blockchainWallet, wallet.publicKey, INIT_BL);
+        blockchain.setCurrentDelegate(walletMiner.publicKey);
         blockchain.addBlock([tx], walletMiner);
 
         context.currentWallet = wallet;

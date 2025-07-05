@@ -15,6 +15,7 @@ export default (req, res) => {
     }
     const { model, description, dataHash } = value;
     try {
+        blockchain.setCurrentDelegate(walletMiner.publicKey);
         const block = blockchain.addBlock(
             { type: 'AI_DATA', model, description, hash: dataHash },
             walletMiner
