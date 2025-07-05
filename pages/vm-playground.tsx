@@ -25,12 +25,12 @@ const KEYWORDS = [
 
 const baseSnippets = [
   {
-    label: 'Contrato base',
+    label: 'Base contract',
     insertText: 'TRANSFER alice bob 10\nSTAKE alice 10',
     kind: 15
   },
   {
-    label: 'Condicional',
+    label: 'Conditional',
     insertText: 'IF BALANCE alice >= 10 THEN TRANSFER alice bob 5',
     kind: 15
   },
@@ -190,7 +190,7 @@ export default function VmPlayground() {
   }
 
   const saveTemplate = () => {
-    const name = prompt('Nombre del template')
+    const name = prompt('Template name')
     if (!name) return
     const next = { ...templates, [name]: script }
     setTemplates(next)
@@ -213,7 +213,13 @@ export default function VmPlayground() {
   return (
     <div className='py-10 space-y-4'>
       <h1 className='text-2xl font-semibold'>BYDLang VM Playground</h1>
-      <div className='text-sm'>Altura: {blockInfo.height} | Avg Block Time: {blockInfo.avg.toFixed(2)}ms</div>
+      <div className='text-sm'>Height: {blockInfo.height} | Avg Block Time: {blockInfo.avg.toFixed(2)}ms</div>
+      <div className='space-y-2 text-sm text-neutral-300'>
+        <p>This playground lets you run BYDLang scripts against a JSON state.</p>
+        <p><strong>Creating tokens:</strong> each wallet receives an initial balance and you can move tokens with the <code>TRANSFER</code> instruction or through the wallet page.</p>
+        <p><strong>Creating NFTs:</strong> store a unique entry in the state using <code>state.set('nft.&lt;id&gt;.owner', '&lt;address&gt;')</code>. Update this value when the NFT changes hands.</p>
+        <p>You can also stake tokens with <code>STAKE</code>, emit events with <code>EMIT</code> and add conditions using <code>IF</code>.</p>
+      </div>
       <div>
         <Monaco
           language='bydlang'
@@ -225,7 +231,7 @@ export default function VmPlayground() {
         />
       </div>
       <div>
-        <label className='block mb-1'>Estado inicial (JSON)</label>
+        <label className='block mb-1'>Initial state (JSON)</label>
         <textarea
           className='w-full h-32 bg-black text-white p-2 font-mono'
           value={stateText}
@@ -238,14 +244,14 @@ export default function VmPlayground() {
         <label htmlFor='dbg'>Debug</label>
       </div>
       <div className='flex gap-2 flex-wrap'>
-        <Button onClick={handleRun}>Ejecutar</Button>
-        <Button onClick={saveTemplate} variant='outline'>Guardar como template</Button>
-        <Button onClick={loadStateFromBlock} variant='outline'>Cargar estado actual</Button>
-        <Button onClick={() => setShowTree(s => !s)} variant='outline'>Ver estado</Button>
+        <Button onClick={handleRun}>Run</Button>
+        <Button onClick={saveTemplate} variant='outline'>Save as template</Button>
+        <Button onClick={loadStateFromBlock} variant='outline'>Load current state</Button>
+        <Button onClick={() => setShowTree(s => !s)} variant='outline'>View state</Button>
       </div>
       {Object.keys(templates).length > 0 && (
         <select onChange={e => setScript(templates[e.target.value])} className='bg-black text-white p-1'>
-          <option value=''>Cargar template...</option>
+          <option value=''>Load template...</option>
           {Object.entries(templates).map(([k]) => (
             <option key={k} value={k}>{k}</option>
           ))}
@@ -256,7 +262,7 @@ export default function VmPlayground() {
           const h = history[Number(e.target.value)]
           if (h) { setScript(h.script); setStateText(h.state) }
         }} className='bg-black text-white p-1'>
-          <option value=''>Historial...</option>
+          <option value=''>History...</option>
           {history.map((h, i) => (
             <option key={i} value={i}>{new Date().toLocaleTimeString()}</option>
           ))}
