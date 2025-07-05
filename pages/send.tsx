@@ -9,6 +9,8 @@ import { Tooltip } from 'react-tooltip'
 import 'react-tooltip/dist/react-tooltip.css'
 import { cn } from '@/lib/utils'
 
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE || 'http://localhost:8000'
+
 const GAS_OPTIONS = [
   { label: 'Slow', value: 15 },
   { label: 'Standard', value: 25 },
@@ -49,7 +51,8 @@ export default function Send() {
     }
   }, [toast])
 
-  const validAddress = /^0x[a-fA-F0-9]{40}$/.test(to)
+  const cleaned = to.startsWith('0x') ? to.slice(2) : to
+  const validAddress = /^[a-fA-F0-9]+$/.test(cleaned)
   const amt = parseFloat(amount)
   const validAmount = !isNaN(amt) && amt > 0
   const valid = validAddress && validAmount && from && !loading
