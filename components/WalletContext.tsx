@@ -13,6 +13,10 @@ interface WalletContextType {
   selectWallet: (address: string) => void
   toggleFavorite: (address: string) => void
   exportJson: (address: string) => string | null
+  deleteWallet: (address: string) => void
+  copyToClipboard: (text: string) => void
+  getBalance: (address: string) => Promise<number | null>
+  exportAll: () => string
   logout: () => void
   exportMnemonic: () => Promise<string | null>
   exportKeys: () => Promise<{ privateKey: string; publicKey: string } | null>
@@ -77,6 +81,25 @@ export function WalletProvider({ children }: { children: ReactNode }) {
     return w ? JSON.stringify(w) : null
   }
 
+  function deleteWallet(address: string) {
+    setWallets((wls) => wls.filter((w) => w.publicKey !== address))
+    if (wallet?.publicKey === address) setWallet(null)
+  }
+
+  function copyToClipboard(text: string) {
+    if (navigator?.clipboard) navigator.clipboard.writeText(text)
+  }
+
+  async function getBalance(address: string) {
+    const res = await fetch(`${API_BASE}/api/balance/${address}`)
+    const json = await res.json()
+    return json.balance
+  }
+
+  function exportAll() {
+    return JSON.stringify(wallets)
+  }
+
   function logout() {
     setWallet(null)
   }
@@ -121,6 +144,10 @@ export function WalletProvider({ children }: { children: ReactNode }) {
         selectWallet,
         toggleFavorite,
         exportJson,
+        deleteWallet,
+        copyToClipboard,
+        getBalance,
+        exportAll,
         logout,
         exportMnemonic,
         exportKeys,
