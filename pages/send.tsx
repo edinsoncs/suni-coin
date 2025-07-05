@@ -11,18 +11,32 @@ export default function Send() {
   const router = useRouter()
   const [recipient, setRecipient] = useState('')
   const [amount, setAmount] = useState('')
+  const [message, setMessage] = useState<string | null>(null)
+  const [sending, setSending] = useState(false)
 
   async function handleSend() {
-    if (!wallet) return
-    const res = await fetch(`${API_BASE}/api/transactions`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ recipient, amount: parseFloat(amount), sender: wallet.publicKey })
-    })
-    const json = await res.json()
-    await refreshBalance()
-    if (json && json.id) {
-      router.push(`/tx/${json.id}`)
+    if (!wallet || sending) return
+    setSending(true)
+    setMessage(null)
+    try {
+      const res = await fetch(`${API_BASE}/api/transactions`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ recipient, amount: parseFloat(amount), sender: wallet.publicKey })
+      })
+      const data = await res.json()
+      await refreshBalance()
+      if (res.ok && data && data.id) {
+        setMessage('Transaction sent! Redirecting...')
+        router.push(`/tx/${data.id}`)
+      } else {
+        const err = typeof data.error === 'object' ? data.error.message : data.error
+        setMessage(err || 'Transaction failed')
+      }
+    } catch {
+      setMessage('Transaction failed')
+    } finally {
+      setSending(false)
     }
   }
 
@@ -44,7 +58,10 @@ export default function Send() {
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
           />
-          <Button onClick={handleSend}>Send</Button>
+          <Button onClick={handleSend} disabled={sending}>
+            {sending ? 'Sending...' : 'Send'}
+          </Button>
+          {message && <p className="text-sm mt-2">{message}</p>}
         </>
       )}
     </div>
