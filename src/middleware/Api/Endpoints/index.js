@@ -3,7 +3,6 @@ import blocks from './blocks.js';
 import transactions from './transactions.js';
 import mineTransactions from './transactions_mine.js';
 import walletNew from './wallet_new.js';
-import walletAccess from './wallet_access.js';
 import walletStake from './wallet_stake.js';
 import walletList from './wallet_list.js';
 import walletStatus from './wallet_status.js';
@@ -103,8 +102,6 @@ r.route('/wallet/status')
 r.route('/wallet/new')
 .post(walletNew);
 
-r.route('/wallet/access')
-.post(walletAccess);
 
 r.route('/wallet/stake')
 .post(walletStake);
