@@ -2,7 +2,7 @@ import Blockchain from '../blockchain/index.js';
 import P2PAction from './p2p.js';
 import Wallet from '../wallet/index.js';
 import Miner from '../miner/index.js';
-import { existsSync, readFileSync, writeFileSync } from 'fs';
+import { existsSync, readFileSync, writeFileSync, mkdirSync } from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
@@ -11,6 +11,7 @@ const wallets = [];
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const MINER_KEY_FILE = path.join(__dirname, '../storage/miner.key');
+const CURRENT_WALLET_FILE = path.join(__dirname, '../storage/current_wallet.json');
 
 let walletMiner;
 if (existsSync(MINER_KEY_FILE)) {
@@ -37,6 +38,17 @@ const p2pAction = new P2PAction(blockchain);
 const miner = new Miner(blockchain, p2pAction, walletMiner);
 
 let currentWallet = null;
+if (existsSync(CURRENT_WALLET_FILE)) {
+  try {
+    const data = JSON.parse(readFileSync(CURRENT_WALLET_FILE, 'utf8'));
+    if (data && data.privateKey) {
+      currentWallet = Wallet.fromPrivateKey(blockchain, data.privateKey, 0);
+      wallets.push(currentWallet);
+    }
+  } catch {
+    currentWallet = null;
+  }
+}
 
 const context = {
   blockchain,
@@ -52,5 +64,5 @@ const context = {
   }
 };
 
-export { blockchain, wallets, walletMiner, p2pAction, miner, currentWallet };
+export { blockchain, wallets, walletMiner, p2pAction, miner, currentWallet, CURRENT_WALLET_FILE };
 export default context;
