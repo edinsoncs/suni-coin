@@ -9,38 +9,44 @@ interface Props {
 export default function ExplorerHeader({ blockHeight, blockHash }: Props) {
   const { theme, setTheme } = useTheme()
   return (
-    <header className="bg-black dark:bg-neutral-900 text-white border-b border-white/10 transition-all duration-300">
-      <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+    <header className="h-16 bg-neutral-950 border-b border-white/10 px-6 text-white">
+      <div className="mx-auto flex h-full max-w-7xl items-center justify-between">
         <div className="flex items-center space-x-3">
           <div className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-white text-black rounded flex items-center justify-center">
-              <Blocks className="w-5 h-5" />
+            <div className="flex h-8 w-8 items-center justify-center rounded bg-gradient-to-br from-purple-500 to-fuchsia-600">
+              <Blocks className="h-5 w-5 text-white" />
             </div>
-            <span className="text-xl font-bold">BYDChain</span>
+            <span className="text-lg font-semibold text-white">BYDChain</span>
           </div>
-          <span className="border border-white/20 text-white px-2 py-0.5 rounded text-xs">Mainnet</span>
-          <span className="bg-green-700 text-white px-2 py-1 rounded-full text-xs">Healthy</span>
+          <span className="rounded-md border border-white/20 px-2 py-0.5 text-xs text-white">Mainnet</span>
+          <span className="rounded-full bg-green-600 px-2 py-0.5 text-xs text-white">Healthy</span>
         </div>
-        <div className="flex-1 mx-8">
+        <div className="mx-8 flex-1 max-w-xl">
           <div className="relative">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400" />
+            <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-neutral-400" />
             <input
               type="text"
+              aria-label="Search"
               placeholder="Search blocks, transactions, addresses..."
-              className="w-full rounded-full bg-neutral-800 border border-white/10 pl-10 pr-4 py-2 text-sm placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300"
+              className="w-full rounded-md border border-white/20 bg-transparent py-1.5 pl-9 pr-4 text-sm placeholder:text-neutral-400 hover:border-white/30 focus:border-white/30 focus:ring-1 focus:ring-white/50 transition-all duration-200"
             />
           </div>
         </div>
         <div className="flex items-center space-x-4">
-          <span
+          <button
+            aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
             onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-            className="cursor-pointer hover:opacity-80 transition-all duration-300 text-xl"
+            className="text-lg transition-opacity hover:opacity-75"
           >
-            {theme === 'dark' ? '🌞' : '🌚'}
-          </span>
-          <div className="border border-white/20 rounded-lg px-3 py-1 text-sm leading-tight">
-            <div>Block Height: {blockHeight}</div>
-            <div className="font-mono text-xs truncate">{blockHash}</div>
+            {theme === 'dark' ? '🌞' : '🌙'}
+          </button>
+          <div className="flex items-center space-x-2 text-xs">
+            <span className="whitespace-nowrap">
+              <span aria-hidden="true" className="mr-1">🌒</span>Block Height: {blockHeight}
+            </span>
+            <span className="truncate rounded border border-white/20 bg-white/5 px-2 py-0.5 font-mono">
+              {blockHash}
+            </span>
           </div>
         </div>
       </div>
