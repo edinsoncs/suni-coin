@@ -12,6 +12,7 @@ export default (req, res) => {
                 return res.status(400).json({ status: 0, error });
         }
 
+        blockchain.setCurrentDelegate(walletMiner.publicKey);
         const block = blockchain.addBlock(value.data, walletMiner);
         p2pAction.sync();
 
