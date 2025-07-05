@@ -102,6 +102,9 @@ export function WalletProvider({ children }: { children: ReactNode }) {
 
   function logout() {
     setWallet(null)
+    setWallets([])
+    localStorage.removeItem('wallet')
+    localStorage.removeItem('wallets')
   }
 
   async function exportMnemonic() {
