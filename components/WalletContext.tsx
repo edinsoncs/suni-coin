@@ -3,6 +3,7 @@ import { createContext, useContext, useState, useEffect, ReactNode } from 'react
 export type Wallet = {
   publicKey: string
   balance: number
+  favorite?: boolean
 }
 
 interface WalletContextType {
@@ -10,6 +11,8 @@ interface WalletContextType {
   wallets: Wallet[]
   createWallet: () => Promise<void>
   selectWallet: (address: string) => void
+  toggleFavorite: (address: string) => void
+  exportJson: (address: string) => string | null
   logout: () => void
   exportMnemonic: () => Promise<string | null>
   exportKeys: () => Promise<{ privateKey: string; publicKey: string } | null>
@@ -28,7 +31,10 @@ export function WalletProvider({ children }: { children: ReactNode }) {
     const stored = localStorage.getItem('wallet')
     const list = localStorage.getItem('wallets')
     if (stored) setWallet(JSON.parse(stored))
-    if (list) setWallets(JSON.parse(list))
+    if (list) {
+      const parsed: Wallet[] = JSON.parse(list)
+      setWallets(parsed.map(w => ({ favorite: false, ...w })))
+    }
   }, [])
 
   useEffect(() => {
@@ -41,7 +47,6 @@ export function WalletProvider({ children }: { children: ReactNode }) {
   }, [wallets])
 
   async function createWallet() {
-    if (wallets.length >= 10) return
     const res = await fetch(`${API_BASE}/api/wallet/new`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -50,13 +55,26 @@ export function WalletProvider({ children }: { children: ReactNode }) {
     const json = await res.json()
     if (json.data) {
       setWallet(json.data)
-      setWallets((w) => [...w, json.data])
+      setWallets((w) => [...w, { ...json.data, favorite: false }])
     }
   }
 
   function selectWallet(address: string) {
     const w = wallets.find((wl) => wl.publicKey === address) || null
     setWallet(w)
+  }
+
+  function toggleFavorite(address: string) {
+    setWallets((wls) =>
+      wls.map((w) =>
+        w.publicKey === address ? { ...w, favorite: !w.favorite } : w
+      )
+    )
+  }
+
+  function exportJson(address: string) {
+    const w = wallets.find((wl) => wl.publicKey === address)
+    return w ? JSON.stringify(w) : null
   }
 
   function logout() {
@@ -101,6 +119,8 @@ export function WalletProvider({ children }: { children: ReactNode }) {
         wallets,
         createWallet,
         selectWallet,
+        toggleFavorite,
+        exportJson,
         logout,
         exportMnemonic,
         exportKeys,

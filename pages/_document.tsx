@@ -17,13 +17,13 @@ export default function Document(): ReactElement {
         />
         <script src="https://cdn.tailwindcss.com"></script>
         <link
-          href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&family=Raleway:wght@400;700&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&family=IBM+Plex+Sans:wght@400;700&display=swap"
           rel="stylesheet"
         />
       </Head>
       <body
         className="bg-white text-black dark:bg-black dark:text-white transition-colors duration-300"
-        style={{ fontFamily: 'Nunito, Raleway, sans-serif' }}
+        style={{ fontFamily: "'__IBM_Plex_Sans_ce9353','__IBM_Plex_Sans_Fallback_ce9353', sans-serif" }}
       >
         <Main />
         <NextScript />
