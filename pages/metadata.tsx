@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState } from 'react'
+import { Input } from '@/components/ui/input'
 
 const API_BASE = 'http://localhost:8000';
 
@@ -24,23 +25,20 @@ export default function Metadata() {
         Store Metadata
       </h1>
       <div className="flex flex-col gap-2">
-        <input
+        <Input
           value={model}
           onChange={e => setModel(e.target.value)}
           placeholder="model name"
-          className="border p-2 rounded bg-gray-900 text-gray-100"
         />
-        <input
+        <Input
           value={description}
           onChange={e => setDescription(e.target.value)}
           placeholder="description"
-          className="border p-2 rounded bg-gray-900 text-gray-100"
         />
-        <input
+        <Input
           value={dataHash}
           onChange={e => setDataHash(e.target.value)}
           placeholder="data hash"
-          className="border p-2 rounded bg-gray-900 text-gray-100"
         />
         <button
           onClick={storeData}

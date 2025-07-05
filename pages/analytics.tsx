@@ -53,7 +53,7 @@ export default function Analytics() {
         <div className="flex items-center justify-between">
           <h1 className="text-2xl font-semibold text-white">Network Analytics</h1>
           <select
-            className="bg-neutral-900 text-white rounded px-3 py-2"
+            className="bg-black text-white border border-white/20 rounded-lg px-3 py-2 focus:ring-2 transition-all duration-200"
             value={range}
             onChange={(e) => setRange(e.target.value)}
           >
