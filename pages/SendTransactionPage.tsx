@@ -66,12 +66,21 @@ export default function SendTransactionPage() {
     setModal(false)
     setLoading(true)
     try {
-      // mock sending
-      await new Promise(res => setTimeout(res, 1500))
-      const hash = randomHash()
-      setTxHash(hash)
-      setToast('Transaction sent!')
-      await refreshBalance()
+      const res = await fetch(`${API_BASE}/api/transactions`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ recipient: to, amount: parseFloat(amount) })
+      })
+      const data = await res.json()
+      if (res.ok) {
+        setTxHash(data.id || null)
+        setToast('Transaction sent!')
+        await refreshBalance()
+      } else {
+        setToast(data.error || 'Transaction failed')
+      }
+    } catch {
+      setToast('Transaction failed')
     } finally {
       setLoading(false)
     }
