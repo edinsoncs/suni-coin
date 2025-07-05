@@ -102,7 +102,7 @@ export default function Analytics() {
             />
             <AnalyticsCard
               title="Connected Nodes"
-              value={stats.connectedNodes.toLocaleString()}
+              value={(stats.connectedNodes ?? nodes[nodes.length - 1] ?? 0).toLocaleString()}
               icon="🌐"
               data={nodes}
               color="#22c55e"
